@@ -1,35 +1,5 @@
-/* Estilos Base (Escritorio y Tablet) */
-.app-footer {
-  /* La clave para evitar desbordes en flexbox es asegurar que el contenedor
-     no fuerce un ancho más allá de su límite. */
-  width: 100%;
-  max-width: 100%; /* Asegura que no se exceda el 100% del contenedor padre */
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 30px;
-  background-color: #e5f5e5;
-  color: #1a4314;
-  font-size: 14px;
-  border-top: 1px solid #c8e6c9;
 
-  /* Nuevo: Añade un pequeño margen a la derecha y oculta desbordes internos */
-  box-sizing: border-box;
-  overflow: hidden; /* Oculta cualquier texto que pudiera salirse del borde derecho */
-}
-
-.app-footer p {
-  /* Asegura que el texto se pueda cortar o envolver si es muy largo */
-  white-space: nowrap; /* Mantiene el texto en una línea (como en tu imagen) */
-  overflow: hidden;    /* Oculta lo que no quepa */
-  text-overflow: ellipsis; /* Añade puntos suspensivos si el texto se corta */
-
-  /* Permite que el elemento se comprima sin forzar el ancho del flexbox */
-  flex-shrink: 1;
-  margin: 0;
-  padding: 0;
-}
 
 /* Media Query para Móviles (solución responsive) */
 @media (max-width: 600px) {

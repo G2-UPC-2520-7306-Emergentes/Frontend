@@ -1,43 +1,58 @@
-/* Estilos Base (Escritorio y Tablet) */
+/* Estilos Base para la Estructura del Footer */
 .app-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 30px;
-  background-color: #e5f5e5; /* Verde claro */
-  color: #1a4314; /* Verde oscuro */
+  width: 100%;
+  padding: 15px 30px; /* Padding de la caja principal del footer */
+  background-color: #e5f5e5;
+  color: #1a4314;
   font-size: 14px;
   border-top: 1px solid #c8e6c9;
-  width: 100%;
+  box-sizing: border-box;
+
+  /* Hacemos el footer Flexbox para apilar las dos secciones */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra el contenido horizontalmente (especialmente el copyright) */
 }
 
-.app-footer p {
-  margin: 5px 0; /* Asegura un pequeño margen entre párrafos en móviles */
+/* CLASE CORRECTA: Aplica Flexbox para separar los enlaces a los extremos */
+.footer-links-row {
+  display: flex;
+  justify-content: space-between; /* CLAVE: Separa "Privacy" y "Terms" al máximo */
+  align-items: center;
+  width: 100%; /* Ocupa todo el ancho disponible */
+  max-width: 900px; /* Puedes ajustar este valor si quieres un margen interior */
+  margin: 0 auto; /* Centra este contenedor horizontalmente */
+  margin-bottom: 10px; /* Espacio entre los enlaces y el copyright */
 }
 
-/* Media Query para Móviles (ejemplo: pantallas de 600px o menos) */
-@media (max-width: 600px) {
-  .app-footer {
-    /* Cambia la dirección del flujo a columna */
-    flex-direction: column;
-    /* Centra el texto */
+/* Estilo para los enlaces (Privacy/Terms) */
+.footer-link {
+  color: #50e37a;
+  text-decoration: none;
+  /* Eliminar padding horizontal: justify-content hace la separación */
+  padding: 0;
+  white-space: nowrap;
+}
+
+/* Estilo para el texto de Copyright (en el centro, debajo de los enlaces) */
+.copyright {
+  color: #1a4314;
+  margin: 0;
+  padding: 0 10px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* --- SOLUCIÓN RESPONSIVE --- */
+@media (max-width: 768px) {
+  .footer-links-row {
+    flex-direction: column; /* Apila los elementos en pantallas pequeñas */
     text-align: center;
-    padding: 15px 15px; /* Reduce el padding lateral */
+    max-width: 100%;
   }
 
-  .app-footer p {
-    /* Asegura que cada párrafo use su propio espacio vertical */
+  .footer-link {
     width: 100%;
-  }
-
-  /* Esto aplica a toda la aplicación */
-  html, body {
-    overflow-x: hidden; /* Oculta cualquier desborde horizontal */
-    width: 100%;        /* Asegura que el body no se estire más allá del viewport */
-  }
-
-  /* Si tu layout principal es el que envuelve todo (header, main, footer) */
-  .page-layout {
-    overflow-x: hidden;
+    padding: 5px 0;
   }
 }
