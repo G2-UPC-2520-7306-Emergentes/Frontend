@@ -1,0 +1,43 @@
+/* Estilos Base (Escritorio y Tablet) */
+.app-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #e5f5e5; /* Verde claro */
+  color: #1a4314; /* Verde oscuro */
+  font-size: 14px;
+  border-top: 1px solid #c8e6c9;
+  width: 100%;
+}
+
+.app-footer p {
+  margin: 5px 0; /* Asegura un pequeño margen entre párrafos en móviles */
+}
+
+/* Media Query para Móviles (ejemplo: pantallas de 600px o menos) */
+@media (max-width: 600px) {
+  .app-footer {
+    /* Cambia la dirección del flujo a columna */
+    flex-direction: column;
+    /* Centra el texto */
+    text-align: center;
+    padding: 15px 15px; /* Reduce el padding lateral */
+  }
+
+  .app-footer p {
+    /* Asegura que cada párrafo use su propio espacio vertical */
+    width: 100%;
+  }
+
+  /* Esto aplica a toda la aplicación */
+  html, body {
+    overflow-x: hidden; /* Oculta cualquier desborde horizontal */
+    width: 100%;        /* Asegura que el body no se estire más allá del viewport */
+  }
+
+  /* Si tu layout principal es el que envuelve todo (header, main, footer) */
+  .page-layout {
+    overflow-x: hidden;
+  }
+}

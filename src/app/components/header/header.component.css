@@ -1,0 +1,26 @@
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #1a4314; /* Verde oscuro */
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+  font-size: 16px;
+  transition: color 0.2s;
+}
+
+nav a:hover {
+  color: #50e37a; /* Verde brillante */
+}

@@ -1,0 +1,119 @@
+/* General container and alignment */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f7fff7; /* Light background to match the image */
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.title {
+  color: #1a4314; /* Darker green for the title */
+  margin-bottom: 40px;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 350px;
+}
+
+/* Form Group Layout */
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+/* Input Field Styling */
+.input-field {
+  width: 100%;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #e5f5e5; /* Light green background for inputs */
+  color: #1a4314; /* Dark text color */
+  font-size: 16px;
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+/* Specific styling for the password field wrapper */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper .input-field {
+  padding-right: 40px; /* Make space for the eye icon */
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: #1a4314;
+}
+
+.eye-icon {
+  font-style: normal; /* To prevent 👁️ from being italic */
+}
+
+/* Sign In Button Styling */
+.sign-in-button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #50e37a; /* Bright green button color */
+  color: #1a4314; /* Dark green text */
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.sign-in-button:hover:not([disabled]) {
+  background-color: #43c76b;
+}
+
+.sign-in-button:disabled {
+  background-color: #a0f0b4; /* Lighter color when disabled */
+  cursor: not-allowed;
+}
+
+/* Error Message Styling (Matching the image) */
+.error-message {
+  color: #e35050; /* Red error color */
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+/* Links Styling */
+.forgot-password-link,
+.signup-link {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+  color: #50e37a; /* Light green link color */
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.signup-link {
+  margin-top: 5px;
+}
+
+.forgot-password-link:hover,
+.signup-link:hover {
+  text-decoration: underline;
+}
