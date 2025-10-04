@@ -34,6 +34,17 @@
         </li>
       </ul>
 
+
+      <div class="theme-toggle-container">
+        <button (click)="toggleTheme()" class="nav-item theme-toggle-button">
+          <i
+            class="icon"
+            [ngClass]="(isDarkTheme$ | async) ? 'fas fa-sun' : 'fas fa-moon'">
+          </i>
+          <span>{{ (isDarkTheme$ | async) ? 'Modo Oscuro' : 'Modo Claro' }}</span>
+        </button>
+      </div>
+
       <div class="logout">
         <a routerLink="/login" class="nav-item logout-link">
           <i class="icon">⬅️</i> Log Out

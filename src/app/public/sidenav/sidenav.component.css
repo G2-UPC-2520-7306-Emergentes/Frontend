@@ -1,43 +1,140 @@
-/* Use Flexbox for a simple side-by-side layout */
+/* ------------------------------------------- */
+/* LAYOUT BASE (MODO CLARO POR DEFECTO) */
+/* ------------------------------------------- */
 .sidenav-layout {
   display: flex;
-  height: 100vh; /* Takes up the full height of the viewport */
+  height: 100vh;
 }
 
-/* Style for the fixed sidebar */
+/* Sidebar - Modo Claro (tu estilo base) */
 .sidebar {
-  width: 250px; /* Fixed width for the menu */
-  background-color: #f7f7f7; /* Light background for the menu */
+  width: 250px;
+  background-color: #f7f7f7; /* Fondo claro del menú */
   padding-top: 20px;
-  flex-shrink: 0; /* Prevents sidebar from shrinking */
+  flex-shrink: 0;
+  color: #333; /* Texto oscuro */
 }
 
-/* Style for the main content area, which takes the remaining space */
+/* Contenido Principal - Modo Claro */
 .content-area {
-  flex-grow: 1; /* Allows the content to fill the rest of the screen */
-  padding: 30px; /* Padding inside the content area */
-  overflow-y: auto; /* Allows scrolling if content is long */
+  flex-grow: 1;
+  padding: 30px;
+  overflow-y: auto;
+  background-color: #ffffff; /* El fondo principal es blanco */
 }
 
-/* Ensure your nav styles are applied (optional, just for context) */
+/* Navegación Base */
 .sidebar-nav ul {
   list-style: none;
   padding: 0;
 }
+
 .nav-item {
   display: flex;
   align-items: center;
   padding: 10px 15px;
   text-decoration: none;
   color: #333;
+  transition: background-color 0.2s, color 0.2s;
 }
+
 .nav-item:hover {
   background-color: #e0e0e0;
 }
+
 .nav-item.active {
   background-color: #d0d0d0;
   font-weight: bold;
+  border-left: 4px solid #388e3c; /* Borde de color activo */
+  padding-left: 11px; /* Ajuste para el borde */
 }
+
 .icon {
   margin-right: 10px;
+  font-size: 1.2em;
+}
+
+/* Logout y Separadores */
+.logout {
+  padding-top: 10px;
+  margin-top: auto;
+  border-top: 1px solid #ddd;
+}
+
+.logout-link {
+  color: #cc0000; /* Rojo para destacar el logout */
+}
+
+/* ------------------------------------------- */
+/* THEME TOGGLE */
+/* ------------------------------------------- */
+.theme-toggle-container {
+  padding: 10px 0;
+  margin-top: 15px; /* Separación de la navegación */
+  border-top: 1px solid #ddd;
+}
+
+.theme-toggle-button {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  color: #333;
+  transition: background-color 0.2s;
+}
+
+.theme-toggle-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* ------------------------------------------- */
+/* ESTILOS DE MODO OSCURO (TONALIDADES VERDES) */
+/* ------------------------------------------- */
+
+/* Cuando el BODY tiene la clase dark-theme, sobrescribe los colores con tonos verdes */
+:host-context(body.dark-theme) .sidebar {
+  background-color: #0f3a12; /* Verde oscuro intenso para el menú */
+  color: #e6ffe6; /* Verde muy claro, casi blanco */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.4);
+}
+
+:host-context(body.dark-theme) .content-area {
+  background-color: #1a4314; /* Verde oscuro medio para el contenido principal */
+}
+
+:host-context(body.dark-theme) .nav-item {
+  color: #e6ffe6; /* Texto verde claro */
+}
+
+:host-context(body.dark-theme) .nav-item:hover {
+  background-color: #2b5c2a; /* Verde ligeramente más claro al pasar el mouse */
+}
+
+:host-context(body.dark-theme) .nav-item.active {
+  background-color: #2b5c2a; /* Verde más claro para activo */
+  border-left-color: #a3ffac; /* Verde brillante para el borde activo */
+}
+
+:host-context(body.dark-theme) .logout {
+  border-top: 1px solid #2b5c2a; /* Borde separador verde */
+}
+
+:host-context(body.dark-theme) .logout-link {
+  color: #ffb3b3; /* Rojo suave para contraste en verde oscuro */
+}
+
+:host-context(body.dark-theme) .theme-toggle-container {
+  border-top: 1px solid #2b5c2a;
+}
+
+:host-context(body.dark-theme) .theme-toggle-button {
+  color: #e6ffe6; /* Texto del botón verde claro */
+}
+
+:host-context(body.dark-theme) .theme-toggle-button:hover {
+  background-color: #2b5c2a; /* Fondo verde al pasar el mouse */
 }

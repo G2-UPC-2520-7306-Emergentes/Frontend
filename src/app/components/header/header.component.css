@@ -3,8 +3,8 @@
   justify-content: flex-start; /* Alinea el logo a la izquierda */
   align-items: center;
   padding: 10px 20px;
-  background-color: #e5f5e5; /* Fondo blanco */
-  color: #1a4314; /* Texto verde oscuro */
+  background-color: #2b5c2a; /* Fondo blanco */
+  color: white; /* Texto verde oscuro */
   border-bottom: 1px solid #e5f5e5; /* Borde muy sutil */
 }
 
