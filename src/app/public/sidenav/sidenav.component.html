@@ -1,35 +1,45 @@
-<nav class="sidebar-nav">
-  <ul>
-    <li>
-      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
-        <i class="icon">🏠</i> Dashboard
-      </a>
-    </li>
-    <li>
-      <a routerLink="/my-batches" routerLinkActive="active" class="nav-item">
-        <i class="icon">📦</i> My Batches
-      </a>
-    </li>
-    <li>
-      <a routerLink="/create-batch" routerLinkActive="active" class="nav-item">
-        <i class="icon">➕</i> Create Batch
-      </a>
-    </li>
-    <li>
-      <a routerLink="/duplicate-batch" routerLinkActive="active" class="nav-item">
-        <i class="icon">📋</i> Duplicate Batch
-      </a>
-    </li>
-    <li>
-      <a routerLink="/delete-batch" routerLinkActive="active" class="nav-item">
-        <i class="icon">🗑️</i> Delete Batch
-      </a>
-    </li>
-  </ul>
+<div class="sidenav-layout">
 
-  <div class="logout">
-    <a routerLink="/login" class="nav-item logout-link">
-      <i class="icon">⬅️</i> Log Out
-    </a>
-  </div>
-</nav>
+  <aside class="sidebar">
+    <nav class="sidebar-nav">
+      <ul>
+        <li>
+          <a routerLink="/sidenav/dashboard" routerLinkActive="active" class="nav-item">
+            <i class="icon">🏠</i> Dashboard
+          </a>
+        </li>
+        <li>
+          <a routerLink="/sidenav/my-batches" routerLinkActive="active" class="nav-item">
+            <i class="icon">📦</i> My Batches
+          </a>
+        </li>
+        <li>
+          <a routerLink="/sidenav/create-batch" routerLinkActive="active" class="nav-item">
+            <i class="icon">➕</i> Create Batch
+          </a>
+        </li>
+        <li>
+          <a routerLink="/sidenav/details-batch" routerLinkActive="active" class="nav-item">
+            <i class="icon">📋</i> Duplicate Batch
+          </a>
+        </li>
+        <li>
+          <a routerLink="/sidenav/delete-batch" routerLinkActive="active" class="nav-item">
+            <i class="icon">🗑️</i> Delete Batch
+          </a>
+        </li>
+      </ul>
+
+      <div class="logout">
+        <a routerLink="/login" class="nav-item logout-link">
+          <i class="icon">⬅️</i> Log Out
+        </a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="content-area">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>

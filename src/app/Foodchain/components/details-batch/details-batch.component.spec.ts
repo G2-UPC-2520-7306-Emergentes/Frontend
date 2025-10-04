@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DashboardComponent } from './dashboard.component';
+import { DetailsBatchComponent } from './details-batch.component';
 
-describe('DashboardComponent', () => {
-  let component: DashboardComponent;
-  let fixture: ComponentFixture<DashboardComponent>;
+describe('DetailsBatchComponent', () => {
+  let component: DetailsBatchComponent;
+  let fixture: ComponentFixture<DetailsBatchComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DashboardComponent]
+      imports: [DetailsBatchComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DashboardComponent);
+    fixture = TestBed.createComponent(DetailsBatchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

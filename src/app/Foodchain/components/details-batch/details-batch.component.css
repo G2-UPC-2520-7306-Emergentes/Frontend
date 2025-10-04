@@ -1,0 +1,203 @@
+/* --- Estilos Generales y Contenedor --- */
+.page-content {
+  padding: 40px;
+  background-color: #f8fcf8;
+  min-height: 100vh;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+.batch-detail-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.lot-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1a4314; /* Verde oscuro */
+  margin-bottom: 5px;
+}
+
+.lot-description {
+  color: #666;
+  margin-bottom: 25px;
+}
+
+/* --- Pestañas de Navegación --- */
+.tabs-navigation {
+  display: flex;
+  border-bottom: 2px solid #eee;
+  margin-bottom: 30px;
+}
+
+.tab-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  color: #777;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+  border-bottom: 3px solid transparent;
+  border-radius: 6px 6px 0 0;
+}
+
+.tab-item:hover:not(.active) {
+  background-color: #f1fff1;
+}
+
+.tab-item.active {
+  color: #1a4314;
+  border-bottom: 3px solid #50e37a; /* Verde brillante */
+}
+
+/* --- Pestaña: Lot Summary Grid --- */
+.summary-grid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 40px;
+  padding-top: 20px;
+}
+
+.summary-details h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a4314;
+  margin-bottom: 25px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.label {
+  font-weight: 500;
+  color: #333;
+}
+
+.value {
+  font-weight: 400;
+  color: #555;
+  text-align: right;
+}
+
+.detail-id .value {
+  font-weight: 600;
+  color: #007bff; /* Azul para IDs */
+}
+
+/* Estilos para el estado (usando la clase dinámica state-active/state-draft) */
+.state-active {
+  font-weight: 700;
+  color: #28a745; /* Verde para activo */
+  background-color: #e6ffe6;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.state-draft {
+  font-weight: 700;
+  color: #ffc107; /* Amarillo para borrador */
+  background-color: #fffbe6;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.copy-button {
+  background-color: #1a4314;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 30px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+  box-shadow: 0 4px 10px rgba(26, 67, 20, 0.3);
+}
+
+.copy-button:hover {
+  background-color: #285422;
+}
+
+.summary-image-wrapper {
+  background-color: #e5f5e5;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.lot-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- Contenido Placeholder (History/QR) --- */
+.placeholder-content {
+  text-align: center;
+  padding: 50px 20px;
+  background-color: #f7fff7;
+  border: 1px dashed #c8e6c9;
+  border-radius: 8px;
+  color: #555;
+}
+
+/* --- Estados de carga y error --- */
+.state-message {
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: center;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.loading {
+  background-color: #e0f7fa;
+  color: #00796b;
+}
+.error {
+  background-color: #ffe0e0;
+  color: #d32f2f;
+  border: 1px solid #d32f2f;
+}
+
+/* --- Responsiveness --- */
+@media (max-width: 768px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+  .summary-image-wrapper {
+    order: -1;
+    height: 200px;
+    margin-bottom: 20px;
+  }
+  .lot-title {
+    font-size: 24px;
+  }
+  .page-content {
+    padding: 20px 10px;
+  }
+  .tabs-navigation {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tab-item {
+    flex-shrink: 0;
+  }
+  .batch-detail-container {
+    padding: 20px;
+  }
+}

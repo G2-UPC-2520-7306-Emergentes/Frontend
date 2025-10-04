@@ -1,53 +1,43 @@
-.sidebar-nav {
-  width: 220px; /* Ancho fijo del sidebar */
-  background-color: white;
-  border-right: 1px solid #e5f5e5;
-  padding: 20px 0;
-  height: 100%; /* Ocupa el 100% de la altura de su contenedor flex */
+/* Use Flexbox for a simple side-by-side layout */
+.sidenav-layout {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* CLAVE: Empuja el logout al final */
-  box-sizing: border-box;
+  height: 100vh; /* Takes up the full height of the viewport */
 }
 
+/* Style for the fixed sidebar */
+.sidebar {
+  width: 250px; /* Fixed width for the menu */
+  background-color: #f7f7f7; /* Light background for the menu */
+  padding-top: 20px;
+  flex-shrink: 0; /* Prevents sidebar from shrinking */
+}
+
+/* Style for the main content area, which takes the remaining space */
+.content-area {
+  flex-grow: 1; /* Allows the content to fill the rest of the screen */
+  padding: 30px; /* Padding inside the content area */
+  overflow-y: auto; /* Allows scrolling if content is long */
+}
+
+/* Ensure your nav styles are applied (optional, just for context) */
 .sidebar-nav ul {
   list-style: none;
   padding: 0;
-  margin: 0;
 }
-
 .nav-item {
   display: flex;
   align-items: center;
-  padding: 12px 20px;
-  color: #1a4314;
+  padding: 10px 15px;
   text-decoration: none;
-  font-size: 16px;
-  transition: background-color 0.2s;
+  color: #333;
 }
-
 .nav-item:hover {
-  background-color: #f0f8f0;
-  color: #50e37a;
+  background-color: #e0e0e0;
 }
-
 .nav-item.active {
-  background-color: #e5f5e5;
-  color: #50e37a;
-  border-left: 4px solid #50e37a;
-  padding-left: 16px;
+  background-color: #d0d0d0;
+  font-weight: bold;
 }
-
 .icon {
   margin-right: 10px;
-  font-size: 18px;
-}
-
-.logout {
-  padding: 20px 0;
-  border-top: 1px solid #e5f5e5;
-}
-
-.logout-link {
-  color: #e35050;
 }

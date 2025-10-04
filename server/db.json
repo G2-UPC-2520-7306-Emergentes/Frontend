@@ -1,0 +1,14 @@
+{
+  "batches": [
+    {
+      "id": "LOT-2023-10-26-001",
+      "lotName": "Lot 2023-10-26",
+      "farmName": "Green Acres Farm",
+      "variety": "Heirloom Tomatoes",
+      "harvestDate": "2023-10-26",
+      "createdDate": "2023-10-25 14:30",
+      "state": "Active",
+      "imageUrl": "assets/images/farm_photo.jpg"
+    }
+  ]
+}
