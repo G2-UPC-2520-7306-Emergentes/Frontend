@@ -1,0 +1,87 @@
+<div class="user-registration-container">
+  <div class="header-section">
+    <h2>Registrar Nuevo Usuario</h2>
+    <p class="description">Asigna un rol específico con permisos correspondientes</p>
+  </div>
+
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+
+    <div class="info-section-card">
+      <h3>Información del Usuario</h3>
+      <p class="section-subtitle">Completa los datos del nuevo usuario</p>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="nombreCompleto">Nombre Completo</label>
+          <input id="nombreCompleto" type="text" formControlName="nombreCompleto">
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" type="email" formControlName="email">
+        </div>
+
+        <div class="form-group">
+          <label for="telefono">Teléfono</label>
+          <input id="telefono" type="tel" formControlName="telefono">
+        </div>
+
+        <div class="form-group">
+          <label for="empresa">Empresa/Organización</label>
+          <input id="empresa" type="text" formControlName="empresa">
+        </div>
+      </div>
+    </div>
+
+    <div class="role-section">
+      <div class="form-group role-dropdown">
+        <label for="rol">Rol de Usuario</label>
+        <div class="input-with-icon">
+          <i class="fas fa-box role-icon"></i>
+          <select id="rol" formControlName="rol">
+            <option *ngFor="let role of roles" [value]="role.value">
+              {{ role.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="permissions-block">
+        <div class="permissions-block">
+          <div class="permissions-header">
+            <i class="fas fa-shield-alt"></i> Permisos del Rol: Distribuidor
+          </div>
+          <ul class="permissions-list">
+            <li *ngFor="let permission of selectedPermissions">
+              <i class="fas fa-check-circle check-icon"></i> {{ permission.description }}
+            </li>
+          </ul>
+        </div>
+        <ul class="permissions-list">
+          <li *ngFor="let permission of selectedPermissions">
+            <i class="fas fa-check-circle check-icon"></i> {{ permission.description }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button type="submit" [disabled]="userForm.invalid || isLoading" class="create-user-button">
+        <i class="fas fa-user-plus"></i> {{ isLoading ? 'Creando...' : 'Crear Usuario' }}
+      </button>
+      <button type="button" (click)="cancelCreation()" class="cancel-button" [disabled]="isLoading">
+        Cancelar
+      </button>
+    </div>
+
+  </form>
+
+  <div class="info-footer-block">
+    <h3>Información</h3>
+    <p>Los usuarios solo podrán acceder a las funciones permitidas por su rol.</p>
+    <p>Puedes cambiar el rol de un usuario en cualquier momento desde la gestión de usuarios.</p>
+  </div>
+
+
+
+</div>

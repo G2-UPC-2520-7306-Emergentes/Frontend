@@ -1,0 +1,58 @@
+<div class="edit-form-container">
+  <h2>Editar información de lote</h2>
+  <p class="description">Modifica los detalles básicos de tu lote activo.</p>
+
+  <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+      <label for="nombreLote">Nombre del lote</label>
+      <input id="nombreLote" type="text" formControlName="nombreLote">
+    </div>
+
+    <div class="form-group">
+      <label for="nombreFinca">Nombre de la finca</label>
+      <input id="nombreFinca" type="text" formControlName="nombreFinca">
+    </div>
+
+    <div class="form-group">
+      <label for="variedad">Variedad</label>
+      <input id="variedad" type="text" formControlName="variedad">
+    </div>
+
+    <div class="form-group">
+      <label for="fechaCosecha">Fecha de cosecha</label>
+      <div class="input-with-icon">
+        <input id="fechaCosecha" type="date" formControlName="fechaCosecha" placeholder="AAAA-MM-DD">
+        <i class="fas fa-calendar-alt calendar-icon"></i>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="descripcion">Descripción o notas</label>
+      <textarea id="descripcion" formControlName="descripcion" rows="5"></textarea>
+    </div>
+
+    <div class="image-upload-area">
+      <p class="upload-text">
+        Imagen representativa (opcional)
+      </p>
+      <p class="upload-subtext">
+        Arrastra y suelta un archivo aquí o busca un archivo
+      </p>
+      <button type="button" class="search-file-button">Buscar archivo</button>
+    </div>
+
+    <p class="trazability-message">
+      Los cambios se firmarán digitalmente y se registrarán en blockchain para garantizar la integridad y trazabilidad de la información.
+    </p>
+
+    <div class="action-buttons">
+      <button type="submit" [disabled]="editForm.invalid || isLoading" class="save-button">
+        {{ isLoading ? 'Guardando...' : 'Guardar cambios' }}
+      </button>
+      <button type="button" (click)="cancelEdit()" class="cancel-button" [disabled]="isLoading">
+        Cancelar
+      </button>
+    </div>
+  </form>
+</div>

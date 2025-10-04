@@ -1,0 +1,20 @@
+<h2>Duplicar Lote</h2>
+
+<div *ngIf="errorMessage" class="error-message">
+  {{ errorMessage }}
+</div>
+
+<div *ngFor="let batch of availableBatches" class="batch-card">
+  <div class="batch-info">
+    <h3>{{ batch.lotName }}</h3>
+    <p>Fecha de creación: {{ batch.createdDate }}</p>
+    <p>{{ batch.varietyAndFarm }}</p>
+    <p>Estado: <strong>{{ batch.state }}</strong></p>
+
+    <button (click)="duplicateBatch(batch.id)">Duplicar</button>
+  </div>
+
+  <div class="batch-image">
+    <img [src]="batch.imageUrl" alt="Imagen de {{ batch.lotName }}">
+  </div>
+</div>

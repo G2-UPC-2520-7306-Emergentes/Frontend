@@ -1,0 +1,165 @@
+/* ------------------------------------------- */
+/* ESTILOS DE CONTENEDOR Y TÍTULO */
+/* ------------------------------------------- */
+.edit-form-container {
+  max-width: 700px; /* Ancho máximo para el formulario */
+  margin: 30px auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+  font-size: 1.8em;
+  font-weight: 600;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+.description {
+  color: #555;
+  margin-bottom: 25px;
+  font-size: 0.95em;
+}
+
+/* ------------------------------------------- */
+/* ESTILOS DE LOS GRUPOS DE FORMULARIO */
+/* ------------------------------------------- */
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="date"],
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Incluye padding y borde en el ancho */
+  font-size: 1em;
+  color: #333;
+  transition: border-color 0.2s;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #1a4314; /* Color de enfoque */
+  outline: none;
+  box-shadow: 0 0 0 1px #a4d8a1;
+}
+
+/* Manejo del input de fecha con icono */
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon input[type="date"] {
+  padding-right: 35px; /* Deja espacio para el icono */
+}
+
+/* Estilo para el ícono (requiere Font Awesome o similar) */
+.calendar-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  pointer-events: none; /* Asegura que el clic pase al input */
+}
+
+/* ------------------------------------------- */
+/* ÁREA DE CARGA DE IMAGEN (DRAG & DROP) */
+/* ------------------------------------------- */
+.image-upload-area {
+  text-align: center;
+  padding: 40px 20px;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  background-color: #fcfcfc;
+}
+
+.upload-text {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.upload-subtext {
+  color: #777;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 0.9em;
+}
+
+.search-file-button {
+  background-color: #eee;
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-file-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* ------------------------------------------- */
+/* MENSAJE DE TRAZABILIDAD Y BOTONES */
+/* ------------------------------------------- */
+.trazability-message {
+  font-size: 0.85em;
+  color: #777;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+  margin-bottom: 25px;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-start;
+  gap: 15px;
+}
+
+.save-button,
+.cancel-button {
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, background-color 0.2s;
+}
+
+.save-button {
+  background-color: #388e3c; /* Verde principal */
+  color: white;
+  border: none;
+}
+
+.save-button:disabled {
+  background-color: #a4d8a1;
+  cursor: not-allowed;
+}
+
+.cancel-button {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.cancel-button:hover:not(:disabled) {
+  background-color: #e0e0e0;
+}

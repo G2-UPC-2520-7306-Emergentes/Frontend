@@ -1,0 +1,94 @@
+<div class="profile-container">
+  <div class="content-grid">
+
+    <div class="profile-form-area">
+      <!-- CONTENEDOR NUEVO: Título y Botón -->
+      <div class="header-actions">
+        <h2>Mi Perfil</h2>
+        <button (click)="addUser()" class="add-user-button">
+          <i class="fas fa-user-plus"></i> Agregar usuario
+        </button>
+      </div>
+      <p class="description">Actualiza tu información personal y genera tu firma digital.</p>
+
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmitAndGenerateSignature()">
+
+        <div class="form-group">
+          <label for="nombreCompleto">Nombre Completo</label>
+          <input id="nombreCompleto" type="text" formControlName="nombreCompleto">
+        </div>
+
+        <div class="form-group">
+          <label for="correoElectronico">Correo Electrónico</label>
+          <input id="correoElectronico" type="email" formControlName="correoElectronico">
+        </div>
+
+        <div class="form-group">
+          <label for="telefono">Teléfono</label>
+          <input id="telefono" type="tel" formControlName="telefono">
+        </div>
+
+        <div class="form-group">
+          <label for="empresa">Empresa</label>
+          <input id="empresa" type="text" formControlName="empresa">
+        </div>
+
+        <div class="form-group">
+          <label for="cargo">Cargo</label>
+          <input id="cargo" type="text" formControlName="cargo">
+        </div>
+
+        <div class="action-buttons">
+          <button type="submit" [disabled]="profileForm.invalid || isLoading" class="save-signature-button">
+            {{ isLoading ? 'Guardando...' : 'Guardar y Generar Firma Digital' }}
+          </button>
+          <button type="button" (click)="cancelEdit()" class="cancel-button" [disabled]="isLoading">
+            Cancelar
+          </button>
+        </div>
+
+        <p class="signature-note">
+          A partir de ahora, los eventos que registres incluirán esta firma digital.
+        </p>
+
+        <div class="current-signature-area">
+          <h3>Firma Digital Actual</h3>
+          <div class="signature-image-placeholder">
+            <p>Tu firma digital generada aparecerá aquí.</p>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="signature-info-area">
+
+      <div class="info-block">
+        <h3>¿Qué es una Firma Digital?</h3>
+        <div class="definition-grid">
+          <div class="definition-item">
+            <h4 class="green-text">Autenticidad</h4>
+            <p>Confirma la identidad del firmante. No repudio impide la negación de la firma.</p>
+          </div>
+          <div class="definition-item">
+            <h4 class="green-text">Integridad</h4>
+            <p>Asegura que los datos no han sido alterados.</p>
+            <h4 class="green-text">Trazabilidad verificable</h4>
+            <p>Proporciona un registro verificable.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="history-block">
+        <h3>Historial de Firmas</h3>
+        <div *ngFor="let item of signatureHistory" class="history-item">
+          <p class="hash-text">Hash: {{ item.hash }} ({{ item.status }})</p>
+          <p class="details-text">Eventos Firmados: {{ item.eventsCount }} | Generada: {{ item.generatedDate }}</p>
+        </div>
+        <p class="history-note">
+          Las firmas anteriores siguen siendo válidas para sus eventos.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>

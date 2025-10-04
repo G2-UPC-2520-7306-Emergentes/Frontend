@@ -1,0 +1,180 @@
+/* ------------------------------------------- */
+/* SECCIÓN PRINCIPAL Y ENCABEZADO */
+/* ------------------------------------------- */
+:host {
+  display: block;
+  padding: 20px 30px;
+  background-color: #fcfcfc;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 1.8em;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.title-and-description p {
+  color: #666;
+  margin: 5px 0 0 0;
+  font-size: 0.9em;
+}
+
+.create-button {
+  background-color: #1a4314; /* Verde FoodChain */
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.create-button:hover {
+  background-color: #276221;
+}
+
+/* ------------------------------------------- */
+/* BARRA DE HERRAMIENTAS */
+/* ------------------------------------------- */
+.toolbar-section {
+  display: flex;
+  justify-content: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 20px;
+}
+
+.toolbar-icons {
+  /* Aquí iría el input de búsqueda si lo incluyes en el HTML */
+  display: flex;
+  align-items: center;
+}
+
+.icon-button {
+  font-size: 1.1em;
+  color: #666;
+  margin-right: 15px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.icon-button:hover {
+  color: #1a4314;
+}
+
+/* ------------------------------------------- */
+/* ESTILOS DE TABLA */
+/* ------------------------------------------- */
+.table-responsive {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background-color: #f9f9f9;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9em;
+  color: #333;
+}
+
+th {
+  font-weight: 600;
+  color: #555;
+}
+
+tbody tr:hover {
+  background-color: #f5fff5;
+}
+
+/* ------------------------------------------- */
+/* ETIQUETAS DE ESTADO */
+/* ------------------------------------------- */
+
+.status-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 0.8em;
+  font-weight: 600;
+  text-align: center;
+}
+
+.status-tag.active {
+  background-color: #e5f5e3; /* Verde claro */
+  color: #388e3c; /* Texto verde */
+}
+
+.status-tag.closed {
+  background-color: #fce4ec; /* Rojo/Rosa claro */
+  color: #c2185b; /* Texto rojo/vino */
+}
+
+.status-tag.review {
+  background-color: #fff3e0; /* Naranja claro */
+  color: #f57f17; /* Texto naranja */
+}
+
+/* ------------------------------------------- */
+/* ENLACES DE ACCIÓN */
+/* ------------------------------------------- */
+.action-links a {
+  color: #1a4314; /* Verde FoodChain */
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s;
+  white-space: nowrap; /* Evita que los enlaces se rompan en varias líneas */
+}
+
+.action-links a:hover {
+  color: #0d280c;
+  text-decoration: underline;
+}
+
+/* ------------------------------------------- */
+/* PAGINACIÓN */
+/* ------------------------------------------- */
+.pagination-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 0;
+  margin-top: 10px;
+}
+
+.pagination-section a {
+  color: #666;
+  text-decoration: none;
+  padding: 5px 10px;
+  margin: 0 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  font-size: 0.9em;
+}
+
+.pagination-section a:hover {
+  background-color: #eee;
+}
+
+.pagination-section a.active-page {
+  background-color: #1a4314;
+  color: white;
+  font-weight: bold;
+}

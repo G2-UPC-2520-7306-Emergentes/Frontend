@@ -1,0 +1,119 @@
+/* ------------------------------------------- */
+/* ESTILOS GENERALES Y TÍTULO */
+/* ------------------------------------------- */
+:host {
+  display: block;
+  padding: 20px;
+  background-color: #f7f7f7; /* Fondo ligero para contraste */
+}
+
+h2 {
+  font-size: 2em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+/* ------------------------------------------- */
+/* ESTILOS DE LA TARJETA INDIVIDUAL (batch-card) */
+/* ------------------------------------------- */
+.batch-card {
+  display: flex; /* Usamos flexbox para alinear texto e imagen */
+  align-items: center; /* Centrar verticalmente */
+  justify-content: space-between; /* Espaciar el contenido */
+
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Sombra suave */
+  transition: transform 0.2s;
+}
+
+.batch-card:hover {
+  transform: translateY(-3px); /* Efecto de elevación al pasar el ratón */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Contenedor de la información textual (izquierda) */
+.batch-info {
+  flex-grow: 1; /* Permite que ocupe el espacio disponible */
+}
+
+.batch-info h3 {
+  font-size: 1.25em;
+  font-weight: 600;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.batch-info p {
+  font-size: 0.95em;
+  color: #555;
+  margin: 4px 0;
+}
+
+/* Estilo para el estado 'Activo' (usando el color verde de tu tema) */
+.batch-info p strong {
+  font-weight: bold;
+  color: #1a4314; /* Verde FoodChain */
+}
+
+
+/* ------------------------------------------- */
+/* ESTILOS DE IMAGEN Y BOTÓN */
+/* ------------------------------------------- */
+
+/* Contenedor de la imagen (derecha) */
+.batch-image {
+  width: 150px; /* Ancho fijo para la imagen */
+  height: 100px;
+  margin-left: 20px;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.batch-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Asegura que la imagen cubra el contenedor sin distorsionarse */
+  display: block;
+}
+
+/* Estilos del botón Duplicar (basado en el estilo de tu imagen) */
+button {
+  background-color: #e6f7e4; /* Fondo verde muy claro */
+  color: #1a4314; /* Texto verde oscuro */
+  border: 1px solid #1a4314; /* Borde verde */
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  margin-top: 10px; /* Espacio superior */
+}
+
+button:hover {
+  background-color: #d6f2d4; /* Un poco más oscuro al pasar el ratón */
+  color: #0d280c;
+}
+
+/* ------------------------------------------- */
+/* MEDIA QUERIES (Ajuste para móviles) */
+/* ------------------------------------------- */
+
+@media (max-width: 600px) {
+  .batch-card {
+    flex-direction: column; /* Apilar elementos en pantallas pequeñas */
+    align-items: flex-start;
+  }
+
+  .batch-image {
+    width: 100%; /* Imagen a ancho completo */
+    height: 150px;
+    margin-top: 15px;
+    margin-left: 0;
+  }
+}

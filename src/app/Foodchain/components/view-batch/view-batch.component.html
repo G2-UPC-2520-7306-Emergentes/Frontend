@@ -1,0 +1,71 @@
+<div class="batch-list-container">
+  <div class="header-section">
+    <div class="title-and-description">
+      <h2>Mis Lotes</h2>
+      <p>Visualiza y gestiona tus lotes de productos.</p>
+    </div>
+
+    <button class="create-button">
+      <i class="fas fa-plus"></i> Crear Nuevo Lote
+    </button>
+  </div>
+
+  <div class="toolbar-section">
+    <div class="toolbar-icons">
+      <i class="fas fa-search icon-button"></i>
+      <i class="fas fa-filter icon-button"></i>
+      <i class="fas fa-calendar-alt icon-button"></i>
+      <i class="fas fa-download icon-button"></i>
+      <i class="fas fa-bars icon-button"></i>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table>
+      <thead>
+      <tr>
+        <th>Lote</th>
+        <th>Estado</th>
+        <th>Fecha de creación</th>
+        <th>Última actividad</th>
+        <th>Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let batch of availableBatches">
+        <td>{{ batch.lote }}</td>
+        <td>
+                        <span class="status-tag"
+                              [class.active]="batch.estado === 'Activo'"
+                              [class.closed]="batch.estado === 'Cerrado'"
+                              [class.review]="batch.estado === 'En Revisión'">
+                            {{ batch.estado }}
+                        </span>
+        </td>
+        <td>{{ batch.fechaCreacion }}</td>
+        <td>{{ batch.ultimaActividad }}</td>
+        <td class="action-links">
+          <a (click)="viewDetail(batch.id)">Ver detalle</a> |
+          <a (click)="editBatch(batch.id)">Editar</a> |
+          <a (click)="generateQR(batch.id)">Generar QR</a>
+          <ng-container *ngIf="batch.estado === 'Activo'">
+            | <a (click)="closeBatch(batch.id)">Cerrar lote</a>
+          </ng-container>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination-section">
+    <i class="fas fa-angle-left icon-button"></i>
+    <span>
+            <a [class.active-page]="currentPage === 1">1</a>
+            <a [class.active-page]="currentPage === 2">2</a>
+            <a [class.active-page]="currentPage === 3">3</a>
+            ...
+            <a [class.active-page]="currentPage === 13">13</a>
+        </span>
+    <i class="fas fa-angle-right icon-button"></i>
+  </div>
+</div>

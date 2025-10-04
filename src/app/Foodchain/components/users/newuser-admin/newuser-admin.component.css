@@ -1,0 +1,244 @@
+/* ------------------------------------------- */
+/* SECCIÓN PRINCIPAL Y ENCABEZADO */
+/* ------------------------------------------- */
+.user-registration-container {
+  max-width: 800px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.header-section {
+  margin-bottom: 25px;
+}
+
+h2 {
+  font-size: 1.8em;
+  font-weight: 600;
+  color: #333;
+  margin-top: 0;
+}
+
+.description {
+  color: #555;
+  margin-bottom: 0;
+  font-size: 0.95em;
+}
+
+/* ------------------------------------------- */
+/* TARJETA DE INFORMACIÓN DEL USUARIO */
+/* ------------------------------------------- */
+.info-section-card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.info-section-card h3 {
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+.section-subtitle {
+  color: #777;
+  margin-bottom: 20px;
+  font-size: 0.9em;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas */
+  gap: 20px;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 1em;
+  color: #333;
+}
+
+input:focus,
+select:focus {
+  border-color: #1a4314;
+  outline: none;
+  box-shadow: 0 0 0 1px #a4d8a1;
+}
+
+/* ------------------------------------------- */
+/* SECCIÓN DE ROL Y PERMISOS */
+/* ------------------------------------------- */
+
+.role-section {
+  margin-bottom: 30px;
+}
+
+/* Estilos del Dropdown de Rol */
+.role-dropdown {
+  max-width: 50%;
+}
+
+.role-dropdown .input-with-icon {
+  position: relative;
+}
+
+.role-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  pointer-events: none;
+}
+
+.role-dropdown select {
+  padding-left: 35px; /* Espacio para el icono */
+  /* Asegura que la flecha del dropdown se mantenga */
+  -webkit-appearance: menulist;
+}
+
+/* Bloque de Permisos */
+.permissions-block {
+  background-color: #fff8ee; /* Fondo naranja muy claro */
+  border: 1px solid #ffcc80; /* Borde naranja */
+  border-radius: 6px;
+  padding: 15px;
+  margin-top: 20px;
+}
+
+.permissions-header {
+  color: #e65100; /* Texto naranja oscuro */
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: 1em;
+}
+
+.permissions-header .fa-shield-alt {
+  margin-right: 8px;
+}
+
+.permissions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.permissions-list li {
+  color: #333;
+  font-size: 0.9em;
+  flex-basis: calc(50% - 15px); /* Dos columnas en la lista */
+  display: flex;
+  align-items: center;
+}
+
+.check-icon {
+  color: #e65100; /* Iconos naranja */
+  margin-right: 8px;
+}
+
+/* ------------------------------------------- */
+/* BOTONES DE ACCIÓN */
+/* ------------------------------------------- */
+.action-buttons {
+  display: flex;
+  justify-content: flex-start;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.create-user-button,
+.cancel-button {
+  padding: 12px 25px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, background-color 0.2s;
+  font-size: 1em;
+}
+
+.create-user-button {
+  background-color: #000; /* Botón Crear Negro */
+  color: white;
+  border: none;
+}
+
+.create-user-button:disabled {
+  background-color: #666;
+  cursor: not-allowed;
+}
+
+.cancel-button {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.cancel-button:hover:not(:disabled) {
+  background-color: #e0e0e0;
+}
+
+/* ------------------------------------------- */
+/* BLOQUE DE INFORMACIÓN INFERIOR */
+/* ------------------------------------------- */
+
+.info-footer-block {
+  background-color: #e3f2fd; /* Fondo azul claro */
+  border: 1px solid #90caf9; /* Borde azul */
+  border-radius: 6px;
+  padding: 20px;
+  margin-top: 30px;
+}
+
+.info-footer-block h3 {
+  color: #1e88e5; /* Título azul */
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.1em;
+}
+
+.info-footer-block p {
+  color: #333;
+  margin: 5px 0;
+  font-size: 0.9em;
+}
+
+/* ------------------------------------------- */
+/* MEDIA QUERIES */
+/* ------------------------------------------- */
+@media (max-width: 700px) {
+  .form-grid {
+    grid-template-columns: 1fr; /* Una sola columna en móvil */
+  }
+  .role-dropdown {
+    max-width: 100%;
+  }
+  .permissions-list li {
+    flex-basis: 100%; /* Una sola columna en permisos */
+  }
+}

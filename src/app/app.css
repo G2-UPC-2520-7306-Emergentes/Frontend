@@ -1,5 +1,95 @@
 
 
+/* ---------------------------------- */
+/* 1. ESTILOS BASE (MODO CLARO)       */
+/* ---------------------------------- */
+
+/* El cuerpo por defecto es claro */
+body {
+  background-color: #f0f2f5; /* Fondo claro de la página */
+  color: #333;               /* Texto principal oscuro */
+}
+
+/* Contenedor principal del contenido */
+.page-layout {
+  background-color: #f0f2f5;
+  min-height: 100vh;
+}
+
+/* Contenido principal (donde se cargan los componentes) */
+.main-content {
+  background-color: #ffffff; /* El área principal del componente es blanca */
+  /* Ajusta el padding según necesites */
+}
+
+/* Estilo para tarjetas o contenedores secundarios */
+.info-section-card,
+.permissions-block {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+}
+
+
+/* ---------------------------------- */
+/* 2. ESTILOS PARA MODO OSCURO (CLASE .dark-theme) */
+/* ---------------------------------- */
+
+/* Cuando el BODY tiene la clase dark-theme */
+body.dark-theme {
+  background-color: #121212; /* Fondo muy oscuro */
+  color: #e0e0e0;             /* Texto principal claro */
+}
+
+body.dark-theme .page-layout {
+  background-color: #121212;
+}
+
+body.dark-theme .main-content {
+  background-color: #1e1e1e; /* Fondo de componente un poco más claro que el fondo de página */
+}
+
+/* Sobrescribe estilos de tarjetas e inputs */
+body.dark-theme .info-section-card,
+body.dark-theme .permissions-block {
+  background-color: #2c2c2c;
+  border: 1px solid #3a3a3a;
+  box-shadow: none; /* Quitamos sombras claras en modo oscuro */
+}
+
+/* Inputs y Textareas */
+body.dark-theme input[type="text"],
+body.dark-theme input[type="email"],
+body.dark-theme input[type="tel"],
+body.dark-theme select,
+body.dark-theme textarea {
+  background-color: #3a3a3a;
+  border-color: #555;
+  color: #f0f0f0;
+}
+
+/* Texto verde (para enlaces o títulos destacados) */
+body.dark-theme .green-text {
+  color: #90ee90;
+}
+
+/* ---------------------------------- */
+/* 3. TU MEDIA QUERY EXISTENTE (MANTENIDA) */
+/* ---------------------------------- */
+
+@media (max-width: 600px) {
+  .app-footer {
+    flex-direction: column;
+    text-align: center;
+    padding: 15px 15px;
+  }
+
+  .app-footer p {
+    white-space: normal;
+    text-overflow: clip;
+    overflow: visible;
+  }
+}
+
 
 /* Media Query para Móviles (solución responsive) */
 @media (max-width: 600px) {
