@@ -1,0 +1,162 @@
+.register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  background-color: #f7fff7; /* Fondo verde muy claro */
+}
+
+.header-section {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.title {
+  font-size: 32px;
+  color: #1a4314;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  color: #555;
+  font-size: 16px;
+}
+
+.register-form {
+  width: 100%;
+  max-width: 900px; /* Ancho máximo para la vista de dos columnas */
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.form-grid {
+  display: flex;
+  gap: 40px; /* Espacio entre las dos columnas */
+  margin-bottom: 20px;
+}
+
+.column {
+  flex: 1; /* Distribuye el espacio equitativamente */
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #1a4314;
+}
+
+.input-field, .select-field {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #c8e6c9;
+  background-color: #e5f5e5; /* Fondo verde claro del input */
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.input-field:focus, .select-field:focus {
+  outline: none;
+  border-color: #50e37a;
+  background-color: #fff;
+}
+
+/* Estilos de Radio y Checkbox */
+.radio-group {
+  background-color: #e5f5e5;
+  border: 1px solid #c8e6c9;
+  border-radius: 6px;
+  padding: 10px 15px;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.radio-label input[type="radio"] {
+  margin-right: 10px;
+}
+
+.checkbox-group {
+  margin-bottom: 15px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+  font-size: 14px;
+}
+
+.checkbox-label input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.link {
+  color: #50e37a;
+  text-decoration: none;
+}
+
+/* Botón y Sección Inferior */
+.create-account-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #50e37a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s;
+}
+
+.create-account-button:disabled {
+  background-color: #a3d9a3;
+  cursor: not-allowed;
+}
+
+.links-bottom {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.links-bottom .link {
+  margin: 0 10px;
+  font-size: 14px;
+}
+
+.note {
+  font-size: 12px;
+  color: #777;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.validation-error {
+  color: #e35050;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* Responsive para pasar a una columna en móvil */
+@media (max-width: 800px) {
+  .form-grid {
+    flex-direction: column;
+    gap: 0;
+  }
+}

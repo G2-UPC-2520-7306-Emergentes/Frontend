@@ -1,0 +1,152 @@
+<div class="register-container">
+  <div class="header-section">
+    <h1 class="title">Create Account</h1>
+    <p class="subtitle">Join FoodChain and start managing your food supply chain efficiently.</p>
+  </div>
+
+  <form #registerForm (submit)="onSubmit(registerForm)" class="register-form">
+
+    <div class="form-grid">
+      <div class="column">
+
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input
+            id="firstName"
+            type="text"
+            placeholder="Enter your first name"
+            name="firstName"
+            required
+            class="input-field">
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input
+            id="lastName"
+            type="text"
+            placeholder="Enter your last name"
+            name="lastName"
+            required
+            class="input-field">
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            placeholder="Enter your email"
+            name="email"
+            required
+            class="input-field">
+        </div>
+
+        <div class="form-group">
+          <label for="companyName">Company Name</label>
+          <input
+            id="companyName"
+            type="text"
+            placeholder="Enter company name"
+            name="companyName"
+            required
+            class="input-field">
+        </div>
+
+        <div class="form-group">
+          <label for="taxId">Tax ID (Optional)</label>
+          <input
+            id="taxId"
+            type="text"
+            placeholder="Enter tax ID"
+            name="taxId"
+            class="input-field">
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="form-group">
+          <label>Company</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" value="join" name="companyOption" required checked>
+              Join My Company
+            </label>
+            <label class="radio-label">
+              <input type="radio" value="create" name="companyOption" required>
+              Create My Company
+            </label>
+          </div>
+        </div>
+
+        <div class="password-group">
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              placeholder="Enter your password"
+              name="password"
+              required
+              minlength="8"
+              class="input-field">
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input
+              id="confirmPassword"
+              type="password"
+              placeholder="Confirm your password"
+              name="confirmPassword"
+              required
+              class="input-field">
+
+            <div *ngIf="isPasswordMismatch(registerForm)" class="validation-error">
+              Passwords do not match.
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="role">Requested Role (Proposed)</label>
+          <select
+            id="role"
+            name="requestedRole"
+            required
+            class="input-field select-field">
+            <option value="" disabled selected>Select role</option>
+            <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-form-section">
+      <p class="note">Note: Your final permissions will be assigned by an administrator.</p>
+
+      <div class="checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" name="agreement" required>
+          I agree to the <a href="#" class="link">Terms of Use</a> and <a href="#" class="link">Privacy Policy</a>
+        </label>
+      </div>
+
+      <div class="checkbox-group recaptcha-placeholder">
+        <label class="checkbox-label">
+          <input type="checkbox" name="recaptcha" required>
+          reCAPTCHA placeholder
+        </label>
+      </div>
+
+      <button type="submit" class="create-account-button">
+        Create Account
+      </button>
+
+      <div class="links-bottom">
+        <a routerLink="/login" class="link">Already have an account? Sign in</a>
+        <a href="#" class="link">Forgot your password?</a>
+      </div>
+    </div>
+  </form>
+</div>
