@@ -1,0 +1,120 @@
+.recover-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 80px); /* Ajusta si tienes header/footer */
+  background-color: #f7fff7;
+  padding: 50px 20px;
+}
+
+.step-content {
+  width: 100%;
+  max-width: 450px; /* Ancho similar al de tus imágenes */
+  text-align: center;
+  background-color: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.title {
+  font-size: 28px;
+  color: #1a4314; /* Verde oscuro */
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: #555;
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+.form-group {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #1a4314;
+}
+
+.input-icon-wrapper {
+  position: relative;
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px 40px 12px 15px; /* Espacio para el icono a la derecha */
+  border: 1px solid #c8e6c9;
+  background-color: #e5f5e5; /* Fondo verde claro del input */
+  border-radius: 6px;
+  font-size: 16px;
+  box-sizing: border-box;
+  color: #1a4314;
+}
+
+.icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #50e37a;
+}
+
+/* Botones */
+.reset-button, .update-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #50e37a; /* Verde brillante */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s;
+}
+
+.reset-button:hover, .update-button:hover {
+  background-color: #43c168;
+}
+
+.update-button:disabled {
+  background-color: #a3d9a3;
+  cursor: not-allowed;
+}
+
+/* Mensajes de texto */
+.info-text, .security-note {
+  font-size: 14px;
+  color: #777;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.resend-link {
+  display: block;
+  color: #50e37a;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.validation-error {
+  color: #e35050; /* Rojo de error */
+  font-size: 14px;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+.success-message {
+  color: #1a4314;
+  font-size: 14px;
+  margin-top: 15px;
+  font-weight: bold;
+}
