@@ -10,6 +10,7 @@ import {EditBatchComponent} from './Foodchain/components/edit-batch/edit-batch.c
 import {EditAdminComponent} from './Foodchain/components/users/edit-admin/edit-admin.component';
 import {NewUserAdminComponent} from './Foodchain/components/users/newuser-admin/newuser-admin.component';
 import {CreateBatchComponent} from './Foodchain/components/create-batch/create-batch.component';
+import {RegisterStepComponent} from './Foodchain/components/steps/register-step/register-step.component';
 export const routes: Routes = [
 
   { path: 'login', component: LoginComponent },
@@ -24,6 +25,7 @@ export const routes: Routes = [
       { path: 'edit-admin', component: EditAdminComponent },
       { path: 'newuser-admin', component: NewUserAdminComponent },
       { path: 'create-batch', component: CreateBatchComponent },
+      { path: 'register-step', component: RegisterStepComponent },
     ]}
 
 ];

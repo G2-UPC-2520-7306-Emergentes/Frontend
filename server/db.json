@@ -1,5 +1,99 @@
 {
-  "batches": [],
+  "batches": [
+    {
+      "id": 1,
+      "lotName": "Limonade",
+      "farmName": "GreenX",
+      "variety": "Tomatoes",
+      "harvestDate": "2025-10-10",
+      "createdDate": "2025-10-07T04:02:11.794Z",
+      "state": "Draft",
+      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg"
+    },
+    {
+      "id": 2,
+      "lotName": "Limonade",
+      "farmName": "GreenX",
+      "variety": "Vig",
+      "harvestDate": "5199-06-15",
+      "createdDate": "2025-10-07T04:05:34.338Z",
+      "state": "Draft",
+      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg"
+    },
+    {
+      "id": 3,
+      "lotName": "Ejemplo",
+      "farmName": "ejmplo22",
+      "variety": "agag",
+      "harvestDate": "2025-10-18",
+      "createdDate": "2025-10-07T04:13:52.718Z",
+      "state": "Draft",
+      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg"
+    },
+    {
+      "id": 4,
+      "lotName": "Ejemplo",
+      "farmName": "ejmplo22",
+      "variety": "agag",
+      "harvestDate": "2025-10-18",
+      "createdDate": "2025-10-07T04:14:49.259Z",
+      "state": "Draft",
+      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg"
+    },
+    {
+      "id": 5,
+      "lotName": "Ejemplo",
+      "farmName": "ejmplo22",
+      "variety": "Tomatoes",
+      "harvestDate": "2025-10-30",
+      "createdDate": "2025-10-07T04:15:42.788Z",
+      "state": "Draft",
+      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg"
+    },
+    {
+      "id": 6,
+      "lotName": "Limonade",
+      "farmName": "GreenX",
+      "variety": "Tomatoes",
+      "harvestDate": "2025-10-18",
+      "createdDate": "2025-10-07T04:16:19.681Z",
+      "state": "Draft",
+      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg"
+    },
+    {
+      "id": 7,
+      "lotName": "PrimeraPrueba",
+      "farmName": "GOZU",
+      "variety": "Carrots",
+      "harvestDate": "2025-10-18",
+      "createdDate": "2025-10-07T04:51:38.618Z",
+      "state": "Draft",
+      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg",
+      "producer_id": ""
+    },
+    {
+      "id": 8,
+      "lotName": "Limonade",
+      "farmName": "ghgh",
+      "variety": "ghgh",
+      "harvestDate": "2025-10-24",
+      "createdDate": "2025-10-07T04:57:27.831Z",
+      "state": "Draft",
+      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg",
+      "producer_id": ""
+    },
+    {
+      "id": 9,
+      "lotName": "gdfgs",
+      "farmName": "gsgs",
+      "variety": "gsgs",
+      "harvestDate": "2025-10-11",
+      "createdDate": "2025-10-07T05:02:42.020Z",
+      "state": "Draft",
+      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg",
+      "producer_id": "3"
+    }
+  ],
   "users": [
     {
       "firstName": "Angelo",
@@ -44,6 +138,20 @@
       "password": "12345678",
       "requestedRole": "Administrator",
       "id": 5
+    }
+  ],
+  "qrcode": [],
+  "steps": [
+    {
+      "id": 1,
+      "lotId": "9",
+      "userId": "3",
+      "stepType": "Productor",
+      "stepDate": "2025-10-24",
+      "stepTime": "17:50",
+      "location": "En mi hato",
+      "observations": "",
+      "hash": ""
     }
   ]
 }

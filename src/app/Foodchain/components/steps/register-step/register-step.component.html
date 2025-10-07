@@ -1,0 +1,120 @@
+<div class="register-step-container">
+  <div class="header-section">
+    <h2>Registro de Paso</h2>
+    <p>Documenta una actividad de trazabilidad para uno de tus lotes.</p>
+  </div>
+
+  <form [formGroup]="stepForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group-row">
+
+      <div class="form-group">
+        <label for="lotId">Lote</label>
+        <select
+          id="lotId"
+          formControlName="lotId"
+          class="form-control"
+          [class.is-invalid]="f['lotId'].invalid"
+        >
+          <option value="" disabled>Seleccionar Lote</option>
+          <option *ngFor="let lot of availableLots" [value]="lot.id">
+            {{ lot.lotName }} (ID: {{ lot.id }})
+          </option>
+        </select>
+
+        <div *ngIf="isLoading" class="text-muted">Cargando lotes...</div>
+        <div *ngIf="errorMessage && !isLoading" class="text-danger">
+          {{ errorMessage }}
+        </div>
+        <div *ngIf="f['lotId'].invalid" class="text-danger">
+          El Lote es requerido.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="stepType">Tipo de paso</label>
+        <select
+          id="stepType"
+          formControlName="stepType"
+          class="form-control"
+          [class.is-invalid]="f['stepType'].invalid"
+        >
+          <option value="" disabled>Seleccionar Tipo</option>
+          <option *ngFor="let type of stepTypes" [value]="type">{{ type }}</option>
+        </select>
+        <div *ngIf="f['stepType'].invalid" class="text-danger">
+          El Tipo de paso es requerido.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="form-group-row">
+
+      <div class="form-group">
+        <label for="stepDate">Fecha</label>
+        <input
+          type="date"
+          id="stepDate"
+          formControlName="stepDate"
+          class="form-control"
+          [class.is-invalid]="f['stepDate'].invalid"
+        >
+        <div *ngIf="f['stepDate'].invalid" class="text-danger">
+          La Fecha es requerida.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="stepTime">Hora</label>
+        <input
+          type="time"
+          id="stepTime"
+          formControlName="stepTime"
+          class="form-control"
+          [class.is-invalid]="f['stepTime'].invalid"
+        >
+        <div *ngIf="f['stepTime'].invalid" class="text-danger">
+          La Hora es requerida.
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group-full">
+      <label for="location">Ubicación</label>
+      <input
+        type="text"
+        id="location"
+        formControlName="location"
+        class="form-control"
+        placeholder="Ubicación manual (ej: Dirección, Coordenadas)"
+        [class.is-invalid]="f['location'].invalid"
+      >
+      <small class="text-muted">Ubicación capturada manualmente. No editable (por ahora).</small>
+      <div *ngIf="f['location'].invalid" class="text-danger">
+        La Ubicación es requerida.
+      </div>
+    </div>
+
+    <div class="map-placeholder">
+
+    </div>
+    <small class="text-muted map-reference">Vista de referencia de la ubicación capturada</small>
+
+    <div class="form-group-full observations-group">
+      <label for="observations">Observaciones</label>
+      <textarea id="observations" formControlName="observations" class="form-control" rows="4"></textarea>
+    </div>
+
+    <div class="action-buttons">
+      <button
+        type="submit"
+        class="register-button"
+        [disabled]="stepForm.invalid || isLoading || availableLots.length === 0"
+      >
+        Registrar Paso
+      </button>
+      <button type="button" class="cancel-button" (click)="router.navigate(['/sidenav/view-batch'])">Cancelar</button>
+    </div>
+  </form>
+</div>
