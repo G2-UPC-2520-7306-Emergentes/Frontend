@@ -1,1 +1,67 @@
-<p>create-batch works!</p>
+<div id="batch-container">
+  <div id="batch-card">
+
+    <div id="header-row">
+      <h1>Create New Lot</h1>
+      <a routerLink="/dashboard">
+        Back to Dashboard
+      </a>
+    </div>
+
+    <p>
+      Register a new product lot and start its traceability on FoodChain.
+    </p>
+
+    <form [formGroup]="batchForm" (ngSubmit)="onSubmit()">
+
+      <div class="form-group">
+        <label for="lotName">Lot Name</label>
+        <input id="lotName" type="text" formControlName="lotName" placeholder="e.g., Batch 2023-A">
+        <div *ngIf="batchForm.get('lotName')?.invalid" class="validation-error"> This field is required.</div>
+      </div>
+
+      <div class="form-group">
+        <label for="farmName">Farm Name</label>
+        <input id="farmName" type="text" formControlName="farmName" placeholder="e.g., Green Acres">
+        <div *ngIf="batchForm.get('farmName')?.invalid" class="validation-error"> This field is required.</div>
+      </div>
+
+      <div class="form-group">
+        <label for="variety">Variety</label>
+        <input id="variety" type="text" formControlName="variety" placeholder="e.g., Heirloom Tomatoes">
+        <div *ngIf="batchForm.get('variety')?.invalid" class="validation-error"> This field is required.</div>
+      </div>
+
+      <div class="form-group">
+        <label for="harvestDate">Harvest Date</label>
+        <input id="harvestDate" type="date" formControlName="harvestDate" class="date-input">
+        <div *ngIf="batchForm.get('harvestDate')?.invalid" class="validation-error"> Please select a date.</div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description or Notes (Optional)</label>
+        <textarea id="description" formControlName="description" rows="4"></textarea>
+      </div>
+
+      <div id="upload-area">
+        <p>Upload Image (Optional)</p>
+        <p>Drag and drop or browse to upload an image of the lot</p>
+        <div>
+          <button type="button" class="upload-button">
+            Browse Files
+          </button>
+          <input type="file" formControlName="imageUrl" class="hidden-input">
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="batchForm.invalid" class="submit-button">
+        Create Lot
+      </button>
+
+      <p *ngIf="batchForm.invalid" class="error-message">
+        Failed to create lot. Please check all required fields.
+      </p>
+
+    </form>
+  </div>
+</div>

@@ -1,0 +1,198 @@
+/* -------------------------------------- */
+/* 1. Contenedor y Estructura Principal */
+/* -------------------------------------- */
+
+#batch-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#batch-card {
+  width: 100%;
+  max-width: 42rem; /* max-w-2xl */
+  background-color: white;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+  border-radius: 0.75rem; /* rounded-xl */
+  padding: 2rem;
+  margin-top: 2.5rem; /* mt-10 */
+}
+
+/* Espaciado del contenido */
+#batch-card > * {
+  margin-top: 2rem; /* space-y-8 */
+}
+#batch-card > *:first-child {
+  margin-top: 0;
+}
+#batch-card form > * {
+  margin-top: 1.5rem; /* space-y-6 */
+}
+#batch-card form > *:first-child {
+  margin-top: 0;
+}
+
+/* -------------------------------------- */
+/* 2. Header y Texto */
+/* -------------------------------------- */
+
+#header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#header-row h1 {
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: 800; /* font-extrabold */
+  color: #1f2937; /* text-gray-900 */
+}
+
+#header-row a {
+  font-size: 0.875rem; /* text-sm */
+  color: #10b981; /* text-green-600 */
+  font-weight: 500; /* font-medium */
+  text-decoration: none;
+}
+#header-row a:hover {
+  color: #059669; /* hover:text-green-700 */
+}
+
+#batch-card p {
+  color: #6b7280; /* text-gray-500 */
+}
+
+/* -------------------------------------- */
+/* 3. Campos de Formulario */
+/* -------------------------------------- */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem; /* space-y-1 */
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  color: #374151; /* text-gray-700 */
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem; /* p-3 */
+  border: 1px solid #d1d5db; /* border border-gray-300 */
+  border-radius: 0.5rem; /* rounded-lg */
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+/* Foco */
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #10b981; /* focus:border-green-500 */
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.5); /* focus:ring-green-500 */
+}
+
+/* Estado de Error */
+.form-group input.border-red-500,
+.form-group textarea.border-red-500 {
+  border-color: #ef4444; /* Rojo de Tailwind (500) */
+}
+.validation-error {
+  font-size: 0.75rem; /* text-xs */
+  color: #ef4444; /* text-red-600 */
+  margin-top: 0.25rem; /* mt-1 */
+}
+
+/* Estilo para el campo de fecha (date-input) */
+.date-input {
+  /* Mantiene los estilos del CSS previo para el icono */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.5em 1.5em;
+  padding-right: 3rem;
+}
+
+
+/* -------------------------------------- */
+/* 4. Área de Subida (Upload) */
+/* -------------------------------------- */
+
+#upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem; /* space-y-2 */
+  border: 2px dashed #d1d5db; /* border-2 border-dashed border-gray-300 */
+  border-radius: 0.5rem; /* rounded-lg */
+  padding: 1.5rem; /* p-6 */
+  text-align: center;
+  background-color: #f9fafb; /* bg-gray-50 */
+}
+
+#upload-area p:first-of-type {
+  font-weight: 500; /* font-medium */
+  color: #374151; /* text-gray-700 */
+}
+#upload-area p:last-of-type {
+  font-size: 0.875rem; /* text-sm */
+  color: #6b7280; /* text-gray-500 */
+}
+
+.upload-button {
+  padding: 0.5rem 1rem; /* px-4 py-2 */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  color: white;
+  background-color: #10b981; /* bg-green-500 */
+  border-radius: 0.5rem; /* rounded-lg */
+  transition: background-color 0.15s ease-in-out;
+}
+.upload-button:hover {
+  background-color: #059669; /* hover:bg-green-600 */
+}
+
+.hidden-input {
+  display: none;
+}
+
+/* -------------------------------------- */
+/* 5. Botón de Envío */
+/* -------------------------------------- */
+
+.submit-button {
+  width: 100%;
+  padding: 0.75rem 0; /* py-3 */
+  margin-top: 1rem; /* mt-4 */
+  color: white;
+  font-weight: 700; /* font-bold */
+  border-radius: 0.5rem; /* rounded-lg */
+  transition: all 0.15s ease-in-out;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06); /* shadow-lg */
+  background-color: #059669; /* bg-green-600 */
+}
+.submit-button:hover:not(:disabled) {
+  background-color: #047857; /* hover:bg-green-700 */
+}
+
+.submit-button:disabled {
+  background-color: #a7f3d0; /* disabled:bg-green-300 */
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Mensaje de error general */
+.error-message {
+  color: #ef4444; /* text-red-500 */
+  font-size: 0.875rem; /* text-sm */
+  text-align: center;
+  padding-top: 0.5rem; /* pt-2 */
+}
+
