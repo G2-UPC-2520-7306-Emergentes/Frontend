@@ -8,7 +8,8 @@
       "harvestDate": "2025-10-10",
       "createdDate": "2025-10-07T04:02:11.794Z",
       "state": "Draft",
-      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg"
+      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg",
+      "producer_id": "4"
     },
     {
       "id": 2,
@@ -18,7 +19,8 @@
       "harvestDate": "5199-06-15",
       "createdDate": "2025-10-07T04:05:34.338Z",
       "state": "Draft",
-      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg"
+      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg",
+      "producer_id": "4"
     },
     {
       "id": 3,
@@ -28,7 +30,8 @@
       "harvestDate": "2025-10-18",
       "createdDate": "2025-10-07T04:13:52.718Z",
       "state": "Draft",
-      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg"
+      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg",
+      "producer_id": "4"
     },
     {
       "id": 4,
@@ -38,7 +41,8 @@
       "harvestDate": "2025-10-18",
       "createdDate": "2025-10-07T04:14:49.259Z",
       "state": "Draft",
-      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg"
+      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg",
+      "producer_id": "4"
     },
     {
       "id": 5,
@@ -48,7 +52,8 @@
       "harvestDate": "2025-10-30",
       "createdDate": "2025-10-07T04:15:42.788Z",
       "state": "Draft",
-      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg"
+      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg",
+      "producer_id": "4"
     },
     {
       "id": 6,
@@ -58,7 +63,8 @@
       "harvestDate": "2025-10-18",
       "createdDate": "2025-10-07T04:16:19.681Z",
       "state": "Draft",
-      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg"
+      "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg",
+      "producer_id": "4"
     },
     {
       "id": 7,
@@ -69,7 +75,7 @@
       "createdDate": "2025-10-07T04:51:38.618Z",
       "state": "Draft",
       "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg",
-      "producer_id": ""
+      "producer_id": "4"
     },
     {
       "id": 8,
@@ -80,7 +86,7 @@
       "createdDate": "2025-10-07T04:57:27.831Z",
       "state": "Draft",
       "imageUrl": "https://www.ciencuadras.com/blog/wp-content/uploads/2022/10/beneficios-de-comprar-un-lote-o-terreno.jpg",
-      "producer_id": ""
+      "producer_id": "4"
     },
     {
       "id": 9,
@@ -151,6 +157,17 @@
       "stepTime": "17:50",
       "location": "En mi hato",
       "observations": "",
+      "hash": ""
+    },
+    {
+      "id": 2,
+      "lotId": "9",
+      "userId": "3",
+      "stepType": "Procesador",
+      "stepDate": "2025-10-24",
+      "stepTime": "03:20",
+      "location": "En Cuzco",
+      "observations": "Vivaaaa",
       "hash": ""
     }
   ]

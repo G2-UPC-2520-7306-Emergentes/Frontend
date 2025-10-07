@@ -1,0 +1,206 @@
+/* history-batch.component.css */
+
+.history-batch-container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.header-section h1 {
+  color: #333;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 25px;
+}
+
+/* Selector de Lote */
+.lot-selector-section {
+  margin-bottom: 30px;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+}
+
+.lot-selector-section label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #555;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
+
+/* Mensajes de Estado */
+.message-error {
+  color: #e74c3c;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.message-loading {
+  color: #4CAF50;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+/* Sección de la Línea de Tiempo */
+.history-timeline-section h2 {
+  font-size: 1.5rem;
+  color: #4CAF50;
+  margin-bottom: 20px;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 50px; /* Espacio para la línea y los íconos */
+}
+
+/* Contenedor del Paso */
+.timeline-step {
+  display: flex;
+  margin-bottom: 30px;
+}
+
+/* Línea y Ícono */
+.timeline-icon-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timeline-line {
+  width: 2px;
+  background-color: #ddd;
+  flex-grow: 1;
+  height: 100%;
+  margin-top: 10px;
+}
+
+.timeline-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #ccc;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  z-index: 10;
+  border: 2px solid white;
+}
+
+.timeline-icon.unlocked {
+  background-color: #4CAF50; /* Verde, si tiene hash */
+}
+.timeline-icon:not(.unlocked) {
+  background-color: #aaa; /* Gris oscuro, si está bloqueado */
+}
+
+/* Contenido del Paso */
+.timeline-content {
+  flex-grow: 1;
+  padding: 15px;
+  border-radius: 6px;
+  background-color: #f7f7f7;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.role-title {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 5px;
+}
+
+.step-type {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.details-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.detail-item {
+  margin-right: 20px;
+  font-size: 0.9rem;
+  color: #666;
+  white-space: nowrap; /* Evita que el timestamp se rompa */
+}
+
+.detail-item .label {
+  font-weight: 600;
+  color: #444;
+}
+
+.hash-detail {
+  font-family: monospace;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.status-badge.blocked {
+  background-color: #e74c3c; /* Rojo/Bloqueado */
+  color: white;
+}
+
+.status-badge.unlocked {
+  background-color: #4CAF50; /* Verde/Trazado */
+  color: white;
+}
+
+.observations {
+  margin-top: 10px;
+  padding-top: 5px;
+  border-top: 1px dashed #e0e0e0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Ajuste para el último paso (sin línea) */
+.timeline-step:last-child .timeline-line {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .details-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .detail-item {
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
+  .status-badge {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+}

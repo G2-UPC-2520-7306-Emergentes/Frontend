@@ -1,0 +1,83 @@
+<div class="history-batch-container">
+
+  <div class="header-section">
+    <h1>Historial de Trazabilidad</h1>
+  </div>
+
+  <div class="lot-selector-section">
+    <label for="lot-select">Seleccionar Lote:</label>
+    <select
+      id="lot-select"
+      [(ngModel)]="selectedLotId"
+      (change)="onLotSelected()"
+      [disabled]="isLoadingBatches || userBatches.length === 0"
+      class="form-control"
+    >
+      <option [ngValue]="null" disabled>
+        {{ isLoadingBatches ? 'Cargando Lotes...' : (userBatches.length === 0 ? 'No hay lotes disponibles' : 'Seleccione un lote') }}
+      </option>
+      <option *ngFor="let lot of userBatches" [value]="lot.id">
+        {{ lot.lotName }} (ID: {{ lot.id }})
+      </option>
+    </select>
+    <div *ngIf="errorBatchMessage" class="message-error">{{ errorBatchMessage }}</div>
+  </div>
+
+  <div class="history-timeline-section">
+    <h2>Pasos Registrados</h2>
+
+    <div *ngIf="isLoadingSteps" class="message-loading">Cargando historial de pasos para el lote seleccionado...</div>
+    <div *ngIf="errorStepMessage && !isLoadingSteps" class="message-error">{{ errorStepMessage }}</div>
+
+    <div *ngIf="stepsHistory.length > 0" class="timeline">
+
+      <div *ngFor="let step of stepsHistory; let i = index" class="timeline-step">
+
+        <div class="timeline-icon-container">
+          <div class="timeline-icon" [class.unlocked]="step.hash && step.hash.length > 0">
+            <span *ngIf="step.hash && step.hash.length > 0">✔</span>
+            <span *ngIf="!step.hash || step.hash.length === 0">🔒</span>
+          </div>
+          <div *ngIf="i < stepsHistory.length - 1" class="timeline-line"></div>
+        </div>
+
+        <div class="timeline-content">
+          <div class="role-title">
+            {{ getRoleTitle(step.stepType, i) }}
+          </div>
+
+          <div class="step-type">{{ step.stepType }}</div>
+
+          <div class="details-row">
+            <div class="detail-item">
+              <span class="label">ID:</span> {{ step.id }}
+            </div>
+            <div class="detail-item hash-detail">
+              <span class="label">Hash:</span> {{ formatHash(step.hash) }}
+            </div>
+            <div
+              class="status-badge"
+              [class.unlocked]="step.hash && step.hash.length > 0"
+              [class.blocked]="!step.hash || step.hash.length === 0"
+            >
+              {{ step.hash && step.hash.length > 0 ? 'Trazado' : 'Bloqueado' }}
+            </div>
+          </div>
+
+          <div class="details-row">
+            <div class="detail-item">
+              <span class="label">Timestamp:</span> {{ step.stepDate }} {{ step.stepTime }}
+            </div>
+            <div class="detail-item location-detail">
+              <span class="label">Ubicación:</span> {{ step.location }}
+            </div>
+          </div>
+
+          <div *ngIf="step.observations" class="observations">
+            Notas: {{ step.observations }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
