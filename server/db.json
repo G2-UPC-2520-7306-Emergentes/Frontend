@@ -1,14 +1,49 @@
 {
-  "batches": [
+  "batches": [],
+  "users": [
     {
-      "id": "LOT-2023-10-26-001",
-      "lotName": "Lot 2023-10-26",
-      "farmName": "Green Acres Farm",
-      "variety": "Heirloom Tomatoes",
-      "harvestDate": "2023-10-26",
-      "createdDate": "2023-10-25 14:30",
-      "state": "Active",
-      "imageUrl": "assets/images/farm_photo.jpg"
+      "firstName": "Angelo",
+      "lastName": "Curi Marcelo",
+      "email": "curimarcelo89@gmail.com",
+      "companyName": "Los mas chingones34",
+      "taxId": "145",
+      "companyOption": "join",
+      "password": "123456789",
+      "requestedRole": "Administrator",
+      "id": 2
+    },
+    {
+      "firstName": "Angelo",
+      "lastName": "Curi Marcelo",
+      "email": "curimarcelo8@gmail.com",
+      "companyName": "gfgfgf",
+      "taxId": "145",
+      "companyOption": "join",
+      "password": "123456789",
+      "requestedRole": "Auditor",
+      "id": 3
+    },
+    {
+      "firstName": "Luis",
+      "lastName": "Miguel",
+      "email": "luisito@gmail.com",
+      "companyName": "LuisitoComunica",
+      "taxId": "7875",
+      "companyOption": "join",
+      "password": "123456789",
+      "requestedRole": "Administrator",
+      "id": 4
+    },
+    {
+      "firstName": "Daniel",
+      "lastName": "Dani",
+      "email": "dani@gmail.com",
+      "companyName": "maigamga",
+      "taxId": "fa13",
+      "companyOption": "join",
+      "password": "12345678",
+      "requestedRole": "Administrator",
+      "id": 5
     }
   ]
 }

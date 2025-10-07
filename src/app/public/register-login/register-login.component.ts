@@ -1,75 +1,81 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import {Router, RouterLink} from '@angular/router';
 
-// Nota: Eliminamos la importación de FormsModule
-
-// La interfaz es opcional, pero mantiene la estructura de datos limpia
-interface RegisterData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  // ... resto de propiedades ...
-}
+// Importamos el UserService y la interfaz RegisterPayload
+import { UserService, RegisterPayload } from '../../Foodchain/services/user.service'; // AJUSTA LA RUTA
 
 @Component({
   selector: 'app-register',
-  templateUrl: './register-login.component.html', // Usamos el nombre de tu archivo
-  styleUrls: ['./register-login.component.css'],
   standalone: true,
-  // 🚨 Solo necesitamos CommonModule para *ngIf y *ngFor
-  imports: [CommonModule, RouterLink]
+  templateUrl: './register-login.component.html',
+  styleUrls: ['./register-login.component.css'],
+  imports: [ReactiveFormsModule, CommonModule, HttpClientModule]
 })
 export class RegisterLoginComponent implements OnInit {
 
-  registerError: boolean = false;
+  registerForm: FormGroup;
   roles = ['Administrator', 'Auditor', 'Supply Chain Manager', 'Standard User'];
 
-  constructor(private router: Router) { }
-
-  ngOnInit(): void {
-    // No hay inicialización de formulario, ¡genial!
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private userService: UserService
+  ) {
+    this.registerForm = this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      companyName: ['', Validators.required],
+      taxId: [''],
+      companyOption: ['join', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', Validators.required],
+      requestedRole: ['', Validators.required],
+      agreement: [false, Validators.requiredTrue],
+      recaptcha: [false, Validators.requiredTrue],
+    }, {
+      validators: this.passwordsMatchValidator.bind(this)
+    });
   }
 
-  // 2. Manejo del Submit del Formulario
-  // Recibimos el formulario HTMLElement directamente
-  public onSubmit(form: HTMLFormElement): void {
+  ngOnInit(): void {}
 
-    // 1. Prevenir el envío clásico del formulario
-    // (Angular lo hace automáticamente con (ngSubmit), pero aquí es manual si fuera necesario)
-    // El evento 'submit' de Angular ya previene el refresh, pero es bueno saberlo.
+  passwordsMatchValidator(form: FormGroup) {
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value;
+    return password === confirmPassword ? null : { mismatch: true };
+  }
 
-    this.registerError = false;
-
-    // 2. Usar el objeto nativo FormData para obtener todos los valores
-    const formData = new FormData(form);
-
-    // Creamos un objeto simple de JavaScript
-    const data: any = {};
-    formData.forEach((value, key) => (data[key] = value));
-
-    // Validaciones Manuales (deben ser implementadas completamente por ti ahora)
-    if (!data.email || !data.password || !data.confirmPassword) {
-      this.registerError = true;
-      console.error('Por favor, rellene todos los campos requeridos.');
+  onSubmit() {
+    if (this.registerForm.invalid) {
+      alert('Formulario inválido. Revisa los campos requeridos y la coincidencia de contraseñas.');
+      this.registerForm.markAllAsTouched();
       return;
     }
 
-    if (data.password !== data.confirmPassword) {
-      alert('Error: Las contraseñas no coinciden.');
-      this.registerError = true;
-      return;
-    }
-    console.log('Datos de Registro Válidos:', data);
-    this.router.navigate(['/sidenav']);
-    // Aquí harías la llamada a tu API con el objeto 'data'
+    // 1. Limpiamos el payload antes de enviarlo al servicio
+    //    El servicio recibe ahora un objeto que no tiene confirmPassword
+    const {  confirmPassword,
+      agreement,
+      recaptcha,
+      ...newUserToSave } = this.registerForm.value;
+
+    // 2. 🚀 Llama al servicio y se suscribe al resultado
+    this.userService.registerUser(newUserToSave as RegisterPayload)
+      .subscribe((user) => {
+        // user será el objeto registrado (User) o null (si falló en el servicio)
+        if (user) {
+          alert('Registro exitoso');
+          // 3. Redirigir SOLO si el registro fue exitoso
+          this.router.navigate(['/sidenav']);
+        }
+      });
   }
 
-  // Helper para validación visual (necesitarás más lógica en el HTML)
-  isPasswordMismatch(form: HTMLFormElement): boolean {
-    const password = form.querySelector('[name="password"]') as HTMLInputElement;
-    const confirm = form.querySelector('[name="confirmPassword"]') as HTMLInputElement;
-
-    return password && confirm && password.value !== confirm.value && password.value.length > 0;
+  get f() {
+    return this.registerForm.controls;
   }
 }

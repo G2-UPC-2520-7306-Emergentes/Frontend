@@ -1,162 +1,216 @@
-.register-container {
+/* ======================================= */
+/* Estilos Generales           */
+/* ======================================= */
+
+:host {
+  display: block;
+  /* Centrar el contenido de la página */
+  min-height: 100vh;
+  background-color: #f4f7f6; /* Fondo suave */
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 40px 20px;
-  background-color: #f7fff7; /* Fondo verde muy claro */
+  padding: 20px;
 }
+
+.register-container {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 900px; /* Ancho máximo para el formulario de dos columnas */
+  box-sizing: border-box;
+}
+
+/* ======================================= */
+/* Sección de Cabecera         */
+/* ======================================= */
 
 .header-section {
   text-align: center;
   margin-bottom: 30px;
+  border-bottom: 1px solid #eeeeee;
+  padding-bottom: 20px;
 }
 
 .title {
-  font-size: 32px;
-  color: #1a4314;
+  font-size: 2.2rem;
+  color: #333333;
   margin-bottom: 5px;
+  font-weight: 700;
 }
 
 .subtitle {
-  color: #555;
-  font-size: 16px;
+  font-size: 1rem;
+  color: #666666;
+  margin-top: 0;
 }
 
+/* ======================================= */
+/* Diseño del Formulario       */
+/* ======================================= */
+
 .register-form {
-  width: 100%;
-  max-width: 900px; /* Ancho máximo para la vista de dos columnas */
-  background-color: white;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .form-grid {
-  display: flex;
-  gap: 40px; /* Espacio entre las dos columnas */
-  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas por defecto */
+  gap: 30px;
+  margin-bottom: 30px;
 }
 
 .column {
-  flex: 1; /* Distribuye el espacio equitativamente */
+  display: flex;
+  flex-direction: column;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 label {
   display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-  color: #1a4314;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #444444;
+  font-size: 0.95rem;
 }
 
-.input-field, .select-field {
+.input-field,
+.select-field {
   width: 100%;
   padding: 12px 15px;
-  border: 1px solid #c8e6c9;
-  background-color: #e5f5e5; /* Fondo verde claro del input */
-  border-radius: 6px;
-  font-size: 16px;
+  border: 1px solid #cccccc;
+  border-radius: 8px;
   box-sizing: border-box;
-  transition: border-color 0.2s;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.input-field:focus, .select-field:focus {
+.input-field:focus,
+.select-field:focus {
+  border-color: #5cb85c; /* Color de enfoque (Verde FoodChain) */
+  box-shadow: 0 0 0 3px rgba(92, 184, 92, 0.2);
   outline: none;
-  border-color: #50e37a;
-  background-color: #fff;
 }
 
-/* Estilos de Radio y Checkbox */
-.radio-group {
-  background-color: #e5f5e5;
-  border: 1px solid #c8e6c9;
-  border-radius: 6px;
-  padding: 10px 15px;
+/* Estilo para inputs inválidos */
+.input-field.ng-touched.ng-invalid,
+.select-field.ng-touched.ng-invalid {
+  border-color: #e74c3c; /* Rojo de error */
 }
 
-.radio-label {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-  font-weight: normal;
-  cursor: pointer;
-}
+/* ======================================= */
+/* Radio y Checkbox Groups        */
+/* ======================================= */
 
-.radio-label input[type="radio"] {
-  margin-right: 10px;
-}
-
+.radio-group,
 .checkbox-group {
-  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 5px;
 }
 
+.radio-label,
 .checkbox-label {
   display: flex;
   align-items: center;
-  font-weight: normal;
-  font-size: 14px;
+  font-weight: 400;
+  color: #555555;
+  cursor: pointer;
 }
 
+.radio-label input[type="radio"],
 .checkbox-label input[type="checkbox"] {
   margin-right: 10px;
+  transform: scale(1.1);
 }
 
-.link {
-  color: #50e37a;
-  text-decoration: none;
+.validation-error {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 5px;
 }
 
-/* Botón y Sección Inferior */
+/* ======================================= */
+/* Sección de Pie             */
+/* ======================================= */
+
+.footer-form-section {
+  padding-top: 20px;
+  border-top: 1px solid #eeeeee;
+}
+
+.note {
+  font-size: 0.85rem;
+  color: #888888;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
 .create-account-button {
   width: 100%;
   padding: 15px;
-  background-color: #50e37a;
+  background-color: #5cb85c; /* Verde brillante de FoodChain */
   color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 18px;
-  font-weight: bold;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 700;
   cursor: pointer;
-  margin-top: 15px;
-  transition: background-color 0.3s;
+  margin-top: 20px;
+  transition: background-color 0.3s, transform 0.1s;
+}
+
+.create-account-button:hover {
+  background-color: #4cae4c;
 }
 
 .create-account-button:disabled {
-  background-color: #a3d9a3;
+  background-color: #a5d6a7; /* Tono más pálido cuando está deshabilitado */
   cursor: not-allowed;
 }
 
 .links-bottom {
   text-align: center;
   margin-top: 20px;
+  font-size: 0.9rem;
 }
 
-.links-bottom .link {
+.link {
+  color: #5cb85c;
+  text-decoration: none;
   margin: 0 10px;
-  font-size: 14px;
+  transition: color 0.3s;
 }
 
-.note {
-  font-size: 12px;
-  color: #777;
-  text-align: center;
-  margin-bottom: 15px;
+.link:hover {
+  color: #4cae4c;
+  text-decoration: underline;
 }
 
-.validation-error {
-  color: #e35050;
-  font-size: 12px;
-  margin-top: 5px;
-}
+/* ======================================= */
+/* Responsividad               */
+/* ======================================= */
 
-/* Responsive para pasar a una columna en móvil */
-@media (max-width: 800px) {
+@media (max-width: 768px) {
+  .register-container {
+    padding: 25px;
+    margin: 10px;
+  }
+
   .form-grid {
-    flex-direction: column;
+    /* Una sola columna en pantallas pequeñas */
+    grid-template-columns: 1fr;
     gap: 0;
+  }
+
+  .header-section {
+    margin-bottom: 20px;
   }
 }
