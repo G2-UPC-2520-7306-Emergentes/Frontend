@@ -6,6 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import {UserService} from '../../Foodchain/services/user.service';
 import {User} from '../../Foodchain/model/user.entity';
 import {CommonModule} from '@angular/common';
+import {SessionService} from '../../Foodchain/services/session.service';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +27,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private router: Router // Para la navegación después del login
+    private router: Router, // Para la navegación después del login
+    private sessionService: SessionService
   ) { }
 
   ngOnInit(): void {
@@ -74,7 +76,9 @@ export class LoginComponent implements OnInit {
           if (userFound) {
             console.log('Login exitoso para el usuario:', userFound.email);
             // 🚨 Aquí se debe implementar la lógica de sesión (ej. guardar token/usuario en localStorage o en un servicio de estado)
+            const userIdAsString = userFound.id.toString();
 
+            this.sessionService.setUserId(userIdAsString);
             // Redirigir al usuario (ej. a la página de inicio o dashboard)
             this.router.navigate(['/sidenav']); // Cambia '/home' por la ruta de tu dashboard
           } else {

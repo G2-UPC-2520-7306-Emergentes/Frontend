@@ -14,6 +14,7 @@ export interface BatchCreatePayload {
   // Campos opcionales que vienen del formulario
   description?: string; // Lo añado basado en el UI: "Description or Notes (Optional)"
   imageUrl?: string;
+  producer_id: string;
 }
 
 @Injectable({
@@ -63,4 +64,19 @@ export class BatchService extends BaseService<Batch> {
         })
       );
   }
+
+  getAllBatches(): Observable<Batch[]> {
+    // Usamos el método getAll() heredado de BaseService
+    return this.getAll()
+      .pipe(
+        retry(2), // Reintentar la operación si falla
+        // El manejo de errores genérico (this.handleError) ya debería estar en BaseService
+        catchError((error) => {
+          console.error('Error de API al obtener todos los lotes:', error);
+          // Retornamos un Observable de un array vacío en caso de error para que la aplicación no se caiga
+          return of([]);
+        })
+      );
+  }
+
 }

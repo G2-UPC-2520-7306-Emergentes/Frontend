@@ -8,6 +8,7 @@ export class Batch {
   createdDate: string;
   state: string;
   imageUrl: string;
+  producer_id: string;
 
   constructor(batch: {
     // Los siguientes son opcionales en el objeto de entrada (data), pero la clase siempre los tendrá.
@@ -19,6 +20,7 @@ export class Batch {
     lotName?: string,
     farmName?: string,
     variety?: string,
+    producer_id?: string,
   }) {
     // 💡 Asignación de valores, utilizando el operador OR (||) para proporcionar un valor por defecto ('').
     this.id = batch.id || '';
@@ -30,6 +32,7 @@ export class Batch {
     this.createdDate = batch.createdDate || new Date().toISOString(); // Usa la fecha/hora actual por defecto
     this.state = batch.state || 'Draft'; // El estado por defecto puede ser 'Draft' o 'Active'
     this.imageUrl = batch.imageUrl || '';
+    this.producer_id = batch.producer_id || '';
   }
 
 }

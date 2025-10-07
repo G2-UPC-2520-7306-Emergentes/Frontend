@@ -19,6 +19,7 @@ export interface RegisterPayload {
   recaptcha: boolean;
   // Opcional, si el componente no lo limpia antes:
   confirmPassword?: string;
+  id: string;
 }
 
 @Injectable({

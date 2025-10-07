@@ -2,17 +2,20 @@
   <div class="header-section">
     <div class="title-and-description">
       <h2>Mis Lotes</h2>
-      <p>Visualiza y gestiona tus lotes de productos.</p>
+      <p *ngIf="errorMessage && !isLoading" class="error-message">{{ errorMessage }}</p>
+      <p *ngIf="!errorMessage && !isLoading">Visualiza y gestiona tus lotes de productos.</p>
+      <p *ngIf="isLoading">Cargando lotes...</p>
     </div>
 
-    <button class="create-button">
+    <button class="create-button" routerLink="/sidenav/create-batch">
       <i class="fas fa-plus"></i> Crear Nuevo Lote
     </button>
   </div>
 
   <div class="toolbar-section">
     <div class="toolbar-icons">
-      <i class="fas fa-search icon-button"></i>
+      <input type="text" [(ngModel)]="searchText" placeholder="Buscar por Lote o ID" class="search-input">
+
       <i class="fas fa-filter icon-button"></i>
       <i class="fas fa-calendar-alt icon-button"></i>
       <i class="fas fa-download icon-button"></i>
@@ -27,31 +30,40 @@
         <th>Lote</th>
         <th>Estado</th>
         <th>Fecha de creación</th>
-        <th>Última actividad</th>
+        <th>Fecha de Cosecha</th>
         <th>Acciones</th>
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let batch of availableBatches">
-        <td>{{ batch.lote }}</td>
+      <tr *ngFor="let batch of filteredBatches">
+
+        <td>{{ batch.lotName }} (ID: {{ batch.id }})</td>
+
         <td>
-                        <span class="status-tag"
-                              [class.active]="batch.estado === 'Activo'"
-                              [class.closed]="batch.estado === 'Cerrado'"
-                              [class.review]="batch.estado === 'En Revisión'">
-                            {{ batch.estado }}
-                        </span>
+          <span class="status-tag"
+                [class.active]="batch.state === 'Activo' || batch.state === 'Draft'"
+                [class.closed]="batch.state === 'Cerrado'"
+                [class.review]="batch.state === 'En Revisión'">
+              {{ batch.state }}
+          </span>
         </td>
-        <td>{{ batch.fechaCreacion }}</td>
-        <td>{{ batch.ultimaActividad }}</td>
+
+        <td>{{ batch.createdDate | date: 'yyyy-MM-dd' }}</td>
+
+        <td>{{ batch.harvestDate | date: 'yyyy-MM-dd' }}</td>
+
         <td class="action-links">
           <a (click)="viewDetail(batch.id)">Ver detalle</a> |
           <a (click)="editBatch(batch.id)">Editar</a> |
           <a (click)="generateQR(batch.id)">Generar QR</a>
-          <ng-container *ngIf="batch.estado === 'Activo'">
+
+          <ng-container *ngIf="batch.state === 'Activo' || batch.state === 'Draft'">
             | <a (click)="closeBatch(batch.id)">Cerrar lote</a>
           </ng-container>
         </td>
+      </tr>
+      <tr *ngIf="!filteredBatches.length && !isLoading && !errorMessage">
+        <td colspan="5" style="text-align: center; color: #6b7280; padding: 20px;">No se encontraron lotes para este usuario.</td>
       </tr>
       </tbody>
     </table>
@@ -60,12 +72,12 @@
   <div class="pagination-section">
     <i class="fas fa-angle-left icon-button"></i>
     <span>
-            <a [class.active-page]="currentPage === 1">1</a>
-            <a [class.active-page]="currentPage === 2">2</a>
-            <a [class.active-page]="currentPage === 3">3</a>
-            ...
-            <a [class.active-page]="currentPage === 13">13</a>
-        </span>
+      <a [class.active-page]="currentPage === 1">1</a>
+      <a [class.active-page]="currentPage === 2">2</a>
+      <a [class.active-page]="currentPage === 3">3</a>
+      ...
+      <a [class.active-page]="currentPage === totalPages">{{ totalPages }}</a>
+    </span>
     <i class="fas fa-angle-right icon-button"></i>
   </div>
 </div>
