@@ -4,26 +4,29 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';
+
+// 🚨 Importar la librería de QR
+
+import { QRCodeComponent } from 'angularx-qrcode';
+
 import {Batch} from '../../model/batch.entity';
 import {BatchService} from '../../services/batch.service';
-import {SessionService} from '../../services/session.service'; // Usaremos first() para desuscribirnos
-
-// La interfaz BatchListItem ya no es necesaria si usamos la entidad Batch directamente.
-// Pero la mantenemos si tu HTML depende de ella, ajustando los tipos.
+import {SessionService} from '../../services/session.service';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-view-batch',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  // 🚨 Añadir QRCodeModule a los imports
+  imports: [CommonModule, RouterLink, FormsModule, QRCodeComponent],
   templateUrl: './view-batch.component.html',
   styleUrls: ['./view-batch.component.css'],
 })
 export class ViewBatchComponent implements OnInit {
 
-  // 🚨 Usamos la entidad real Batch. Esta será la lista filtrada que se muestre en el HTML.
   filteredBatches: Batch[] = [];
 
-  // Variables para la interfaz
   searchText: string = '';
   currentPage: number = 1;
   totalPages: number = 1;
@@ -31,26 +34,25 @@ export class ViewBatchComponent implements OnInit {
   isLoading: boolean = false;
   errorMessage: string | null = null;
 
+  // 🚨 Nuevas propiedades para la generación de QR
+  showQrModal: boolean = false;
+  qrData: string = ''; // URL a codificar
+  qrCodeBatchId: string = ''; // ID para mostrar en el modal
+
   constructor(
     private router: Router,
-    // 🚨 Inyectar los servicios
     private batchService: BatchService,
     private sessionService: SessionService
   ) { }
 
   ngOnInit(): void {
-    // 🚨 Llamamos a la nueva función de carga y filtrado al iniciar el componente
     this.loadBatchesByProducer();
   }
 
-  /**
-   * Carga todos los lotes de la API y filtra solo los que corresponden al productor conectado.
-   */
   loadBatchesByProducer(): void {
     this.isLoading = true;
     this.errorMessage = null;
 
-    // 1. Obtener el ID del usuario conectado
     const connectedUserId = this.sessionService.getUserId();
 
     if (!connectedUserId) {
@@ -60,32 +62,30 @@ export class ViewBatchComponent implements OnInit {
       return;
     }
 
-    // 2. Llamar al BatchService para obtener todos los lotes
     this.batchService.getAllBatches()
-      .pipe(first()) // Nos desuscribimos después de recibir los datos una vez
-      .subscribe({
-        next: (allBatches: Batch[]) => {
-          // 3. Filtrar los lotes en el frontend
-          this.filteredBatches = allBatches.filter(
-            // Asumimos que la entidad Batch tiene una propiedad 'producer_id'
-            (batch: Batch) => batch.producer_id === connectedUserId
-          );
-
-          this.isLoading = false;
-
-          if (this.filteredBatches.length === 0) {
-            this.errorMessage = `¡Hola Productor ${connectedUserId}! Aún no tienes lotes registrados.`;
-          }
-        },
-        error: (error) => {
+      .pipe(
+        first(),
+        catchError((error) => {
           console.error('Error al cargar lotes:', error);
           this.errorMessage = 'Ocurrió un error al cargar los lotes desde el servidor.';
           this.isLoading = false;
+          return of([]); // Devuelve un observable de un array vacío
+        })
+      )
+      .subscribe((allBatches: Batch[]) => {
+        this.filteredBatches = allBatches.filter(
+          // Asumimos que la entidad Batch tiene una propiedad 'producer_id'
+          (batch: Batch) => batch.producer_id === connectedUserId
+        );
+
+        this.isLoading = false;
+
+        if (this.filteredBatches.length === 0 && !this.errorMessage) {
+          this.errorMessage = `¡Hola Productor ${connectedUserId}! Aún no tienes lotes registrados.`;
         }
       });
   }
 
-  // Métodos de navegación (Asegúrate de que tus rutas esperan el batchId)
   viewDetail(batchId: string): void {
     this.router.navigate([`/sidenav/details-batch/${batchId}`]);
   }
@@ -94,9 +94,33 @@ export class ViewBatchComponent implements OnInit {
     this.router.navigate([`/sidenav/edit-batch/${batchId}`]);
   }
 
-  generateQR(batchId: string): void {
-    console.log(`Acción: Generar QR para el lote: ${batchId}`);
-    // Lógica para generación de QR
+  /**
+   * Genera la URL pública del lote y activa la visualización del QR.
+   * @param batchId El ID del lote para el QR.
+   */
+  generateQR(batchId: string | number): void {
+    const baseUrl = window.location.origin;
+    // Esta URL debe apuntar al ViewQrcodeComponent (asumo que está en tu router)
+    const qrCodeUrl = `${baseUrl}/view-qrcode/${batchId}`;
+
+    // 1. Asignar datos
+    this.qrData = qrCodeUrl;
+    this.qrCodeBatchId = String(batchId);
+
+    // 2. 🚨 CLAVE: Activar el modal
+    this.showQrModal = true;
+
+    // Opcional: Agregar un console.log para verificar que se ejecuta
+    console.log("Generando QR para URL:", this.qrData);
+  }
+
+  /**
+   * Cierra el modal/panel del QR.
+   */
+  closeQrModal(): void {
+    this.showQrModal = false;
+    this.qrData = '';
+    this.qrCodeBatchId = '';
   }
 
   closeBatch(batchId: string): void {

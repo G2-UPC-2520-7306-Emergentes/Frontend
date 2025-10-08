@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { retry, catchError } from 'rxjs/operators';
+import {retry, catchError, map} from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { BaseService } from '../../shared/services/base.service';
 import { Batch } from '../model/batch.entity';
@@ -77,6 +77,39 @@ export class BatchService extends BaseService<Batch> {
           return of([]);
         })
       );
+  }
+
+  /**
+   * Obtiene un lote específico por su ID.
+   * Carga todos los lotes y filtra en el cliente, ya que getById no está en BaseService.
+   * @param id El ID del lote a buscar.
+   * @returns Un Observable que emite el objeto Batch o null si no se encuentra.
+   */
+  getBatchById(id: string | number): Observable<Batch | null> {
+    const targetId = String(id).trim(); // Aseguramos que el ID es una cadena limpia
+
+    // Usamos getAllBatches y luego filtramos con map
+    return this.getAllBatches().pipe(
+      map((allBatches: Batch[]) => {
+        // Encontramos el primer lote cuyo ID coincida
+        const batch = allBatches.find(
+          // La comparación debe ser estricta para IDs que son strings o numbers
+          b => String(b.id) === targetId
+        );
+
+        if (!batch) {
+          console.warn(`Lote con ID ${targetId} no encontrado en el filtro local.`);
+        }
+
+        // Retorna el lote encontrado o null
+        return batch || null;
+      }),
+      // Añadimos manejo de errores por si getAllBatches falla completamente
+      catchError((error) => {
+        console.error(`Error al obtener todos los lotes para buscar ID ${targetId}:`, error);
+        return of(null);
+      })
+    );
   }
 
 }

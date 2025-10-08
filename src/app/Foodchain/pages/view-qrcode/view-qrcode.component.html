@@ -1,1 +1,100 @@
-<p>view-qrcode works!</p>
+<div class="view-qrcode-container">
+
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Cargando información del Lote ID: {{ batchId }}...</p>
+  </div>
+
+  <div *ngIf="errorMessage && !isLoading" class="error-state">
+    <h2>Error de Trazabilidad</h2>
+    <p>{{ errorMessage }}</p>
+    <p>Por favor, verifique el código QR o intente escanearlo de nuevo.</p>
+  </div>
+
+  <div *ngIf="batchDetails && !isLoading">
+
+    <div class="header-info">
+      <h1>Trazabilidad del Lote: {{ batchDetails.lotName }}</h1>
+      <p class="batch-id-tag">ID: {{ batchDetails.id }}</p>
+    </div>
+
+    <div class="tab-buttons">
+      <button
+        [class.active]="activeTab === 'details'"
+        (click)="setActiveTab('details')"
+      >
+        Detalle Completo
+      </button>
+      <button
+        [class.active]="activeTab === 'history'"
+        (click)="setActiveTab('history')"
+      >
+        Historial ({{ stepsHistory.length }} pasos)
+      </button>
+    </div>
+
+    <div *ngIf="activeTab === 'details'" class="tab-content details-tab">
+      <h2>Datos Principales</h2>
+      <div class="details-grid">
+        <div class="detail-item"><strong>Nombre de Finca:</strong> {{ batchDetails.farmName }}</div>
+        <div class="detail-item"><strong>Variedad:</strong> {{ batchDetails.variety }}</div>
+        <div class="detail-item"><strong>Fecha de Cosecha:</strong> {{ batchDetails.harvestDate }}</div>
+        <div class="detail-item"><strong>Fecha de Creación:</strong> {{ batchDetails.createdDate | date: 'mediumDate' }}</div>
+        <div class="detail-item"><strong>Estado Actual:</strong> <span class="state-badge">{{ batchDetails.state }}</span></div>
+        <div class="detail-item"><strong>ID Productor:</strong> {{ batchDetails.producer_id }}</div>
+      </div>
+      <div *ngIf="batchDetails.imageUrl" class="image-container">
+        <img [src]="batchDetails.imageUrl" alt="Imagen del Lote/Finca">
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'history'" class="tab-content history-tab">
+
+      <div *ngIf="stepsHistory.length === 0" class="no-history-message">
+        <p>Aún no se ha registrado ningún paso de trazabilidad para este lote.</p>
+      </div>
+
+      <div *ngIf="stepsHistory.length > 0" class="timeline">
+
+        <div *ngFor="let step of stepsHistory; let i = index" class="timeline-step">
+
+          <div class="timeline-icon-container">
+            <div class="timeline-icon" [class.unlocked]="step.hash && step.hash.length > 0">
+              <span *ngIf="step.hash && step.hash.length > 0">✔</span>
+              <span *ngIf="!step.hash || step.hash.length === 0">🔒</span>
+            </div>
+            <div *ngIf="i < stepsHistory.length - 1" class="timeline-line"></div>
+          </div>
+
+          <div class="timeline-content">
+            <div class="role-title">{{ getRoleTitle(step.stepType, i) }}</div>
+            <div class="step-type">{{ step.stepType }}</div>
+
+            <div class="details-row">
+              <div class="detail-item hash-detail">
+                <span class="label">Hash:</span> {{ formatHash(step.hash) }}
+              </div>
+              <div class="status-badge" [class.unlocked]="step.hash && step.hash.length > 0">
+                {{ step.hash && step.hash.length > 0 ? 'Trazado' : 'Bloqueado' }}
+              </div>
+            </div>
+
+            <div class="details-row">
+              <div class="detail-item">
+                <span class="label">Fecha:</span> {{ step.stepDate }} {{ step.stepTime }}
+              </div>
+              <div class="detail-item location-detail">
+                <span class="label">Ubicación:</span> {{ step.location }}
+              </div>
+            </div>
+
+            <div *ngIf="step.observations" class="observations">
+              Notas: {{ step.observations }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

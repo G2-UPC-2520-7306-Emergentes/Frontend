@@ -81,3 +81,24 @@
     <i class="fas fa-angle-right icon-button"></i>
   </div>
 </div>
+
+<div *ngIf="showQrModal" class="qr-modal-overlay" (click)="closeQrModal()">
+  <div class="qr-modal-content" (click)="$event.stopPropagation()">
+    <button class="qr-close-button" (click)="closeQrModal()">&times;</button>
+    <h3>Código QR para Lote: {{ qrCodeBatchId }}</h3>
+    <p>Escanea este código para ver la trazabilidad del lote.</p>
+
+    <div class="qr-code-display">
+
+      <qrcode
+        [qrdata]="qrData"
+        [width]="256"
+        [colorDark]="'#333333'"
+        [colorLight]="'#ffffff'"
+        [allowEmptyString]="true"
+      ></qrcode>
+    </div>
+
+    <p class="qr-code-url">{{ qrData }}</p>
+  </div>
+</div>
