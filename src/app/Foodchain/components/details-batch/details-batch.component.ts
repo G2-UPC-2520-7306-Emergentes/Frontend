@@ -1,52 +1,97 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { Batch } from '../../model/batch.entity'; // Asegúrate de que esta clase exista
+import { ActivatedRoute, Router } from '@angular/router'; // Para obtener el ID y la navegación
+import { first, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
-export type BatchDetailView = 'summary' | 'history' | 'qr';
+// Importar el componente de QR
+import { QRCodeComponent } from 'angularx-qrcode';
+
+import { Batch } from '../../model/batch.entity';
+import { BatchService } from '../../services/batch.service';
+import { SessionService } from '../../services/session.service'; // Aunque no se usa directamente, es buena práctica
 
 @Component({
   selector: 'app-details-batch',
-  // Es crucial que sea standalone
   standalone: true,
-  // Solo necesitamos CommonModule y RouterLink
-  imports: [CommonModule, RouterLink],
+  // ✅ Importar QRCodeComponent y módulos de Angular
+  imports: [CommonModule, QRCodeComponent],
   templateUrl: './details-batch.component.html',
   styleUrls: ['./details-batch.component.css'],
 })
 export class DetailsBatchComponent implements OnInit {
 
-  // ✅ Datos de lote inicializados directamente para visualización
-  // Ya no es 'null'
-  batch: Batch = {
-    id: 'LOT-PRUEBA-FIJA-001',
-    lotName: 'Lote de Café Arábica Supremo',
-    farmName: 'Finca El Tesoro (Datos Fijos)',
-    variety: 'Bourbon Rojo',
-    harvestDate: '2025-05-01',
-    createdDate: '2025-06-15',
-    state: 'Tostado y Empaquetado',
-    imageUrl: 'https://placehold.co/600x400/215732/ffffff?text=LOTE+FIJO',
-    // Puedes añadir más propiedades según tu clase Batch...
-  } as Batch;
+  batchId: string | null = null;
+  batchData: Batch | null = null;
+  isLoading: boolean = true;
+  errorMessage: string | null = null;
 
-  // ✅ Estados de carga fijos para asegurar la visualización
-  isLoading: boolean = false; // Siempre falso para mostrar el contenido
-  errorMessage: string | null = null; // Siempre nulo
+  // Propiedades del QR
+  qrData: string = '';
+  qrUrl: string = ''; // URL que se genera para el QR
 
-  currentView: BatchDetailView = 'summary';
+  // Se usa para asegurar que la URL se genere una sola vez
+  qrGenerated: boolean = false;
 
-  // 🛑 ELIMINAMOS la inyección de BatchService para evitar el NG0200
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+    protected router: Router,
+    private batchService: BatchService
+  ) { }
 
   ngOnInit(): void {
-    // Ya no es necesario llamar a loadBatchDetails(), los datos ya están listos.
-    console.log('Componente DetailsBatch cargado con datos fijos.');
+    // 1. Obtener el batchId de la URL
+    this.batchId = this.route.snapshot.paramMap.get('batchId');
+
+    if (this.batchId) {
+      this.loadBatchDetails(this.batchId);
+    } else {
+      this.errorMessage = 'No se proporcionó un ID de lote.';
+      this.isLoading = false;
+    }
   }
 
-  // ELIMINAMOS loadBatchDetails() ya que los datos son fijos.
+  loadBatchDetails(id: string): void {
+    this.isLoading = true;
+    this.errorMessage = null;
 
-  changeView(view: BatchDetailView): void {
-    this.currentView = view;
+    this.batchService.getBatchById(id)
+      .pipe(
+        first(),
+        catchError((error) => {
+          this.errorMessage = `Error: No se pudo cargar el lote con ID ${id}.`;
+          this.isLoading = false;
+          console.error('Error al cargar lote:', error);
+          return of(null);
+        })
+      )
+      .subscribe((batch: Batch | null) => {
+        this.isLoading = false;
+        if (batch) {
+          this.batchData = batch;
+          // 🚨 Generar el QR inmediatamente después de cargar los datos
+          this.generateQRUrl(batch.id);
+        } else if (!this.errorMessage) {
+          this.errorMessage = `Lote con ID ${id} no encontrado.`;
+        }
+      });
+  }
+
+  /**
+   * Construye la URL pública que será codificada en el QR.
+   * @param id El ID del lote.
+   */
+  generateQRUrl(id: string | number): void {
+    const baseUrl = window.location.origin;
+    // URL pública que apunta al componente de vista pública (ViewQrcodeComponent)
+    this.qrUrl = `${baseUrl}/view-qrcode/${id}`;
+    this.qrData = this.qrUrl; // Los datos del QR son la URL
+    this.qrGenerated = true; // Marca como generado
+  }
+
+  editBatch(): void {
+    if (this.batchId) {
+      this.router.navigate([`/sidenav/edit-batch/${this.batchId}`]);
+    }
   }
 }

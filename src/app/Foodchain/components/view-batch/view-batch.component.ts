@@ -87,8 +87,7 @@ export class ViewBatchComponent implements OnInit {
   }
 
   viewDetail(batchId: string): void {
-    this.router.navigate([`/sidenav/details-batch/${batchId}`]);
-  }
+    this.router.navigate([`/sidenav/details-batch/${batchId}`]); }
 
   editBatch(batchId: string): void {
     this.router.navigate([`/sidenav/edit-batch/${batchId}`]);

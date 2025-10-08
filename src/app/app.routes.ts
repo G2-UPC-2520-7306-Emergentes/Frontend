@@ -20,7 +20,7 @@ export const routes: Routes = [
   { path: 'recover-password', component: RecoverLoginComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'sidenav', component: SidenavComponent, children: [
-      { path: 'details-batch', component: DetailsBatchComponent },
+      { path: 'details-batch/:batchId', component: DetailsBatchComponent },
       { path: 'duplicate-batch', component: DuplicateBatchComponent },
       { path: 'view-batch', component: ViewBatchComponent },
       { path: 'edit-batch', component: EditBatchComponent },

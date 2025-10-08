@@ -1,90 +1,86 @@
-<div class="page-content">
+<div class="details-container">
+
+  <header class="details-header">
+    <button class="back-button" (click)="router.navigate(['/sidenav/view-batch'])">
+      &larr; Volver a Mis Lotes
+    </button>
+
+    <div *ngIf="batchData" class="header-title">
+      <h1>Detalles del Lote: {{ batchData.lotName }}</h1>
+    </div>
+
+    <button *ngIf="batchData" class="edit-button" (click)="editBatch()">
+      Editar Lote
+    </button>
+  </header>
+
   <div *ngIf="isLoading" class="state-message loading">
-    Cargando detalles del lote...
+    <p>Cargando detalles del lote...</p>
   </div>
   <div *ngIf="errorMessage" class="state-message error">
-    <i class="fas fa-exclamation-triangle"></i> Error: {{ errorMessage }}
+    <p>{{ errorMessage }}</p>
   </div>
 
-  <div *ngIf="batch" class="batch-detail-container">
+  <div *ngIf="batchData" class="details-grid">
 
-    <h1 class="lot-title">
-      {{ batch.lotName }} — Lot Detail
-    </h1>
-    <p class="lot-description">
-      Administre este lote y genere su código QR único para etiquetar los paquetes.
-    </p>
+    <div class="info-section">
+      <div class="card">
+        <h3>Información General</h3>
+        <p><strong>ID de Lote:</strong> {{ batchData.id }}</p>
+        <p><strong>Productor ID:</strong> {{ batchData.producer_id }}</p>
+        <p><strong>Granja:</strong> {{ batchData.farmName }}</p>
+        <p><strong>Variedad:</strong> {{ batchData.variety }}</p>
+        <p><strong>Fecha de Cosecha:</strong> {{ batchData.harvestDate | date: 'longDate' }}</p>
+        <p><strong>Fecha de Creación:</strong> {{ batchData.createdDate | date: 'short' }}</p>
+        <p><strong>Estado:</strong>
+          <span class="status-tag"
+                [class.active]="batchData.state === 'Activo'"
+                [class.closed]="batchData.state === 'Cerrado'">
+            {{ batchData.state }}
+          </span>
+        </p>
+      </div>
 
-    <div class="tabs-navigation">
-      <div
-        class="tab-item"
-        [class.active]="currentView === 'summary'"
-        (click)="changeView('summary')">
-        Lot Summary
-      </div>
-      <div
-        class="tab-item"
-        [class.active]="currentView === 'history'"
-        (click)="changeView('history')">
-        History
-      </div>
-      <div
-        class="tab-item"
-        [class.active]="currentView === 'qr'"
-        (click)="changeView('qr')">
-        QR & Labels
+      <!--
+  <div class="card description-card">
+    <h3>Descripción</h3>
+    <p>{{ batchData.description || 'Sin descripción proporcionada.' }}</p>
+  </div>
+  -->
+
+
+      <div class="card">
+        <h3>Pasos de Trazabilidad Registrados</h3>
+        <p>Añade aquí el listado de etapas (Siembra, Empaque, Envío, etc.)</p>
       </div>
     </div>
 
-    <div *ngIf="currentView === 'summary'" class="tab-content summary-content">
-      <div class="summary-grid">
-        <div class="summary-details">
-          <h2>Summary Details</h2>
-          <div class="detail-row">
-            <span class="label">Lot Name:</span>
-            <span class="value">{{ batch.lotName }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="label">Farm Name:</span>
-            <span class="value">{{ batch.farmName }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="label">Variety:</span>
-            <span class="value">{{ batch.variety }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="label">Harvest Date:</span>
-            <span class="value">{{ batch.harvestDate }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="label">Created At:</span>
-            <span class="value">{{ batch.createdDate }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="label">State:</span>
-            <span class="value state-{{ batch.state.toLowerCase() }}">{{ batch.state }}</span>
-          </div>
-          <div class="detail-row detail-id">
-            <span class="label">Internal Lot ID:</span>
-            <span class="value">{{ batch.id }}</span>
-          </div>
-          <button class="copy-button">Copy Lot ID / Story</button>
+    <div class="qr-section">
+      <div class="card qr-card">
+        <h3>Código de Trazabilidad</h3>
+        <p>Este código enlaza a la información pública del lote.</p>
+
+        <div *ngIf="qrGenerated" class="qr-code-display">
+          <qrcode
+            [qrdata]="qrData"
+            [width]="256"
+            [colorDark]="'#003366'"
+            [colorLight]="'#ffffff'"
+          ></qrcode>
         </div>
 
-        <div class="summary-image-wrapper">
-          <img [src]="batch.imageUrl" alt="Lot Image" class="lot-image" onerror="this.onerror=null; this.src='https://placehold.co/400x300/1a4314/ffffff?text=No+Image'">
-        </div>
+        <p class="qr-link">URL Pública: <a [href]="qrUrl" target="_blank">{{ qrUrl }}</a></p>
+
+        <button class="download-button">
+          <i class="fas fa-download"></i> Descargar QR
+        </button>
+      </div>
+
+      <div *ngIf="batchData.imageUrl" class="product-image-card">
+        <h3>Imagen del Lote</h3>
+        <img [src]="batchData.imageUrl" alt="Imagen del Lote">
       </div>
     </div>
 
-    <div *ngIf="currentView === 'history'" class="tab-content placeholder-content">
-      <h3>Historial del Lote</h3>
-      <p>Aquí se cargará y mostrará la trazabilidad completa del lote.</p>
-    </div>
-
-    <div *ngIf="currentView === 'qr'" class="tab-content placeholder-content">
-      <h3>Generación de Códigos QR</h3>
-      <p>Próximamente: Opciones para generar y descargar etiquetas QR.</p>
-    </div>
   </div>
 </div>
