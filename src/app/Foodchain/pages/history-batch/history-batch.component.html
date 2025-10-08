@@ -16,7 +16,7 @@
       <option [ngValue]="null" disabled>
         {{ isLoadingBatches ? 'Cargando Lotes...' : (userBatches.length === 0 ? 'No hay lotes disponibles' : 'Seleccione un lote') }}
       </option>
-      <option *ngFor="let lot of userBatches" [value]="lot.id">
+      <option *ngFor="let lot of userBatches" [value]="lot.id.toString()">
         {{ lot.lotName }} (ID: {{ lot.id }})
       </option>
     </select>

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, NgModule, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 
 import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';
@@ -127,7 +128,7 @@ export class HistoryBatchComponent implements OnInit {
             const dateB = `${b.stepDate} ${b.stepTime}`;
             return dateA.localeCompare(dateB);
           });
-        
+
           this.isLoadingSteps = false;
 
           if (this.stepsHistory.length === 0) {
