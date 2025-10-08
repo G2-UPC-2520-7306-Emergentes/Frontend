@@ -17,7 +17,7 @@
 
 .header-title h1 {
   font-size: 24px;
-  color: #003366; /* Color primario */
+  color: white; /* Color primario */
   margin: 0;
 }
 
@@ -174,6 +174,50 @@
   display: block;
   margin: 0 auto;
 }
+
+/* 🚨 NUEVOS ESTILOS PARA EL LISTADO DE PASOS 🚨 */
+.steps-list {
+  list-style: none; /* Quitar las viñetas */
+  padding: 0;
+  margin: 0;
+}
+
+.step-item {
+  padding: 10px 0;
+  position: relative;
+}
+
+.step-item h4 {
+  margin: 0 0 5px 0;
+  color: #003366; /* Color del encabezado del paso */
+  font-size: 16px;
+}
+
+.step-item p {
+  margin: 0 0 3px 0;
+  font-size: 14px;
+}
+
+.step-location {
+  font-weight: bold;
+  color: #008000; /* Color para destacar la ubicación */
+}
+
+.product-image-card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Separador entre pasos */
+.step-item hr {
+  border: 0;
+  border-top: 1px solid #f0f0f0;
+  margin: 10px 0;
+}
+
 
 /* --- Media Queries para Responsividad --- */
 @media (max-width: 900px) {

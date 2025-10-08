@@ -49,9 +49,26 @@
   -->
 
 
+
       <div class="card">
         <h3>Pasos de Trazabilidad Registrados</h3>
-        <p>Añade aquí el listado de etapas (Siembra, Empaque, Envío, etc.)</p>
+
+        <div *ngIf="steps.length === 0">
+          <p>No se han registrado pasos de trazabilidad para este lote.</p>
+        </div>
+
+        <ul *ngIf="steps.length > 0" class="steps-list">
+          <li *ngFor="let step of steps; let i = index" class="step-item">
+            <h4>{{ i + 1 }}. {{ step.stepType }}</h4>
+            <p>
+              <span class="step-location">Ubicación: {{ step.location }}</span>
+            </p>
+            <p class="step-date">
+              Fecha: {{ step.stepDate | date: 'mediumDate' }} a las {{ step.stepTime }}
+            </p>
+            <hr *ngIf="i < steps.length - 1">
+          </li>
+        </ul>
       </div>
     </div>
 
@@ -76,7 +93,7 @@
         </button>
       </div>
 
-      <div *ngIf="batchData.imageUrl" class="product-image-card">
+      <div *ngIf="batchData?.imageUrl" class="card product-image-card">
         <h3>Imagen del Lote</h3>
         <img [src]="batchData.imageUrl" alt="Imagen del Lote">
       </div>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router'; // Para obtener el ID y la navegación
+import { ActivatedRoute, Router } from '@angular/router';
 import { first, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
@@ -9,12 +9,13 @@ import { QRCodeComponent } from 'angularx-qrcode';
 
 import { Batch } from '../../model/batch.entity';
 import { BatchService } from '../../services/batch.service';
-import { SessionService } from '../../services/session.service'; // Aunque no se usa directamente, es buena práctica
+// 🚨 NUEVAS IMPORTACIONES
+import { Step } from '../../model/step.entity';
+import { StepService } from '../../services/step.service';
 
 @Component({
   selector: 'app-details-batch',
   standalone: true,
-  // ✅ Importar QRCodeComponent y módulos de Angular
   imports: [CommonModule, QRCodeComponent],
   templateUrl: './details-batch.component.html',
   styleUrls: ['./details-batch.component.css'],
@@ -26,21 +27,23 @@ export class DetailsBatchComponent implements OnInit {
   isLoading: boolean = true;
   errorMessage: string | null = null;
 
+  // Propiedad para almacenar los pasos
+  steps: Step[] = [];
+
   // Propiedades del QR
   qrData: string = '';
-  qrUrl: string = ''; // URL que se genera para el QR
-
-  // Se usa para asegurar que la URL se genere una sola vez
+  qrUrl: string = '';
   qrGenerated: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     protected router: Router,
-    private batchService: BatchService
+    private batchService: BatchService,
+    private stepService: StepService // 🚨 Inyectar StepService
   ) { }
 
   ngOnInit(): void {
-    // 1. Obtener el batchId de la URL
+    // 🚨 NOTA IMPORTANTE: Si tu ruta es /details-batch/:id, cambia 'batchId' por 'id' aquí.
     this.batchId = this.route.snapshot.paramMap.get('batchId');
 
     if (this.batchId) {
@@ -69,8 +72,9 @@ export class DetailsBatchComponent implements OnInit {
         this.isLoading = false;
         if (batch) {
           this.batchData = batch;
-          // 🚨 Generar el QR inmediatamente después de cargar los datos
           this.generateQRUrl(batch.id);
+          // 🚨 CLAVE: Llamar a la carga de pasos inmediatamente después
+          this.loadBatchSteps(batch.id);
         } else if (!this.errorMessage) {
           this.errorMessage = `Lote con ID ${id} no encontrado.`;
         }
@@ -78,15 +82,30 @@ export class DetailsBatchComponent implements OnInit {
   }
 
   /**
-   * Construye la URL pública que será codificada en el QR.
-   * @param id El ID del lote.
+   * Carga todos los pasos relacionados con este lote.
+   * @param lotId ID del lote.
    */
+  loadBatchSteps(lotId: string | number): void {
+    this.stepService.getStepsByLotId(lotId)
+      .pipe(
+        first(),
+        catchError((error) => {
+          console.error('Error al cargar pasos de trazabilidad:', error);
+          // Solo logueamos el error, no interrumpimos la vista del lote
+          return of([]);
+        })
+      )
+      .subscribe((steps: Step[]) => {
+        // 🚨 Ordenar por fecha del paso para mostrar cronológicamente
+        this.steps = steps.sort((a, b) => new Date(a.stepDate).getTime() - new Date(b.stepDate).getTime());
+      });
+  }
+
   generateQRUrl(id: string | number): void {
     const baseUrl = window.location.origin;
-    // URL pública que apunta al componente de vista pública (ViewQrcodeComponent)
     this.qrUrl = `${baseUrl}/view-qrcode/${id}`;
-    this.qrData = this.qrUrl; // Los datos del QR son la URL
-    this.qrGenerated = true; // Marca como generado
+    this.qrData = this.qrUrl;
+    this.qrGenerated = true;
   }
 
   editBatch(): void {
