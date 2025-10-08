@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, SecurityContext} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+// 🚨 CLAVE: Importar DomSanitizer y SecurityContext
+import { DomSanitizer, SafeUrl,  } from '@angular/platform-browser';
 
-// Importar el componente de QR
 import { QRCodeComponent } from 'angularx-qrcode';
 
 import { Batch } from '../../model/batch.entity';
 import { BatchService } from '../../services/batch.service';
-// 🚨 NUEVAS IMPORTACIONES
 import { Step } from '../../model/step.entity';
 import { StepService } from '../../services/step.service';
 
@@ -27,23 +27,25 @@ export class DetailsBatchComponent implements OnInit {
   isLoading: boolean = true;
   errorMessage: string | null = null;
 
-  // Propiedad para almacenar los pasos
   steps: Step[] = [];
 
-  // Propiedades del QR
   qrData: string = '';
   qrUrl: string = '';
   qrGenerated: boolean = false;
+
+  // 🚨 Propiedad ahora puede ser SafeUrl o string (la dejaremos como string para el download)
+  qrImageURL: string = '';
 
   constructor(
     private route: ActivatedRoute,
     protected router: Router,
     private batchService: BatchService,
-    private stepService: StepService // 🚨 Inyectar StepService
+    private stepService: StepService,
+    // 🚨 CLAVE: Inyectar DomSanitizer
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
-    // 🚨 NOTA IMPORTANTE: Si tu ruta es /details-batch/:id, cambia 'batchId' por 'id' aquí.
     this.batchId = this.route.snapshot.paramMap.get('batchId');
 
     if (this.batchId) {
@@ -73,7 +75,6 @@ export class DetailsBatchComponent implements OnInit {
         if (batch) {
           this.batchData = batch;
           this.generateQRUrl(batch.id);
-          // 🚨 CLAVE: Llamar a la carga de pasos inmediatamente después
           this.loadBatchSteps(batch.id);
         } else if (!this.errorMessage) {
           this.errorMessage = `Lote con ID ${id} no encontrado.`;
@@ -81,22 +82,16 @@ export class DetailsBatchComponent implements OnInit {
       });
   }
 
-  /**
-   * Carga todos los pasos relacionados con este lote.
-   * @param lotId ID del lote.
-   */
   loadBatchSteps(lotId: string | number): void {
     this.stepService.getStepsByLotId(lotId)
       .pipe(
         first(),
         catchError((error) => {
           console.error('Error al cargar pasos de trazabilidad:', error);
-          // Solo logueamos el error, no interrumpimos la vista del lote
           return of([]);
         })
       )
       .subscribe((steps: Step[]) => {
-        // 🚨 Ordenar por fecha del paso para mostrar cronológicamente
         this.steps = steps.sort((a, b) => new Date(a.stepDate).getTime() - new Date(b.stepDate).getTime());
       });
   }
@@ -108,9 +103,55 @@ export class DetailsBatchComponent implements OnInit {
     this.qrGenerated = true;
   }
 
+  /**
+   * 🚨 MÉTODO CORREGIDO: Usa DomSanitizer para extraer el string del SafeUrl.
+   * @param url La URL de datos generada por el componente <qrcode>.
+   */
+  captureQRData(url: SafeUrl): void {
+    // Sanitizamos la URL para obtener su valor crudo (raw value) y asignarlo a la propiedad string.
+    const rawUrl = this.sanitizer.sanitize(SecurityContext.URL, url);
+    this.qrImageURL = rawUrl || '';
+  }
+
   editBatch(): void {
     if (this.batchId) {
       this.router.navigate([`/sidenav/edit-batch/${this.batchId}`]);
+    }
+  }
+
+  /**
+   * Método que toma la URL de datos del QR (Base64) y fuerza la descarga como archivo PNG.
+   */
+  downloadQR(): void {
+    if (!this.qrImageURL || !this.batchData) {
+      console.error('QR code data or batch data not available.');
+      // Utilizamos alert() en este caso ya que es la forma más directa de notificar al usuario en el editor de código.
+      alert('El código QR no está listo para descargar. Intente de nuevo.');
+      return;
+    }
+
+    try {
+      // Ahora dataURL es una string válida gracias al DomSanitizer
+      const dataURL = this.qrImageURL;
+
+      // 1. Crear un enlace temporal (<a>)
+      const a = document.createElement('a');
+
+      // 2. Asignar la URL de datos
+      a.href = dataURL;
+
+      // 3. Establecer el nombre de archivo con el nombre del lote
+      const fileName = `QR_Lote_${this.batchData.id}_${this.batchData.lotName.replace(/\s/g, '_')}.png`;
+      a.download = fileName;
+
+      // 4. Simular un clic para forzar la descarga
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+    } catch (e) {
+      console.error('Error al descargar el QR.', e);
+      alert('Ocurrió un error al intentar descargar el QR.');
     }
   }
 }

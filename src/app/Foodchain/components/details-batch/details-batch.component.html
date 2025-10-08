@@ -76,19 +76,18 @@
       <div class="card qr-card">
         <h3>Código de Trazabilidad</h3>
         <p>Este código enlaza a la información pública del lote.</p>
-
+        <p class="qr-link">URL Pública: <a [href]="qrUrl" target="_blank">{{ qrUrl }}</a></p>
         <div *ngIf="qrGenerated" class="qr-code-display">
           <qrcode
+            #qrCode
             [qrdata]="qrData"
             [width]="256"
             [colorDark]="'#003366'"
             [colorLight]="'#ffffff'"
-          ></qrcode>
+            (qrCodeURL)="captureQRData($event)" ></qrcode>
         </div>
 
-        <p class="qr-link">URL Pública: <a [href]="qrUrl" target="_blank">{{ qrUrl }}</a></p>
-
-        <button class="download-button">
+        <button class="download-button" (click)="downloadQR()">
           <i class="fas fa-download"></i> Descargar QR
         </button>
       </div>
