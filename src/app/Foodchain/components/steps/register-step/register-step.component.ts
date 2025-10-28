@@ -46,12 +46,34 @@ export class RegisterStepComponent implements OnInit {
     this.loadUserBatches();
   }
 
+  // Función para obtener fecha y hora actuales en formato compatible
+  getCurrentDateTime(): { date: string, time: string } {
+    const now = new Date();
+    // Formato YYYY-MM-DD para el input type="date"
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const dateString = `${year}-${month}-${day}`;
+
+    // Formato HH:MM para el input type="time"
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const timeString = `${hours}:${minutes}`;
+
+    return { date: dateString, time: timeString };
+  }
+
   initForm(): void {
+    // Obtener la fecha y hora actuales
+    const currentDateTime = this.getCurrentDateTime();
+
     this.stepForm = this.fb.group({
       lotId: ['', Validators.required],
       stepType: ['', Validators.required],
-      stepDate: ['', Validators.required],
-      stepTime: ['', Validators.required],
+      // CAMBIO 1: Configurar el valor inicial y deshabilitar el control
+      stepDate: [{ value: currentDateTime.date, disabled: true }, Validators.required],
+      // CAMBIO 2: Configurar el valor inicial y deshabilitar el control
+      stepTime: [{ value: currentDateTime.time, disabled: true }, Validators.required],
       location: ['', Validators.required],
       observations: [''],
     });
@@ -101,6 +123,9 @@ export class RegisterStepComponent implements OnInit {
    * Maneja el envío del formulario para registrar el paso.
    */
   onSubmit(): void {
+    // Es crucial usar getRawValue() para incluir los campos deshabilitados (stepDate y stepTime)
+    const rawFormValues = this.stepForm.getRawValue();
+
     if (this.stepForm.invalid) {
       this.stepForm.markAllAsTouched();
       alert('Por favor, completa todos los campos requeridos para el paso.');
@@ -115,11 +140,15 @@ export class RegisterStepComponent implements OnInit {
       return;
     }
 
-    const formValues = this.stepForm.value;
+    // Usar rawFormValues para obtener todos los campos, incluidos los deshabilitados
+    const formValues = rawFormValues;
 
     // Construcción del payload incluyendo los IDs y el hash vacío
     const payload: StepCreatePayload = {
       ...formValues,
+      // Asegurar que los campos deshabilitados estén presentes
+      stepDate: formValues.stepDate,
+      stepTime: formValues.stepTime,
       lotId: formValues.lotId,
       userId: connectedUserId,
       hash: '', // Inicialmente vacío
