@@ -1,77 +1,124 @@
 /* ------------------------------------------- */
-/* LAYOUT BASE (MODO CLARO POR DEFECTO) */
+/* VARIABLES Y ESTILOS BASE (Modo Claro por defecto) */
 /* ------------------------------------------- */
+
+/* Colores Base */
+:root {
+  --clr-primary: #1976d2;
+  --clr-active: #388e3c;
+  --clr-bg-light: #f4f6f8;
+  --clr-sidebar-light: #ffffff;
+  --clr-text-dark: #2c3e50;
+  --clr-hover-light: #e8ecf1;
+  --clr-border-light: #ececec;
+  --clr-logout-light: #d32f2f;
+}
+
+/* Modo Oscuro - Tonalidades Verdes */
+:host-context(body.dark-theme) {
+  --clr-primary: #a3ffac;
+  --clr-active:   #9b9b9b;
+  --clr-bg-dark: #1e3c23;
+  --clr-sidebar-dark: #122b15;
+  --clr-text-light: white;
+  --clr-hover-dark: #284e2c;
+  --clr-border-dark: #284e2c;
+  --clr-logout-dark: #ffb3b3;
+}
+
+/* Estructura del Layout */
 .sidenav-layout {
   display: flex;
   height: 100vh;
+  font-family: 'Arial', sans-serif;
 }
 
-/* Sidebar - Modo Claro (tu estilo base) */
-.sidebar {
-  width: 250px;
-  background-color: #f7f7f7; /* Fondo claro del menú */
-  padding-top: 20px;
-  flex-shrink: 0;
-  color: #333; /* Texto oscuro */
-}
-
-/* Contenido Principal - Modo Claro */
+/* Contenido Principal */
 .content-area {
   flex-grow: 1;
   padding: 30px;
   overflow-y: auto;
-  background-color: #ffffff; /* El fondo principal es blanco */
+  background-color: var(--clr-bg-light);
+  transition: background-color 0.3s ease;
 }
 
-/* Navegación Base */
+/* ------------------------------------------- */
+/* SIDEBAR (Menú Lateral) */
+/* ------------------------------------------- */
+
+.sidebar {
+  width: 280px;
+  background-color: var(--clr-sidebar-light);
+  padding: 0;
+  flex-shrink: 0;
+  color: var(--clr-text-dark);
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+/* Contenedor de Navegación */
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 20px;
+  overflow-y: auto;
+}
+
 .sidebar-nav ul {
   list-style: none;
-  padding: 0;
+  padding: 0 15px;
+  margin: 0;
 }
 
+/* Elementos de Navegación */
 .nav-item {
   display: flex;
   align-items: center;
-  padding: 10px 15px;
+  padding: 12px 15px;
   text-decoration: none;
-  color: #333;
-  transition: background-color 0.2s, color 0.2s;
+  color: var(--clr-text-dark);
+  font-size: 1rem;
+  border-radius: 8px;
+  margin-bottom: 5px;
+  transition: background-color 0.2s, color 0.2s, transform 0.1s;
 }
 
 .nav-item:hover {
-  background-color: #e0e0e0;
+  background-color: #a3ffac ;
+  transform: translateY(-1px);
 }
 
+/* Estado Activo */
 .nav-item.active {
-  background-color: #d0d0d0;
-  font-weight: bold;
-  border-left: 4px solid #388e3c; /* Borde de color activo */
-  padding-left: 11px; /* Ajuste para el borde */
+  background-color: #a3ffac;
+  color: var(--clr-sidebar-light);
+  font-weight: 600;
+  box-shadow: 0 2px 5px rgba(56, 142, 60, 0.4);
+}
+
+.nav-item.active .icon {
+  filter: brightness(1.5);
 }
 
 .icon {
-  margin-right: 10px;
-  font-size: 1.2em;
-}
-
-/* Logout y Separadores */
-.logout {
-  padding-top: 10px;
-  margin-top: auto;
-  border-top: 1px solid #ddd;
-}
-
-.logout-link {
-  color: #cc0000; /* Rojo para destacar el logout */
+  margin-right: 12px;
+  font-size: 1.3em;
+  line-height: 1;
 }
 
 /* ------------------------------------------- */
-/* THEME TOGGLE */
+/* THEME TOGGLE Y LOGOUT */
 /* ------------------------------------------- */
+
+/* Contenedor del Toggle */
 .theme-toggle-container {
-  padding: 10px 0;
-  margin-top: 15px; /* Separación de la navegación */
-  border-top: 1px solid #ddd;
+  padding: 15px;
+  margin-top: 15px;
+  border-top: 1px solid var(--clr-border-light);
+  flex-shrink: 0;
 }
 
 .theme-toggle-button {
@@ -83,58 +130,90 @@
   display: flex;
   align-items: center;
   padding: 10px 15px;
-  color: #333;
+  color: var(--clr-text-dark);
+  border-radius: 8px;
   transition: background-color 0.2s;
 }
 
 .theme-toggle-button:hover {
-  background-color: #e0e0e0;
+  background-color: var(--clr-hover-light);
 }
 
+.theme-toggle-button span {
+  margin-left: 12px;
+}
+
+/* Logout */
+.logout {
+  padding: 15px;
+  border-top: 1px solid var(--clr-border-light);
+  flex-shrink: 0;
+}
+
+.logout-link {
+  color: var(--clr-logout-light);
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.logout-link:hover {
+  background-color: rgba(211, 47, 47, 0.1);
+}
+
+
 /* ------------------------------------------- */
-/* ESTILOS DE MODO OSCURO (TONALIDADES VERDES) */
+/* ADAPTACIÓN AL MODO OSCURO (DARK MODE) */
 /* ------------------------------------------- */
 
-/* Cuando el BODY tiene la clase dark-theme, sobrescribe los colores con tonos verdes */
 :host-context(body.dark-theme) .sidebar {
-  background-color: #0f3a12; /* Verde oscuro intenso para el menú */
-  color: #e6ffe6; /* Verde muy claro, casi blanco */
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.4);
+  background-color: var(--clr-sidebar-dark);
+  color: var(--clr-text-light);
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.6);
 }
 
 :host-context(body.dark-theme) .content-area {
-  background-color: #1a4314; /* Verde oscuro medio para el contenido principal */
+  background-color: var(--clr-bg-dark);
 }
 
 :host-context(body.dark-theme) .nav-item {
-  color: #e6ffe6; /* Texto verde claro */
+  color: var(--clr-text-light);
 }
 
 :host-context(body.dark-theme) .nav-item:hover {
-  background-color: #2b5c2a; /* Verde ligeramente más claro al pasar el mouse */
+  background-color: var(--clr-hover-dark);
 }
 
 :host-context(body.dark-theme) .nav-item.active {
-  background-color: #2b5c2a; /* Verde más claro para activo */
-  border-left-color: #a3ffac; /* Verde brillante para el borde activo */
+  background-color: var(--clr-active);
+  color: var(--clr-text-dark);
+  box-shadow: 0 2px 5px rgba(163, 255, 172, 0.3);
 }
 
+:host-context(body.dark-theme) .nav-item.active .icon {
+  filter: none; 
+}
+
+:host-context(body.dark-theme) .theme-toggle-container,
 :host-context(body.dark-theme) .logout {
-  border-top: 1px solid #2b5c2a; /* Borde separador verde */
-}
-
-:host-context(body.dark-theme) .logout-link {
-  color: #ffb3b3; /* Rojo suave para contraste en verde oscuro */
-}
-
-:host-context(body.dark-theme) .theme-toggle-container {
-  border-top: 1px solid #2b5c2a;
+  border-top: 1px solid var(--clr-border-dark);
 }
 
 :host-context(body.dark-theme) .theme-toggle-button {
-  color: #e6ffe6; /* Texto del botón verde claro */
+  color: var(--clr-text-light);
 }
 
 :host-context(body.dark-theme) .theme-toggle-button:hover {
-  background-color: #2b5c2a; /* Fondo verde al pasar el mouse */
+  background-color: var(--clr-hover-dark);
+}
+
+:host-context(body.dark-theme) .logout-link {
+  color: var(--clr-logout-dark);
+}
+
+:host-context(body.dark-theme) .logout-link:hover {
+  background-color: rgba(255, 179, 179, 0.1);
 }
