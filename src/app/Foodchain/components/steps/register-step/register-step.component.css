@@ -88,18 +88,24 @@ textarea.form-control {
 /* Estilos de Mapa Simulado */
 .map-placeholder {
   width: 100%;
-  height: 300px;
-  background-color: #e0e0e0;
-  border: 1px solid #ccc;
+  /* REMOVIDO: height: 300px; */
+  border: 1px solid #ccc; /* El borde ahora rodeará el mapa o el mensaje de carga */
   border-radius: 6px;
   margin-top: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
-  /* Simulación visual del mapa de la imagen */
-  background-image: url('https://via.placeholder.com/600x300/e0e0e0/555?text=Google+Maps+Placeholder');
-  background-size: cover;
-  background-position: center;
+  padding: 0; /* Aseguramos que no haya padding extra */
+}
+.map-placeholder > div {
+  width: 100%;
+  height: 300px; /* Mantenemos la altura solo para el div de carga/error */
+}
+
+/* Asegurar que el componente Google Maps tome el 100% del contenedor */
+google-map {
+  display: block;
+  width: 100%;
 }
 
 .map-reference {

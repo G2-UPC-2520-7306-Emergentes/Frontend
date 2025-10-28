@@ -87,17 +87,28 @@
         id="location"
         formControlName="location"
         class="form-control"
-        placeholder="Ubicación manual (ej: Dirección, Coordenadas)"
+        placeholder="Ubicación capturada automáticamente (lat, lon)"
         [class.is-invalid]="f['location'].invalid"
+        readonly
       >
-      <small class="text-muted">Ubicación capturada manualmente. No editable (por ahora).</small>
+      <small class="text-muted">Ubicación capturada automáticamente. No editable.</small>
       <div *ngIf="f['location'].invalid" class="text-danger">
         La Ubicación es requerida.
       </div>
     </div>
 
     <div class="map-placeholder">
-
+      <google-map
+        *ngIf="center.lat !== 0"
+        [options]="mapOptions"
+        height="300px"
+        width="100%"
+      >
+        <map-marker [options]="markerOptions"></map-marker>
+      </google-map>
+      <div *ngIf="center.lat === 0" style="height: 300px; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa; border: 1px solid #dee2e6;">
+        Cargando mapa de ubicación...
+      </div>
     </div>
     <small class="text-muted map-reference">Vista de referencia de la ubicación capturada</small>
 
