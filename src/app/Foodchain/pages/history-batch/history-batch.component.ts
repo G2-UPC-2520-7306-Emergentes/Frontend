@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 
-// Entidades y Servicios
+
 import { SessionService } from '../../services/session.service';
 import { BatchService } from '../../services/batch.service';
 import { StepService } from '../../services/step.service';
@@ -67,13 +67,13 @@ export class HistoryBatchComponent implements OnInit {
         next: (allBatches: Batch[]) => {
           console.log('2. Total de Lotes Obtenidos de la API:', allBatches.length);
 
-          // 🚨 FILTRADO CON LOGS DETALLADOS
+
           this.userBatches = allBatches.filter(
             (batch: Batch) => {
-              const batchProducerId = String(batch.producer_id); // Asegurar que ambos son strings
+              const batchProducerId = String(batch.producer_id);
               const isMatch = batchProducerId === connectedUserId;
 
-              // Log de depuración por cada lote
+
               console.log(
                 `   - Lote ID: ${batch.id} | Producer ID del Lote: ${batchProducerId} | Coincide con ${connectedUserId}?: ${isMatch}`
               );
@@ -104,7 +104,7 @@ export class HistoryBatchComponent implements OnInit {
       });
   }
 
-  // --- El resto de los métodos se mantienen iguales ---
+
   onLotSelected(): void {
     if (this.selectedLotId) {
       this.loadStepsByLotId(this.selectedLotId);

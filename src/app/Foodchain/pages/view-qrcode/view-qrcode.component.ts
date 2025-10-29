@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap, first } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-// Servicios y Entidades
+
 import { BatchService } from '../../services/batch.service';
 import { StepService } from '../../services/step.service';
 import { Batch } from '../../model/batch.entity';
@@ -19,7 +19,7 @@ import { Step } from '../../model/step.entity';
 })
 export class ViewQrcodeComponent implements OnInit {
 
-  // Propiedades de Estado
+
   batchId: string | null = null;
   batchDetails: Batch | null = null;
   stepsHistory: Step[] = [];
@@ -27,7 +27,7 @@ export class ViewQrcodeComponent implements OnInit {
   // Estado de la UI
   isLoading: boolean = true;
   errorMessage: string | null = null;
-  activeTab: 'details' | 'history' = 'details'; // Pestaña activa
+  activeTab: 'details' | 'history' = 'details';
 
   constructor(
     private route: ActivatedRoute,
@@ -37,8 +37,7 @@ export class ViewQrcodeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // 1. Obtener el ID del lote desde los parámetros de la URL
-    // Usamos switchMap para cambiar el observable de la ruta al observable del servicio.
+
     this.route.paramMap.pipe(
       switchMap(params => {
         this.batchId = params.get('lotId');
@@ -49,7 +48,7 @@ export class ViewQrcodeComponent implements OnInit {
           return of(null);
         }
 
-        // 2. Cargar el Lote por su ID
+
         return this.batchService.getBatchById(this.batchId);
       }),
       first()
@@ -58,7 +57,7 @@ export class ViewQrcodeComponent implements OnInit {
         this.batchDetails = batch;
 
         if (batch) {
-          // 3. Si el lote existe, cargar sus pasos
+
           this.loadStepsHistory(batch.id);
         } else {
           this.errorMessage = `Lote con ID ${this.batchId} no encontrado.`;
@@ -82,7 +81,7 @@ export class ViewQrcodeComponent implements OnInit {
       .subscribe({
         next: (steps: Step[] | null) => {
           if (steps && steps.length > 0) {
-            // Ordenar por fecha y hora (Antiguo a Reciente)
+
             this.stepsHistory = steps.sort((a, b) => {
               const dateA = `${a.stepDate} ${a.stepTime}`;
               const dateB = `${b.stepDate} ${b.stepTime}`;
@@ -93,7 +92,7 @@ export class ViewQrcodeComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error al cargar historial:', err);
-          // Permitimos que la vista se muestre incluso si falla el historial
+
           this.errorMessage = this.errorMessage || 'Error al cargar el historial de trazabilidad.';
           this.isLoading = false;
         }
@@ -107,10 +106,10 @@ export class ViewQrcodeComponent implements OnInit {
     this.activeTab = tab;
   }
 
-  // Métodos auxiliares para la vista
+
   formatHash(hash: string): string {
     if (!hash || hash.length < 8) {
-      return '**********'; // Bloqueado
+      return '**********';
     }
     return `${hash.substring(0, 4)}...${hash.substring(hash.length - 4)}`;
   }

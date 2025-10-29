@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {Router, RouterLink} from '@angular/router'; // Para volver al Login
+import {Router, RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-recover-login',
@@ -11,11 +11,9 @@ import {Router, RouterLink} from '@angular/router'; // Para volver al Login
 })
 export class RecoverLoginComponent implements OnInit {
 
-  // Controla qué vista se muestra (1: Email, 2: New Password)
   currentStep: number = 1;
   stepError: string | null = null;
 
-  // Variables para la vista de éxito del paso 2
   passwordUpdated: boolean = false;
 
   constructor(private router: Router) { }
@@ -23,13 +21,11 @@ export class RecoverLoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  // Helper simple para validar formato de email
   private isValidEmail(email: string): boolean {
     const re = /\S+@\S+\.\S+/;
     return re.test(email.toLowerCase());
   }
 
-  // Maneja el envío del formulario del Paso 1 (Enviar Email)
   public onSendLink(event: Event, form: HTMLFormElement): void {
     event.preventDefault();
 
@@ -42,7 +38,7 @@ export class RecoverLoginComponent implements OnInit {
       return;
     }
 
-    // 🚨 VALIDACIÓN SIMPLE DE FORMATO (Lo que pediste)
+
     if (!this.isValidEmail(email)) {
       this.stepError = 'Please enter a valid email address.';
       return;

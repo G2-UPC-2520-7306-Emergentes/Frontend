@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Batch } from '../../model/batch.entity'; // Asegúrate de la ruta
-import { RouterLink } from '@angular/router'; // Para el botón 'Duplicar'
+import { Batch } from '../../model/batch.entity';
+import { RouterLink } from '@angular/router';
 
-// Definimos una interfaz para el tipo de datos que vamos a mostrar
+
 interface DuplicableBatch {
   id: string;
   lotName: string;
@@ -15,18 +15,17 @@ interface DuplicableBatch {
 
 @Component({
   selector: 'app-duplicate-batch',
-  // Es crucial que sea standalone
+
   standalone: true,
-  // Sólo necesitamos CommonModule y RouterLink
+
   imports: [CommonModule, RouterLink],
-  // 🚨 Nota: Necesitarás crear un archivo HTML y CSS para este componente.
+
   templateUrl: './duplicate-batch.component.html',
   styleUrls: ['./duplicate-batch.component.css'],
 })
 export class DuplicateBatchComponent implements OnInit {
 
-  // ✅ Datos de lote inicializados directamente para visualización
-  // Estos datos imitan el formato que se ve en tu imagen de ejemplo ("Duplicar Lote").
+
   availableBatches: DuplicableBatch[] = [
     {
       id: 'LOT-2023-07-15',
@@ -34,7 +33,7 @@ export class DuplicateBatchComponent implements OnInit {
       createdDate: '15 de julio de 2023',
       varietyAndFarm: 'Variedad: Arábica / Finca: El Paraíso',
       state: 'Activo',
-      imageUrl: 'assets/images/coffee1.png' // Usa una URL de imagen real o placeholder
+      imageUrl: 'assets/images/coffee1.png'
     },
     {
       id: 'LOT-2023-08-22',
@@ -57,7 +56,7 @@ export class DuplicateBatchComponent implements OnInit {
   isLoading: boolean = false;
   errorMessage: string | null = null;
 
-  // 🛑 ELIMINAMOS cualquier inyección de servicio (BatchService) o constructor para evitar el NG0200
+
   constructor() { }
 
   ngOnInit(): void {

@@ -57,8 +57,7 @@ export class RegisterLoginComponent implements OnInit {
       return;
     }
 
-    // 1. Limpiamos el payload antes de enviarlo al servicio
-    //    El servicio recibe ahora un objeto que no tiene confirmPassword
+
     const {  confirmPassword,
       agreement,
       recaptcha,
@@ -67,10 +66,10 @@ export class RegisterLoginComponent implements OnInit {
     // 2. 🚀 Llama al servicio y se suscribe al resultado
     this.userService.registerUser(newUserToSave as RegisterPayload)
       .subscribe((user) => {
-        // user será el objeto registrado (User) o null (si falló en el servicio)
+
         if (user) {
           alert('Registro exitoso');
-          // 3. Redirigir SOLO si el registro fue exitoso
+
           this.router.navigate(['/login']);
         }
       });

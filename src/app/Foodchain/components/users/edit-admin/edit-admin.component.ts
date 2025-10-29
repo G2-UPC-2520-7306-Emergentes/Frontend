@@ -6,7 +6,7 @@ import {SessionService} from '../../../services/session.service';
 import {UserService} from '../../../services/user.service';
 import {User} from '../../../model/user.entity';
 
-// ✨ Importamos tus servicios
+
 
 // Interfaz para mapear los datos que el formulario necesita
 interface UserProfileForm {
@@ -45,12 +45,12 @@ export class EditAdminComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    // ✨ Inyectamos SessionService
+
     private sessionService: SessionService,
-    // ✨ Inyectamos UserService
+
     private userService: UserService
   ) {
-    // Inicializamos el formulario con los controles
+
     this.profileForm = this.fb.group({
       nombreCompleto: ['', Validators.required],
       correoElectronico: ['', [Validators.required, Validators.email]],
@@ -61,34 +61,34 @@ export class EditAdminComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // 1. Obtener el ID del usuario logueado
+
     const userId = this.sessionService.getUserId();
 
     if (userId) {
       this.isLoading = true;
       console.log(`Usuario logueado ID: ${userId}. Cargando perfil con UserService.getById...`);
 
-      // 2. Llamar a getById() usando el ID de la sesión
+
       this.userService.getById(userId).subscribe({
         next: (user) => {
-          // 3. Mapear los campos del objeto User (asumimos que incluye los campos creados)
+
           const formData: UserProfileForm = {
-            // Combinamos nombre y apellido para el campo 'nombreCompleto'
+
             nombreCompleto: `${user.firstName} ${user.lastName}`,
             correoElectronico: user.email,
-            // Mapeamos el campo 'phoneNumber' (que creamos) al campo 'telefono'
+
             telefono: user.phoneNumber || '',
             empresa: user.companyName,
-            // Asumimos que 'requestedRole' es el 'cargo' en el formulario
+
             cargo: user.requestedRole,
           };
 
-          // 4. Rellenar el formulario con los datos mapeados
+
           this.profileForm.patchValue(formData);
           this.isLoading = false;
 
-          // Opcional: Mostrar la firma actual si existiera un campo para ello
-          // this.updateCurrentSignature(user.currentSignatureHash);
+
+
 
           console.log('Perfil cargado y formulario rellenado exitosamente.');
         },
@@ -97,7 +97,7 @@ export class EditAdminComponent implements OnInit {
           console.error('Fallo al obtener perfil del usuario logueado. ¿ID válido? ¿API accesible?', err);
           alert('Error al cargar datos del usuario. Por favor, verifica la conexión o inicia sesión de nuevo.');
 
-          // Si la llamada falla, se asume que la sesión no es válida y se redirige
+
           this.sessionService.clearSession();
           this.router.navigate(['/login']);
         }
@@ -133,7 +133,7 @@ export class EditAdminComponent implements OnInit {
 
     console.log('Obteniendo usuario completo antes de actualizar...');
 
-    // 1️⃣ Obtener el usuario actual desde el backend
+
     this.userService.getById(userId).subscribe({
       next: (currentUser) => {
         if (!currentUser) {
@@ -142,9 +142,9 @@ export class EditAdminComponent implements OnInit {
           return;
         }
 
-        // 2️⃣ Combinar los datos actuales con los del formulario
+
         const updatedUser: User = {
-          ...currentUser, // mantiene todos los campos actuales
+          ...currentUser,
           firstName,
           lastName,
           email: this.profileForm.value.correoElectronico,
@@ -155,14 +155,14 @@ export class EditAdminComponent implements OnInit {
 
         console.log('Enviando actualización completa del usuario:', updatedUser);
 
-        // 3️⃣ Llamar al servicio de actualización
+
         this.userService.updateProfile(userId, updatedUser).subscribe({
           next: (updated) => {
             this.isLoading = false;
             if (updated) {
               alert('✅ Perfil actualizado correctamente.');
 
-              // Simular generación de nueva firma digital
+
               this.signatureHistory.unshift({
                 hash: '7f9a...3333',
                 eventsCount: 0,

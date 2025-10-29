@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
-// 🚨 CLAVE: Importar DomSanitizer y SecurityContext
+
 import { DomSanitizer, SafeUrl,  } from '@angular/platform-browser';
 
 import { QRCodeComponent } from 'angularx-qrcode';
@@ -33,7 +33,7 @@ export class DetailsBatchComponent implements OnInit {
   qrUrl: string = '';
   qrGenerated: boolean = false;
 
-  // 🚨 Propiedad ahora puede ser SafeUrl o string (la dejaremos como string para el download)
+
   qrImageURL: string = '';
 
   constructor(
@@ -41,7 +41,7 @@ export class DetailsBatchComponent implements OnInit {
     protected router: Router,
     private batchService: BatchService,
     private stepService: StepService,
-    // 🚨 CLAVE: Inyectar DomSanitizer
+
     private sanitizer: DomSanitizer
   ) { }
 
@@ -108,7 +108,7 @@ export class DetailsBatchComponent implements OnInit {
    * @param url La URL de datos generada por el componente <qrcode>.
    */
   captureQRData(url: SafeUrl): void {
-    // Sanitizamos la URL para obtener su valor crudo (raw value) y asignarlo a la propiedad string.
+
     const rawUrl = this.sanitizer.sanitize(SecurityContext.URL, url);
     this.qrImageURL = rawUrl || '';
   }
@@ -125,26 +125,26 @@ export class DetailsBatchComponent implements OnInit {
   downloadQR(): void {
     if (!this.qrImageURL || !this.batchData) {
       console.error('QR code data or batch data not available.');
-      // Utilizamos alert() en este caso ya que es la forma más directa de notificar al usuario en el editor de código.
+
       alert('El código QR no está listo para descargar. Intente de nuevo.');
       return;
     }
 
     try {
-      // Ahora dataURL es una string válida gracias al DomSanitizer
+
       const dataURL = this.qrImageURL;
 
-      // 1. Crear un enlace temporal (<a>)
+
       const a = document.createElement('a');
 
-      // 2. Asignar la URL de datos
+
       a.href = dataURL;
 
-      // 3. Establecer el nombre de archivo con el nombre del lote
+
       const fileName = `QR_Lote_${this.batchData.id}_${this.batchData.lotName.replace(/\s/g, '_')}.png`;
       a.download = fileName;
 
-      // 4. Simular un clic para forzar la descarga
+
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

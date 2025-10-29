@@ -3,9 +3,9 @@ import { Observable, of } from 'rxjs';
 import { retry, catchError, map } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { BaseService } from '../../shared/services/base.service';
-import { User } from '../model/user.entity'; // ✨ Usando la entidad User
+import { User } from '../model/user.entity';
 
-// Define la Interfaz del Payload de Registro
+
 export interface RegisterPayload {
   firstName: string;
   lastName: string;
@@ -18,19 +18,19 @@ export interface RegisterPayload {
   agreement: boolean;
   recaptcha: boolean;
   confirmPassword?: string;
-  id: string; // Puede ser número o string
+  id: string;
 }
 
 export interface CreateUserBody {
   firstName: string;
   lastName: string;
   email: string;
-  password: string; // "admin1"
+  password: string;
   companyName: string;
-  taxId?: string; // ""
-  companyOption: 'join' | 'create'; // "join"
-  requestedRole: string; // El rol seleccionado
-  phoneNumber: string; // Teléfono
+  taxId?: string;
+  companyOption: 'join' | 'create';
+  requestedRole: string;
+  phoneNumber: string;
 }
 
 @Injectable({
@@ -43,11 +43,11 @@ export class UserService extends BaseService<User> {
     this.resourceEndPoint = '/users';
   }
 
-  registerCompany(newUserBody: CreateUserBody): Observable<User | null> { // <-- ¡Nombre de método cambiado!
+  registerCompany(newUserBody: CreateUserBody): Observable<User | null> {
 
     console.log('UserService: Cuerpo HTTP limpio enviado (registerCompany):', newUserBody);
 
-    // Llamamos al método create del BaseService con el cuerpo limpio.
+
     return this.create(newUserBody as unknown as User)
       .pipe(
         catchError((error: HttpErrorResponse) => {
@@ -65,7 +65,6 @@ export class UserService extends BaseService<User> {
   }
 
 
-  // --- Nuevo Método Específico para Registro ---
 
   /**
    * Registra un nuevo usuario en el sistema, utilizando el método create() heredado.
@@ -73,8 +72,7 @@ export class UserService extends BaseService<User> {
    * @returns Un Observable que emite el objeto User registrado o null si falla.
    */
   registerUser(newUserPayload: RegisterPayload): Observable<User | null> {
-    // Aplicamos la doble conversión (as unknown as User) para resolver el TS2352
-    // y satisfacer la firma de BaseService.create(item: any).
+
     return this.create(newUserPayload as unknown as User)
       .pipe(
         catchError((error: HttpErrorResponse) => {
@@ -111,9 +109,8 @@ export class UserService extends BaseService<User> {
 
 
 
-  // --- Métodos CRUD Heredados/Sobrescritos ---
 
-  // El método retorna un Observable de la clase User
+
   getById(id: string): Observable<User> {
     return this.http.get<User>(`${this.resourcePath()}/${id}`, this.httpOptions)
       .pipe(

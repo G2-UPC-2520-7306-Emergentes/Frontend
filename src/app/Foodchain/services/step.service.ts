@@ -3,44 +3,44 @@ import { Observable, of } from 'rxjs';
 import {retry, catchError, map} from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { BaseService } from '../../shared/services/base.service';
-import { Step } from '../model/step.entity'; // 🚨 Importar la entidad Step
+import { Step } from '../model/step.entity';
 
-// --- Interfaz del Payload de Creación de Paso ---
+
 
 /**
  * Define la estructura de los datos necesarios para crear un nuevo Step.
  * El componente RegisterStepComponent será responsable de asegurar que estos campos existan.
  */
 export interface StepCreatePayload {
-  // Datos del Formulario
+
   stepType: string;
   stepDate: string;
   stepTime: string;
   location: string;
   observations?: string;
 
-  // IDs inyectados por el componente (fuera del formulario)
-  lotId: string; // ID del lote seleccionado
-  userId: string; // ID del usuario conectado
 
-  // Campo que debe ser enviado (vacío por ahora)
+  lotId: string;
+  userId: string;
+
+
   hash: string;
 }
 
-// --- Clase del Servicio ---
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class StepService extends BaseService<Step> { // 🚨 Heredar de BaseService<Step>
+export class StepService extends BaseService<Step> {
 
   constructor() {
     super();
-    // 🚨 Establece el endpoint principal para las operaciones CRUD del recurso Step
+
     this.resourceEndPoint = '/steps';
   }
 
-  // --- Método Específico para Creación de Paso ---
+
 
   /**
    * Registra un nuevo paso de trazabilidad en el sistema.
@@ -49,11 +49,11 @@ export class StepService extends BaseService<Step> { // 🚨 Heredar de BaseServ
    */
   createStep(newStepPayload: StepCreatePayload): Observable<Step | null> {
 
-    // Creamos una instancia de Step para asegurarnos de que todos los valores
-    // (incluidos los por defecto como el hash vacío) se asignen antes de enviar.
+
+
     const stepEntity = new Step(newStepPayload);
 
-    // Aplicamos la conversión (as unknown as Step) para satisfacer el tipado del create.
+
     return this.create(stepEntity as unknown as Step)
       .pipe(
         catchError((error: HttpErrorResponse) => {
@@ -74,7 +74,7 @@ export class StepService extends BaseService<Step> { // 🚨 Heredar de BaseServ
       );
   }
 
-  // --- Métodos Adicionales (Opcional, similar a BatchService) ---
+
 
   /**
    * Obtiene todos los pasos registrados (útil para administración o depuración).
@@ -96,14 +96,14 @@ export class StepService extends BaseService<Step> { // 🚨 Heredar de BaseServ
    * @param lotId El ID del lote a filtrar.
    * @returns Un Observable que emite un array de Step.
    */
-  getStepsByLotId(lotId: string | number | null): Observable<Step[]> { // <- Acepta más tipos
+  getStepsByLotId(lotId: string | number | null): Observable<Step[]> {
 
-    // 🚨 CORRECCIÓN CLAVE: Asegura que lotId es una cadena antes de llamar a .trim()
+
     const cleanedLotId = String(lotId || '').trim();
 
     console.log(`[StepService] Solicitando pasos para Lote ID SANEADO: "${cleanedLotId}"`);
 
-    // Si el ID es una cadena vacía después del saneamiento, no tiene sentido buscar
+
     if (!cleanedLotId) {
       console.warn('[StepService] ID de lote inválido o vacío después del saneamiento. Devolviendo array vacío.');
       return of([]);
@@ -115,11 +115,11 @@ export class StepService extends BaseService<Step> { // 🚨 Heredar de BaseServ
           console.log(`[StepService] Total de Pasos recibidos de la API: ${allSteps.length}`);
 
           const filteredSteps = allSteps.filter(step => {
-            // Saneamos el lotId del paso de la misma manera
+
             const stepLotId = String(step.lotId || '').trim();
             const isMatch = stepLotId === cleanedLotId;
 
-            // Log de depuración por cada paso (¡Importante!)
+
             console.log(
               `[StepService]   - Paso ID: ${step.id} | Lote ID del Paso SANEADO: "${stepLotId}" | Coincide con "${cleanedLotId}"?: ${isMatch}`
             );

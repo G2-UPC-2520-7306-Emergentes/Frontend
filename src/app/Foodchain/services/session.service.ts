@@ -4,11 +4,11 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class SessionService {
-  // Almacena el ID del usuario en memoria
+
   private loggedInUserId: string | null = null;
 
   constructor() {
-    // Intenta recuperar el ID de localStorage al iniciar la aplicación
+
     this.loggedInUserId = localStorage.getItem('logged_user_id');
   }
 
@@ -17,7 +17,7 @@ export class SessionService {
    */
   setUserId(id: string): void {
     this.loggedInUserId = id;
-    localStorage.setItem('logged_user_id', id); // Persistencia simple
+    localStorage.setItem('logged_user_id', id);
   }
 
   /**

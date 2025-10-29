@@ -8,7 +8,7 @@ import { ThemeService } from '../../shared/services/theme.service';
 import {UserService} from '../../Foodchain/services/user.service';
 import {SessionService} from '../../Foodchain/services/session.service';
 
-// Tipado para la opción de la compañía (solo para claridad)
+
 type CompanyOption = 'join' | 'create' | null;
 
 @Component({
@@ -29,10 +29,10 @@ export class SidenavComponent implements OnInit {
 
   isDarkTheme$!: Observable<boolean>;
 
-  // ✅ Propiedad central que controla la visibilidad
+
   userCompanyOption: CompanyOption = null;
 
-  // Propiedades de conveniencia (facilita el uso en el HTML)
+
   isCompanyJoin: boolean = false;
   isCompanyCreate: boolean = false;
 
@@ -61,8 +61,8 @@ export class SidenavComponent implements OnInit {
     // Usamos el método getById de tu UserService (heredado del BaseService)
     this.userService.getById(userId).subscribe({
       next: (user) => {
-        // Asegúrate de que tu entidad 'User' tenga el campo 'companyOption'
-        const option = user.companyOption.toLowerCase(); // Normalizar a minúsculas para seguridad
+
+        const option = user.companyOption.toLowerCase();
 
         if (option === 'join' || option === 'create') {
           this.userCompanyOption = option as CompanyOption;
@@ -70,7 +70,7 @@ export class SidenavComponent implements OnInit {
           this.userCompanyOption = null;
         }
 
-        // Establecer los flags de conveniencia
+
         this.isCompanyJoin = (this.userCompanyOption === 'join');
         this.isCompanyCreate = (this.userCompanyOption === 'create');
 
@@ -78,7 +78,7 @@ export class SidenavComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al cargar datos del usuario para el SIDENAV:', err);
-        // En caso de error, asumimos la opción más restrictiva (o ninguna)
+
         this.userCompanyOption = null;
       }
     });

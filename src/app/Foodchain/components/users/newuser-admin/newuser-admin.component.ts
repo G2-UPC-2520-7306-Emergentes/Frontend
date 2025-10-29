@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import {HttpClientModule} from '@angular/common/http';
 import {CreateUserBody, RegisterPayload, UserService} from '../../../services/user.service';
 
-// Interfaz para definir la estructura de los permisos
+
 interface RolePermission {
   key: string;
   description: string;
@@ -88,15 +88,15 @@ export class NewUserAdminComponent implements OnInit {
       email: ['carlos.mendoza@foodchain.com', [Validators.required, Validators.email]],
       telefono: ['+51 555 123 789', Validators.required],
       empresa: ['Distribuidora Central', Validators.required],
-      rol: ['PRODUCER', Validators.required], // Inicializa con Productor como ejemplo
+      rol: ['PRODUCER', Validators.required],
     });
   }
 
   ngOnInit(): void {
-    // Inicializa los permisos al cargar el componente
+
     this.updatePermissions(this.userForm.get('rol')?.value);
 
-    // Suscribe a los cambios del control 'rol' para actualizar los permisos DINÁMICAMENTE
+
     this.userForm.get('rol')?.valueChanges.subscribe(roleValue => {
       this.updatePermissions(roleValue);
     });
@@ -104,7 +104,7 @@ export class NewUserAdminComponent implements OnInit {
   }
 
   updatePermissions(roleValue: string): void {
-    // Asegura que el nombre del rol se muestre en el bloque de permisos (ej. 'productor')
+
     const roleName = this.roles.find(r => r.value === roleValue)?.name || 'Seleccionado';
     const permissionsBlock = document.querySelector('.permissions-header');
     if (permissionsBlock) {
@@ -114,7 +114,7 @@ export class NewUserAdminComponent implements OnInit {
     this.selectedPermissions = this.permissionsMap[roleValue] || [];
   }
 
-  // ... (onSubmit y cancelCreation se mantienen sin cambios)
+
   onSubmit(): void {
     if (this.userForm.valid) {
       this.isLoading = true;
@@ -124,7 +124,7 @@ export class NewUserAdminComponent implements OnInit {
       const firstName = nombreCompleto[0];
       const lastName = nombreCompleto.slice(1).join(' ') || '-';
 
-      // Construye el objeto SÓLO con los campos que la API necesita
+
       const newUserBody: CreateUserBody = {
         firstName: firstName,
         lastName: lastName,
@@ -153,7 +153,7 @@ export class NewUserAdminComponent implements OnInit {
         },
         error: (error) => {
           this.isLoading = false;
-          // El error ya fue manejado y alertado en el servicio.
+
         }
       });
 
