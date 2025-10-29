@@ -229,6 +229,37 @@ input:focus {
   margin-top: 15px;
 }
 
+/* Estilos para la Tarjeta Contenedora Principal */
+.card {
+  /* Fondo claro */
+  background-color: #ffffff;
+  /* Un poco de padding interior */
+  padding: 30px;
+  /* Esquinas redondeadas */
+  border-radius: 8px;
+  /* Sombra suave para darle profundidad */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  /* Borde sutil (opcional) */
+  border: 1px solid #e0e0e0;
+}
+
+/* Estilos para organizar el contenido en dos columnas */
+.content-grid {
+  display: grid;
+  /* Ajusta las proporciones de las columnas (ej: 60% para el formulario, 40% para la información) */
+  grid-template-columns: 3fr 2fr;
+  gap: 40px; /* Espacio entre las columnas */
+}
+
+/* Estilos de responsividad para que la tarjeta se vea bien en móviles */
+@media (max-width: 992px) {
+  .content-grid {
+    /* En pantallas pequeñas, apila las columnas */
+    grid-template-columns: 1fr;
+  }
+}
+
+
 /* ------------------------------------------- */
 /* MEDIA QUERIES */
 /* ------------------------------------------- */
