@@ -9,6 +9,7 @@ export class User {
   email: string;     // Corresponde a 'Email'
   password: string;  // Corresponde a 'Password'
   confirmPassword: string; // Necesario para la validación en el frontend
+  phoneNumber: string; // ✨ CAMPO AGREGADO: Número de teléfono
 
   // --- Campos de Empresa ---
   companyName: string;   // Corresponde a 'Company Name'
@@ -36,6 +37,7 @@ export class User {
     this.email = user.email || '';
     this.password = user.password || '';
     this.confirmPassword = user.confirmPassword || '';
+    this.phoneNumber = user.phoneNumber || ''; // ✨ INICIALIZACIÓN AGREGADA
 
     this.companyName = user.companyName || '';
     this.taxId = user.taxId || '';

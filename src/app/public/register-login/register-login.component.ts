@@ -33,6 +33,7 @@ export class RegisterLoginComponent implements OnInit {
       companyOption: ['join', Validators.required],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required],
+      phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Requerido y solo números
       requestedRole: ['', Validators.required],
       agreement: [false, Validators.requiredTrue],
       recaptcha: [false, Validators.requiredTrue],

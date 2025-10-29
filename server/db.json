@@ -229,6 +229,7 @@
       "companyName": "Finca Los Andes",
       "taxId": "FND12345",
       "companyOption": "create",
+      "phoneNumber": "19568654",
       "password": "productor123",
       "requestedRole": "Producer",
       "id": 1
@@ -241,6 +242,7 @@
       "taxId": "EMP67890",
       "companyOption": "join",
       "password": "procesador123",
+      "phoneNumber": "19568654",
       "requestedRole": "Processor",
       "id": 2
     },
@@ -250,6 +252,7 @@
       "email": "ricardo.flores@control.com",
       "companyName": "Control Certificado",
       "taxId": "CTRL11223",
+      "phoneNumber": "19568654",
       "companyOption": "join",
       "password": "auditor123",
       "requestedRole": "Auditor",
@@ -263,8 +266,32 @@
       "taxId": "ADM00001",
       "companyOption": "create",
       "password": "admin123",
+      "phoneNumber": "19568654",
       "requestedRole": "Administrator",
       "id": 4
+    },
+    {
+      "firstName": "Luis",
+      "lastName": "Fernandez",
+      "email": "luis@gmail.com",
+      "companyName": "LuisGame",
+      "taxId": "5698",
+      "companyOption": "create",
+      "password": "123456789",
+      "requestedRole": "Administrator",
+      "id": 5
+    },
+    {
+      "firstName": "fdff",
+      "lastName": "fdf",
+      "email": "fdfd@gmail.com",
+      "companyName": "fdfd",
+      "taxId": "5698",
+      "companyOption": "join",
+      "password": "123456789",
+      "phoneNumber": "956968965",
+      "requestedRole": "Administrator",
+      "id": 6
     }
   ],
   "qrcode": [],
