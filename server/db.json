@@ -293,6 +293,18 @@
       "phoneNumber": "956968965",
       "requestedRole": "Administrator",
       "id": 6
+    },
+    {
+      "firstName": "Carlos",
+      "lastName": "Mendoza",
+      "email": "carlos.mendoza@foodchain.com",
+      "companyName": "Distribuidora Central",
+      "phoneNumber": "+51 555 123 789",
+      "requestedRole": "PRODUCER",
+      "password": "admin1",
+      "companyOption": "join",
+      "taxId": "",
+      "id": 7
     }
   ],
   "qrcode": [],

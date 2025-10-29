@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
+import {CreateUserBody, RegisterPayload, UserService} from '../../../services/user.service';
 
 // Interfaz para definir la estructura de los permisos
 interface RolePermission {
@@ -11,7 +13,7 @@ interface RolePermission {
 @Component({
   selector: 'app-newuser-admin',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [HttpClientModule,CommonModule, ReactiveFormsModule],
   templateUrl: './newuser-admin.component.html',
   styleUrls: ['./newuser-admin.component.css'],
 })
@@ -79,7 +81,8 @@ export class NewUserAdminComponent implements OnInit {
 
   selectedPermissions: RolePermission[] = [];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+              private userService: UserService) {
     this.userForm = this.fb.group({
       nombreCompleto: ['Carlos Mendoza', Validators.required],
       email: ['carlos.mendoza@foodchain.com', [Validators.required, Validators.email]],
@@ -114,12 +117,46 @@ export class NewUserAdminComponent implements OnInit {
   // ... (onSubmit y cancelCreation se mantienen sin cambios)
   onSubmit(): void {
     if (this.userForm.valid) {
-      console.log('Formulario de Nuevo Usuario Enviado:', this.userForm.value);
       this.isLoading = true;
-      setTimeout(() => {
-        this.isLoading = false;
-        alert('Usuario creado con éxito (Simulación)');
-      }, 1500);
+
+      const formValue = this.userForm.value;
+      const nombreCompleto = formValue.nombreCompleto.split(' ');
+      const firstName = nombreCompleto[0];
+      const lastName = nombreCompleto.slice(1).join(' ') || '-';
+
+      // Construye el objeto SÓLO con los campos que la API necesita
+      const newUserBody: CreateUserBody = {
+        firstName: firstName,
+        lastName: lastName,
+        email: formValue.email,
+        companyName: formValue.empresa,
+        phoneNumber: formValue.telefono,
+        requestedRole: formValue.rol,
+
+        // Campos fijos/predeterminados:
+        password: "admin1",
+        companyOption: "join",
+        taxId: ""
+      };
+
+      console.log('--- Cuerpo Enviado a la API (Limpio) ---', newUserBody);
+
+      // 🚨 ¡Cambiado a registerCompany!
+      this.userService.registerCompany(newUserBody).subscribe({
+        next: (user) => {
+          this.isLoading = false;
+          if (user) {
+            alert(`Usuario ${user.firstName} ${user.lastName} (ID: ${user.id}) creado con éxito.`);
+            this.userForm.reset();
+            this.userForm.get('rol')?.setValue(this.roles[0].value);
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
+          // El error ya fue manejado y alertado en el servicio.
+        }
+      });
+
     } else {
       console.log('El formulario no es válido. Revise los campos.');
       this.userForm.markAllAsTouched();
@@ -128,5 +165,6 @@ export class NewUserAdminComponent implements OnInit {
 
   cancelCreation(): void {
     console.log('Creación de usuario cancelada.');
+    this.userForm.reset();
   }
 }

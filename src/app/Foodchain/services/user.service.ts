@@ -21,6 +21,18 @@ export interface RegisterPayload {
   id: string; // Puede ser número o string
 }
 
+export interface CreateUserBody {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string; // "admin1"
+  companyName: string;
+  taxId?: string; // ""
+  companyOption: 'join' | 'create'; // "join"
+  requestedRole: string; // El rol seleccionado
+  phoneNumber: string; // Teléfono
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -30,6 +42,28 @@ export class UserService extends BaseService<User> {
     super();
     this.resourceEndPoint = '/users';
   }
+
+  registerCompany(newUserBody: CreateUserBody): Observable<User | null> { // <-- ¡Nombre de método cambiado!
+
+    console.log('UserService: Cuerpo HTTP limpio enviado (registerCompany):', newUserBody);
+
+    // Llamamos al método create del BaseService con el cuerpo limpio.
+    return this.create(newUserBody as unknown as User)
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          console.error('Error de API durante el registro:', error);
+          let errorMessage = 'Error desconocido al registrar el usuario.';
+          if (error.status === 409 || error.status === 400) {
+            errorMessage = 'El correo electrónico ya está registrado o los datos son inválidos.';
+          } else if (error.status === 0 || error.status === 500) {
+            errorMessage = 'Error de conexión con el servidor. Inténtalo más tarde.';
+          }
+          alert(`Error de registro: ${errorMessage}`);
+          return of(null);
+        })
+      );
+  }
+
 
   // --- Nuevo Método Específico para Registro ---
 
