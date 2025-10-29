@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router } from '@angular/router';
 import {SessionService} from '../../../services/session.service';
 import {UserService} from '../../../services/user.service';
+import {User} from '../../../model/user.entity';
 
 // ✨ Importamos tus servicios
 
@@ -112,34 +113,79 @@ export class EditAdminComponent implements OnInit {
    * En el futuro, enviarías el userId y los datos del formulario al servicio para actualizar.
    */
   onSubmitAndGenerateSignature(): void {
-    // ... (Mantener la lógica de guardar) ...
-    if (this.profileForm.valid) {
-      console.log('Datos de perfil enviados y Firma Digital solicitada:', this.profileForm.value);
-      this.isLoading = true;
-
-      const userId = this.sessionService.getUserId();
-
-      if (userId) {
-        // 🚨 FUTURO: Desestructurar profileForm.value para separarlo en firstName, lastName, etc.
-        // y llamar a un método de 'update' del UserService
-        // this.userService.updateProfile(userId, { /* datos separados */ }).subscribe(...)
-      }
-
-      setTimeout(() => {
-        this.isLoading = false;
-        alert('Perfil actualizado y Firma Digital generada (Simulación).');
-        this.signatureHistory.unshift({
-          hash: '7f9a...3333',
-          eventsCount: 0,
-          generatedDate: new Date().toISOString().split('T')[0],
-          status: 'Anterior'
-        });
-      }, 1500);
-
-    } else {
-      console.log('El formulario de perfil no es válido.');
+    if (this.profileForm.invalid) {
       this.profileForm.markAllAsTouched();
+      alert('Por favor completa los campos requeridos.');
+      return;
     }
+
+    const userId = this.sessionService.getUserId();
+    if (!userId) {
+      alert('No se encontró el ID del usuario en la sesión.');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.isLoading = true;
+
+    const [firstName, ...lastNameParts] = this.profileForm.value.nombreCompleto.trim().split(' ');
+    const lastName = lastNameParts.join(' ');
+
+    console.log('Obteniendo usuario completo antes de actualizar...');
+
+    // 1️⃣ Obtener el usuario actual desde el backend
+    this.userService.getById(userId).subscribe({
+      next: (currentUser) => {
+        if (!currentUser) {
+          this.isLoading = false;
+          alert('No se pudo obtener la información del usuario.');
+          return;
+        }
+
+        // 2️⃣ Combinar los datos actuales con los del formulario
+        const updatedUser: User = {
+          ...currentUser, // mantiene todos los campos actuales
+          firstName,
+          lastName,
+          email: this.profileForm.value.correoElectronico,
+          phoneNumber: this.profileForm.value.telefono,
+          companyName: this.profileForm.value.empresa,
+          requestedRole: this.profileForm.value.cargo,
+        };
+
+        console.log('Enviando actualización completa del usuario:', updatedUser);
+
+        // 3️⃣ Llamar al servicio de actualización
+        this.userService.updateProfile(userId, updatedUser).subscribe({
+          next: (updated) => {
+            this.isLoading = false;
+            if (updated) {
+              alert('✅ Perfil actualizado correctamente.');
+
+              // Simular generación de nueva firma digital
+              this.signatureHistory.unshift({
+                hash: '7f9a...3333',
+                eventsCount: 0,
+                generatedDate: new Date().toISOString().split('T')[0],
+                status: 'Anterior'
+              });
+            } else {
+              alert('No se pudo actualizar el perfil.');
+            }
+          },
+          error: (err) => {
+            this.isLoading = false;
+            console.error('Error al actualizar perfil:', err);
+            alert('Error al actualizar perfil. Intenta nuevamente.');
+          }
+        });
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Error al obtener usuario antes de actualizar:', err);
+        alert('Error al cargar los datos actuales del usuario.');
+      }
+    });
   }
 
   cancelEdit(): void {
