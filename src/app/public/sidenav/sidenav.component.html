@@ -12,26 +12,31 @@
             <i class="icon">📦</i> My Batches
           </a>
         </li>
-        <li>
+
+        <li *ngIf="isCompanyCreate">
           <a routerLink="/sidenav/create-batch" routerLinkActive="active" class="nav-item">
             <i class="icon">➕</i> Create Batch
           </a>
         </li>
-        <li>
+
+        <li *ngIf="isCompanyCreate">
           <a routerLink="/sidenav/duplicate-batch" routerLinkActive="active" class="nav-item">
             <i class="icon">📋</i> Duplicate Batch
           </a>
         </li>
-        <li>
+
+        <li *ngIf="isCompanyCreate">
           <a routerLink="/sidenav/delete-batch" routerLinkActive="active" class="nav-item">
             <i class="icon">🗑️</i> Delete Batch
           </a>
         </li>
-        <li>
+
+        <li *ngIf="isCompanyCreate">
           <a routerLink="/sidenav/edit-admin" routerLinkActive="active" class="nav-item">
             <i class="icon">⚙️️</i> Configuration
           </a>
         </li>
+
         <li>
           <a routerLink="/sidenav/register-step" routerLinkActive="active" class="nav-item">
             <i class="icon">🚶</i> Create Step
@@ -43,7 +48,6 @@
           </a>
         </li>
       </ul>
-
 
       <div class="theme-toggle-container">
         <button (click)="toggleTheme()" class="nav-item theme-toggle-button">

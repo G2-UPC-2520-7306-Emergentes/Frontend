@@ -305,6 +305,30 @@
       "companyOption": "join",
       "taxId": "",
       "id": 7
+    },
+    {
+      "firstName": "Angelo2025",
+      "lastName": "Curi Marcelo",
+      "email": "curimarcelo89@gmail.com",
+      "companyName": "Los mas chingones",
+      "taxId": "7875",
+      "companyOption": "create",
+      "password": "123456789",
+      "phoneNumber": "975149459",
+      "requestedRole": "Administrator",
+      "id": 8
+    },
+    {
+      "firstName": "Angelo",
+      "lastName": "Curi Marcelo",
+      "email": "curimarcelo8@gmail.com",
+      "companyName": "Los mas chingones",
+      "taxId": "7875",
+      "companyOption": "create",
+      "password": "123456789",
+      "phoneNumber": "975149459",
+      "requestedRole": "Administrator",
+      "id": 9
     }
   ],
   "qrcode": [],

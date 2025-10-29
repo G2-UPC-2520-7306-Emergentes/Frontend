@@ -71,7 +71,7 @@ export class RegisterLoginComponent implements OnInit {
         if (user) {
           alert('Registro exitoso');
           // 3. Redirigir SOLO si el registro fue exitoso
-          this.router.navigate(['/sidenav']);
+          this.router.navigate(['/login']);
         }
       });
   }
