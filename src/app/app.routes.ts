@@ -26,7 +26,7 @@ export const routes: Routes = [
       { path: 'details-batch/:batchId', component: DetailsBatchComponent },
       { path: 'duplicate-batch', component: DuplicateBatchComponent },
       { path: 'view-batch', component: ViewBatchComponent },
-      { path: 'edit-batch', component: EditBatchComponent },
+      { path: 'edit-batch/:batchId', component: EditBatchComponent },
       { path: 'edit-admin', component: EditAdminComponent },
       { path: 'newuser-admin', component: NewUserAdminComponent },
       { path: 'create-batch', component: CreateBatchComponent },

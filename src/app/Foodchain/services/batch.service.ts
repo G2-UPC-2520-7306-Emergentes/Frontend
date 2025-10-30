@@ -17,6 +17,15 @@ export interface BatchCreatePayload {
   producer_id: string;
 }
 
+export interface BatchUpdatePayload {
+  lotName?: string;
+  farmName?: string;
+  variety?: string;
+  harvestDate?: string;
+  imageUrl?: string;
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -104,6 +113,36 @@ export class BatchService extends BaseService<Batch> {
         })
       );
   }
+
+  // 💡 NUEVO MÉTODO DE ACTUALIZACIÓN
+  /**
+   * Actualiza los datos de un lote existente.
+   * Utiliza el método update() heredado de BaseService.
+   * @param id El ID del lote a actualizar.
+   * @param updatedFields Los campos a modificar.
+   * @returns Un Observable que emite el objeto Batch actualizado o null si falla.
+   */
+  updateBatch(id: string, updatedFields: BatchUpdatePayload): Observable<Batch | null> {
+
+    // El método update en BaseService debería ser capaz de tomar un ID y el objeto a actualizar
+    return this.update(id, updatedFields as unknown as Batch)
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          console.error(`Error de API al actualizar el lote ${id}:`, error);
+
+          let errorMessage = 'Error desconocido al actualizar el lote.';
+          if (error.status === 404) {
+            errorMessage = 'Lote no encontrado para actualizar.';
+          } else if (error.status === 400) {
+            errorMessage = 'Datos de actualización inválidos.';
+          }
+
+          alert(`Error al actualizar el lote: ${errorMessage}`);
+          return of(null);
+        })
+      );
+  }
+
 
   /**
    * Obtiene un lote específico por su ID.

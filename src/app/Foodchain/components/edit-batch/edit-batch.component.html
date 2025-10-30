@@ -2,28 +2,71 @@
   <h2>Editar información de lote</h2>
   <p class="description">Modifica los detalles básicos de tu lote activo.</p>
 
-  <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+  <div *ngIf="isLoading && !errorMessage" class="loading-message">
+    <i class="fas fa-spinner fa-spin"></i> Cargando información del lote...
+  </div>
+
+  <div *ngIf="errorMessage" class="error-alert">
+    <p>¡Error al cargar el lote!</p>
+    <p>{{ errorMessage }}</p>
+    <button (click)="router.navigate(['/sidenav/view-batch'])">Volver a Lotes</button>
+  </div>
+
+  <form [formGroup]="editForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading && !errorMessage">
 
     <div class="form-group">
-      <label for="nombreLote">Nombre del lote</label>
-      <input id="nombreLote" type="text" formControlName="nombreLote">
+      <label for="nombreLote">Nombre del lote <span class="required">*</span></label>
+      <input
+        id="nombreLote"
+        type="text"
+        formControlName="nombreLote"
+        [class.is-invalid]="f['nombreLote'].invalid"
+      >
+      <div *ngIf="f['nombreLote'].invalid" class="error-message">
+        El nombre del lote es obligatorio.
+      </div>
     </div>
 
     <div class="form-group">
-      <label for="nombreFinca">Nombre de la finca</label>
-      <input id="nombreFinca" type="text" formControlName="nombreFinca">
+      <label for="nombreFinca">Nombre de la finca <span class="required">*</span></label>
+      <input
+        id="nombreFinca"
+        type="text"
+        formControlName="nombreFinca"
+        [class.is-invalid]="f['nombreFinca'].invalid"
+      >
+      <div *ngIf="f['nombreFinca'].invalid" class="error-message">
+        El nombre de la finca es obligatorio.
+      </div>
     </div>
 
     <div class="form-group">
-      <label for="variedad">Variedad</label>
-      <input id="variedad" type="text" formControlName="variedad">
+      <label for="variedad">Variedad <span class="required">*</span></label>
+      <input
+        id="variedad"
+        type="text"
+        formControlName="variedad"
+        [class.is-invalid]="f['variedad'].invalid"
+      >
+      <div *ngIf="f['variedad'].invalid" class="error-message">
+        La variedad es obligatoria.
+      </div>
     </div>
 
     <div class="form-group">
-      <label for="fechaCosecha">Fecha de cosecha</label>
+      <label for="fechaCosecha">Fecha de cosecha <span class="required">*</span></label>
       <div class="input-with-icon">
-        <input id="fechaCosecha" type="date" formControlName="fechaCosecha" placeholder="AAAA-MM-DD">
+        <input
+          id="fechaCosecha"
+          type="date"
+          formControlName="fechaCosecha"
+          placeholder="AAAA-MM-DD"
+          [class.is-invalid]="f['fechaCosecha'].invalid"
+        >
         <i class="fas fa-calendar-alt calendar-icon"></i>
+      </div>
+      <div *ngIf="f['fechaCosecha'].invalid" class="error-message">
+        La fecha de cosecha es obligatoria.
       </div>
     </div>
 
@@ -38,19 +81,36 @@
       </p>
       <p class="upload-subtext">
         Arrastra y suelta un archivo aquí o busca un archivo
+        <span *ngIf="f['imageUrl'].value !== 'NO_IMAGE_UPLOADED'" class="image-preview-text">
+            | Archivo listo: {{ f['imageUrl'].value | slice:0:30 }}...
+        </span>
       </p>
-      <button type="button" class="search-file-button">Buscar archivo</button>
+      <button type="button" class="search-file-button" (click)="onImageFileSelect($event)">
+        Buscar archivo
+      </button>
     </div>
+
+    <input type="hidden" formControlName="imageUrl">
 
     <p class="trazability-message">
       Los cambios se firmarán digitalmente y se registrarán en blockchain para garantizar la integridad y trazabilidad de la información.
     </p>
 
     <div class="action-buttons">
-      <button type="submit" [disabled]="editForm.invalid || isLoading" class="save-button">
-        {{ isLoading ? 'Guardando...' : 'Guardar cambios' }}
+      <button
+        type="submit"
+        [disabled]="editForm.invalid || isLoading"
+        class="save-button"
+      >
+        <i *ngIf="isLoading" class="fas fa-spinner fa-spin"></i>
+        {{ isLoading ? ' Guardando...' : 'Guardar cambios' }}
       </button>
-      <button type="button" (click)="cancelEdit()" class="cancel-button" [disabled]="isLoading">
+      <button
+        type="button"
+        (click)="cancelEdit()"
+        class="cancel-button"
+        [disabled]="isLoading"
+      >
         Cancelar
       </button>
     </div>
