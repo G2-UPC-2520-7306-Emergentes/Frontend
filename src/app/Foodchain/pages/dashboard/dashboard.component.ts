@@ -176,8 +176,14 @@ export class DashboardComponent implements OnInit {
   processMetrics(batches: Batch[]): void {
     this.metrics.totalLotes = batches.length;
 
-    const distinctStates = new Set(batches.map(b => b.state));
-    this.metrics.tiposEstado = distinctStates.size;
+    const activeLotCount = batches.filter(batch =>
+      // Filtra solo los lotes cuyo estado es la cadena literal "Activo"
+      batch.state === 'Activo'
+    ).length;
+
+    // 2. Asignar el conteo de lotes "Activos" a la métrica tiposEstado.
+    // Aunque el nombre de la propiedad es 'tiposEstado', la usamos para mostrar el conteo.
+    this.metrics.tiposEstado = activeLotCount;
   }
 
   /**
