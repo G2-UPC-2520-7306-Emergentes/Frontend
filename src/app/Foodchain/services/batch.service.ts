@@ -28,6 +28,36 @@ export class BatchService extends BaseService<Batch> {
     this.resourceEndPoint = '/batches';
   }
 
+
+  getBatchesByProducerId(producerId: string): Observable<Batch[]> {
+    const targetProducerId = producerId.trim();
+
+    // Usamos getAllBatches y luego filtramos con map
+    return this.getAllBatches().pipe(
+      map((allBatches: Batch[]) => {
+        // Filtramos solo los lotes cuyo producer_id coincide con el targetProducerId
+        const batches = allBatches.filter(
+          b => b.producer_id === targetProducerId
+        );
+
+        if (batches.length === 0) {
+          console.warn(`No se encontraron lotes para el productor con ID ${targetProducerId}.`);
+        }
+
+        // Retorna la lista filtrada (puede ser un array vacío)
+        return batches;
+      }),
+      // Añadimos manejo de errores por si getAllBatches falla completamente
+      catchError((error) => {
+        console.error(`Error al obtener lotes para el productor ${targetProducerId}:`, error);
+        return of([]); // Retorna un array vacío en caso de error
+      })
+    );
+  }
+
+
+
+
   // --- Nuevo Método Específico para Creación de Lote ---
 
   /**

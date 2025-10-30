@@ -230,6 +230,17 @@
       "state": "Draft",
       "imageUrl": "https://res.cloudinary.com/dwrfcod77/image/upload/v1761784791/xfzoimyzjocqarxsonjf.png",
       "producer_id": "9"
+    },
+    {
+      "id": 25,
+      "lotName": "Prueba1",
+      "farmName": "LosMejores",
+      "variety": "Mejores",
+      "harvestDate": "2025-10-23",
+      "createdDate": "2025-10-30T00:39:52.484Z",
+      "state": "Draft",
+      "imageUrl": "https://res.cloudinary.com/dwrfcod77/image/upload/v1761784791/xfzoimyzjocqarxsonjf.png",
+      "producer_id": "8"
     }
   ],
   "users": [
