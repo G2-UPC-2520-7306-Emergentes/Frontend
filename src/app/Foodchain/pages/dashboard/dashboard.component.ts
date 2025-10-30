@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DatePipe } from '@angular/common'; // Necesario para formatear la fecha/hora
 
 import { forkJoin, of } from 'rxjs';
 import { switchMap, catchError, map } from 'rxjs/operators';
@@ -14,13 +15,19 @@ import {StepService} from '../../services/step.service';
 // 💡 Estructura de métricas
 interface DashboardMetrics {
   totalLotes: number;
-  tiposEstado: number;
+  tiposEstado: number; // Ahora usado para el CONTEO de Lotes "Activo"
   totalPersonal: number;
 }
 
 // 💡 Nuevo tipo para extender User con el conteo de pasos
 interface UserWithStepCount extends User {
   stepCount: number;
+}
+
+// 💡 Nuevo tipo para extender Batch con la info del paso reciente
+interface BatchWithRecentStep extends Batch {
+  lastStepDate: Date | null;
+  lastStepType: string | null;
 }
 
 // 💡 Tipo de datos que se procesará en el .subscribe
@@ -39,7 +46,8 @@ interface LoadData {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  // Agregamos DatePipe para el formateo de fechas
+  imports: [CommonModule, DatePipe],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -47,6 +55,7 @@ export class DashboardComponent implements OnInit {
 
   currentUser: User | any = {};
   companyUsers: UserWithStepCount[] = [];
+  sortedBatches: BatchWithRecentStep[] = []; // Propiedad para la nueva tabla
 
   metrics: DashboardMetrics = {
     totalLotes: 0,
@@ -62,7 +71,7 @@ export class DashboardComponent implements OnInit {
     private sessionService: SessionService,
     private userService: UserService,
     private batchService: BatchService,
-    private stepService: StepService // Inyección de StepService
+    private stepService: StepService
   ) { }
 
   ngOnInit(): void {
@@ -78,10 +87,10 @@ export class DashboardComponent implements OnInit {
 
   /**
    * Getter que combina el nombre y apellido del usuario logueado.
-   * Utilizado en el HTML para mostrar el nombre completo.
    */
   get userFullName(): string {
     if (this.currentUser && this.currentUser.firstName && this.currentUser.lastName) {
+      // Usamos 'firstName' y 'lastName' según tu modelo de User
       return `${this.currentUser.firstName} ${this.currentUser.lastName}`;
     }
     return 'Cargando...';
@@ -94,7 +103,6 @@ export class DashboardComponent implements OnInit {
     this.isLoading = true;
     this.isLoadingUsers = true;
 
-    // 1. Obtener la información completa del usuario logueado
     this.userService.getById(userId).pipe(
       catchError((err) => {
         this.errorMessage = 'Error al cargar el perfil del usuario.';
@@ -102,32 +110,30 @@ export class DashboardComponent implements OnInit {
         return of(null as unknown as User);
       }),
 
-      // 2. Encadenar la carga de los demás datos
       switchMap((user: User | null) => {
         if (!user) {
           this.isLoading = false;
-          // Retornamos el tipo final esperado, inicializado a vacío para evitar el error TS2769
-          return of({ producerBatches: [] as Batch[], companyUsers: [] as UserWithStepCount[] } as DashboardData);
+          return of({ producerBatches: [], companyUsers: [] } as DashboardData);
         }
 
         this.currentUser = user;
         const companyName = user.companyName;
 
-        // 3. Cargar lotes, usuarios y pasos en paralelo
+        // Cargar lotes, usuarios y pasos en paralelo
         return forkJoin({
           batches: this.batchService.getAllBatches().pipe(catchError(() => of([] as Batch[]))),
           allUsers: this.userService.getAll().pipe(catchError(() => of([] as User[]))),
           allSteps: this.stepService.getAllSteps().pipe(catchError(() => of([] as Step[])))
         }).pipe(
-          // 4. Mapear y procesar los resultados
           map((data: LoadData) => {
 
-            // Lógica de Lotes (Métricas)
             const producerBatches = data.batches.filter(b => b.producer_id === userId);
 
-            // Lógica de Usuarios y Pasos
             const companyUsers = data.allUsers.filter(u => u.companyName === companyName);
             const usersWithSteps = this.calculateStepCounts(companyUsers, data.allSteps);
+
+            // 💡 Lógica de ordenamiento para la nueva tabla
+            this.sortedBatches = this.sortBatchesByRecentStep(producerBatches, data.allSteps);
 
             return { producerBatches, companyUsers: usersWithSteps } as DashboardData;
           })
@@ -135,6 +141,7 @@ export class DashboardComponent implements OnInit {
       })
     ).subscribe({
       next: (data: DashboardData) => {
+
 
         this.processMetrics(data.producerBatches);
         this.processCompanyUsers(data.companyUsers, userId);
@@ -157,13 +164,11 @@ export class DashboardComponent implements OnInit {
   calculateStepCounts(users: User[], steps: Step[]): UserWithStepCount[] {
     const stepCounts: { [userId: string]: number } = {};
 
-    // 1. Contar pasos por ID de usuario
     steps.forEach(step => {
       const id = step.userId;
       stepCounts[id] = (stepCounts[id] || 0) + 1;
     });
 
-    // 2. Asignar el conteo al objeto User
     return users.map(user => ({
       ...user,
       stepCount: stepCounts[user.id] || 0
@@ -171,18 +176,18 @@ export class DashboardComponent implements OnInit {
   }
 
   /**
-   * Calcula las métricas de lotes y estados.
+   * Calcula las métricas de lotes y el CONTEO de lotes con estado "Activo".
    */
   processMetrics(batches: Batch[]): void {
+
     this.metrics.totalLotes = batches.length;
 
+    // 💡 CONTEO LÓTICO: Contar el número exacto de lotes con state === "Activo"
     const activeLotCount = batches.filter(batch =>
-      // Filtra solo los lotes cuyo estado es la cadena literal "Activo"
       batch.state === 'Activo'
     ).length;
 
-    // 2. Asignar el conteo de lotes "Activos" a la métrica tiposEstado.
-    // Aunque el nombre de la propiedad es 'tiposEstado', la usamos para mostrar el conteo.
+    // Asignar el conteo de lotes "Activos" a la métrica.
     this.metrics.tiposEstado = activeLotCount;
   }
 
@@ -190,10 +195,61 @@ export class DashboardComponent implements OnInit {
    * Filtra los usuarios de la compañía, excluyendo al usuario logueado, y establece la métrica total.
    */
   processCompanyUsers(allUsers: UserWithStepCount[], currentUserId: string): void {
-    // La métrica cuenta a todos, incluido el usuario logueado
     this.metrics.totalPersonal = allUsers.length;
-
-    // La lista visible excluye al usuario logueado
     this.companyUsers = allUsers.filter(u => u.id !== currentUserId);
+  }
+
+  /**
+   * Encuentra el paso más reciente para cada lote y ordena la lista.
+   */
+  sortBatchesByRecentStep(batches: Batch[], steps: Step[]): BatchWithRecentStep[] {
+    const batchesMap: Map<string, BatchWithRecentStep> = new Map();
+
+    // 1. Inicializar el mapa de lotes (Usando ID de lote como STRING)
+    batches.forEach(batch => {
+      // 💡 CORRECCIÓN 1: Aseguramos que la clave del Map sea STRING
+      const batchIdString = String(batch.id);
+      batchesMap.set(batchIdString, {
+        ...batch,
+        lastStepDate: null,
+        lastStepType: null,
+      });
+    });
+
+    // 2. Encontrar el paso más reciente para cada lote
+    steps.forEach(step => {
+      // 💡 CORRECCIÓN 2: Aseguramos que la búsqueda sea con STRING
+      const lotIdSearchString = String(step.lotId);
+      const batch = batchesMap.get(lotIdSearchString);
+
+      // Console log de verificación final (puedes quitarlo después)
+      // console.log(`Paso ID: ${step.id} | Buscando Lote ID: ${lotIdSearchString} | Lote Encontrado?: ${!!batch}`);
+
+      if (batch) {
+
+        // Lógica de manejo de fechas (se mantiene la versión robusta anterior)
+        const time = step.stepTime.split(':').length === 2 ? `${step.stepTime}:00` : step.stepTime;
+        const dateString = `${step.stepDate}T${time}`;
+        const stepDateTime = new Date(dateString);
+
+        if (isNaN(stepDateTime.getTime())) {
+          return;
+        }
+
+        if (!batch.lastStepDate || stepDateTime.getTime() > batch.lastStepDate.getTime()) {
+          batch.lastStepDate = stepDateTime;
+          batch.lastStepType = step.stepType;
+        }
+      }
+    });
+
+    // 3. Convertir el mapa a un array y ordenar (se mantiene igual)
+    const sortedArray = Array.from(batchesMap.values()).sort((a, b) => {
+      if (!a.lastStepDate) return 1;
+      if (!b.lastStepDate) return -1;
+      return b.lastStepDate.getTime() - a.lastStepDate.getTime();
+    });
+
+    return sortedArray;
   }
 }

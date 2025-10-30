@@ -191,6 +191,32 @@
   text-align: center; /* 👈 Esto centra el contenido de la celda */
 }
 
+/* Estilo para la nueva sección debajo de las tablas existentes */
+.mt-4 {
+  margin-top: 25px;
+}
+
+.section-subtitle {
+  font-size: 0.9rem;
+  color: #999;
+  margin-bottom: 20px;
+}
+
+/* Estilos de la tabla de lotes (usamos .users-table para consistencia) */
+/* Asegúrate de que las etiquetas de estado tengan color si las usas */
+.status-tag {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-activo, .status-active { background-color: #c8e6c9; color: #4caf50; }
+.status-borrador, .status-draft { background-color: #ffecb3; color: #ff9800; }
+.status-vendido, .status-sold { background-color: #e1bee7; color: #9c27b0; }
+
 /* --- Media Queries (Para Responsividad) --- */
 @media (max-width: 992px) {
   .dashboard-header-grid {

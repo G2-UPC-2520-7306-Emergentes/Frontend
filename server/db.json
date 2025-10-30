@@ -500,6 +500,17 @@
       "location": "-12.1470976, -76.9785856",
       "observations": "",
       "hash": ""
+    },
+    {
+      "id": 8,
+      "lotId": "28",
+      "userId": "8",
+      "stepType": "Empacador",
+      "stepDate": "2025-10-30",
+      "stepTime": "04:22",
+      "location": "-12.1470976, -76.9785856",
+      "observations": "",
+      "hash": ""
     }
   ]
 }

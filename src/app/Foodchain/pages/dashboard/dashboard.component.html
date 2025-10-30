@@ -36,9 +36,9 @@
         </div>
 
         <div class="metric-item card">
-          <i class="fas fa-chart-pie metric-icon"></i>
+          <i class="fas fa-seedling metric-icon"></i>
           <div class="metric-value">{{ metrics.tiposEstado || 0 }}</div>
-          <div class="metric-label">Tipos de Estado Activos</div>
+          <div class="metric-label">Lotes en Estado Activo</div>
         </div>
 
       </div>
@@ -46,7 +46,7 @@
   }
 
   <div class="users-list-section card">
-    <h2 class="section-title">Personal de la Compañía: {{ currentUser.companyName || '...' }}</h2>
+    <h2 class="section-title">👥 Personal de la Compañía: {{ currentUser.companyName || '...' }}</h2>
 
     @if (isLoadingUsers) {
       <div class="loading-state">Cargando personal...</div>
@@ -59,8 +59,10 @@
           <tr>
             <th>Nombre</th>
             <th>Email</th>
-            <th>Teléfono</th> <th>Rol</th>
-            <th>Pasos Registrados</th> <th>Estado</th>
+            <th>Teléfono</th>
+            <th>Rol</th>
+            <th>Pasos Registrados</th>
+            <th>Estado</th>
           </tr>
           </thead>
           <tbody>
@@ -68,11 +70,56 @@
               <tr>
                 <td>{{ user.firstName }} {{ user.lastName }}</td>
                 <td>{{ user.email }}</td>
-                <td>{{ user.phoneNumber || 'N/A' }}</td> <td><span class="role-tag role-{{ user.requestedRole | lowercase }}">{{ user.requestedRole }}</span></td>
+                <td>{{ user.phoneNumber || 'N/A' }}</td>
+                <td><span class="role-tag role-{{ user.requestedRole | lowercase }}">{{ user.requestedRole }}</span></td>
                 <td>
                   <span class="step-count-value">{{ user.stepCount }}</span>
                 </td>
                 <td><span class="status-indicator status-active"></span> Activo</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+  <hr>
+
+  <div class="sorted-batches-section card mt-4">
+    <h2 class="section-title">⏱️ Lotes con Actividad Reciente</h2>
+    <p class="section-subtitle">Ordenado por el último paso de trazabilidad registrado.</p>
+
+    @if (isLoading) {
+      <div class="loading-state">Calculando el orden de los lotes...</div>
+    } @else if (sortedBatches.length === 0) {
+      <div class="no-data-message">No hay lotes registrados para mostrar actividad.</div>
+    } @else {
+      <div class="table-responsive">
+        <table class="users-table">
+          <thead>
+          <tr>
+            <th>ID Lote</th>
+            <th>Nombre Lote</th>
+            <th>Estado Actual</th>
+            <th>Último Paso Registrado</th>
+            <th>Fecha/Hora del Paso</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (batch of sortedBatches; track batch.id) {
+              <tr>
+                <td>{{ batch.id }}</td>
+                <td>{{ batch.lotName }}</td>
+                <td><span class="status-tag status-{{ batch.state | lowercase }}">{{ batch.state }}</span></td>
+                <td>{{ batch.lastStepType || 'N/A' }}</td>
+                <td>
+                  @if (batch.lastStepDate) {
+                    {{ batch.lastStepDate | date:'medium' }}
+                  } @else {
+                    Sin pasos
+                  }
+                </td>
               </tr>
             }
           </tbody>
