@@ -5,36 +5,48 @@ import { forkJoin, of } from 'rxjs';
 import { switchMap, catchError, map } from 'rxjs/operators';
 import {Batch} from '../../model/batch.entity';
 import {User} from '../../model/user.entity';
+import {Step} from '../../model/step.entity';
 import {SessionService} from '../../services/session.service';
 import {UserService} from '../../services/user.service';
 import {BatchService} from '../../services/batch.service';
+import {StepService} from '../../services/step.service';
 
-// 💡 Estructura de métricas para el HTML
+// 💡 Estructura de métricas
 interface DashboardMetrics {
   totalLotes: number;
-  tiposEstado: number; // Cantidad de estados distintos
+  tiposEstado: number;
   totalPersonal: number;
 }
 
-// 💡 Definición del tipo de datos que se procesará en el .subscribe
+// 💡 Nuevo tipo para extender User con el conteo de pasos
+interface UserWithStepCount extends User {
+  stepCount: number;
+}
+
+// 💡 Tipo de datos que se procesará en el .subscribe
 interface DashboardData {
   producerBatches: Batch[];
-  companyUsers: User[];
+  companyUsers: UserWithStepCount[];
+}
+
+// 💡 Tipo de datos cargados desde el forkJoin
+interface LoadData {
+  batches: Batch[];
+  allUsers: User[];
+  allSteps: Step[];
 }
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  // Asegúrate de que los pipes (como | lowercase) estén disponibles
   imports: [CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
 
-  // Inicialización de las propiedades
   currentUser: User | any = {};
-  companyUsers: User[] = [];
+  companyUsers: UserWithStepCount[] = [];
 
   metrics: DashboardMetrics = {
     totalLotes: 0,
@@ -49,7 +61,8 @@ export class DashboardComponent implements OnInit {
   constructor(
     private sessionService: SessionService,
     private userService: UserService,
-    private batchService: BatchService
+    private batchService: BatchService,
+    private stepService: StepService // Inyección de StepService
   ) { }
 
   ngOnInit(): void {
@@ -63,24 +76,19 @@ export class DashboardComponent implements OnInit {
     this.loadDashboardData(userId);
   }
 
-
-  // ===========================================
-  // 💡 PROPIEDAD CORREGIDA PARA EL NOMBRE COMPLETO
-  // ===========================================
   /**
    * Getter que combina el nombre y apellido del usuario logueado.
-   * Se utiliza en la plantilla (HTML) en lugar de currentUser.nombreCompleto.
+   * Utilizado en el HTML para mostrar el nombre completo.
    */
   get userFullName(): string {
     if (this.currentUser && this.currentUser.firstName && this.currentUser.lastName) {
       return `${this.currentUser.firstName} ${this.currentUser.lastName}`;
     }
-    // Retorna 'Cargando...' si no hay datos o están incompletos.
     return 'Cargando...';
   }
 
   /**
-   * Carga la información del usuario logueado, las métricas y la lista de personal.
+   * Carga toda la información del dashboard en paralelo.
    */
   loadDashboardData(userId: string): void {
     this.isLoading = true;
@@ -88,47 +96,44 @@ export class DashboardComponent implements OnInit {
 
     // 1. Obtener la información completa del usuario logueado
     this.userService.getById(userId).pipe(
-      // Si falla la obtención del usuario inicial, retornamos un observable de null
       catchError((err) => {
         this.errorMessage = 'Error al cargar el perfil del usuario.';
         console.error('Error cargando usuario:', err);
         return of(null as unknown as User);
       }),
 
-      // 2. Usar switchMap para encadenar las llamadas con el companyName
+      // 2. Encadenar la carga de los demás datos
       switchMap((user: User | null) => {
         if (!user) {
-          // 🛑 SI EL USUARIO FALLA: Retornamos el tipo final esperado (DashboardData), inicializado a vacío.
           this.isLoading = false;
-          return of({
-            producerBatches: [] as Batch[],
-            companyUsers: [] as User[]
-          } as DashboardData);
+          // Retornamos el tipo final esperado, inicializado a vacío para evitar el error TS2769
+          return of({ producerBatches: [] as Batch[], companyUsers: [] as UserWithStepCount[] } as DashboardData);
         }
 
         this.currentUser = user;
         const companyName = user.companyName;
 
-        // 3. Cargar todos los lotes y todos los usuarios en paralelo
+        // 3. Cargar lotes, usuarios y pasos en paralelo
         return forkJoin({
           batches: this.batchService.getAllBatches().pipe(catchError(() => of([] as Batch[]))),
-          allUsers: this.userService.getAll().pipe(catchError(() => of([] as User[])))
+          allUsers: this.userService.getAll().pipe(catchError(() => of([] as User[]))),
+          allSteps: this.stepService.getAllSteps().pipe(catchError(() => of([] as Step[])))
         }).pipe(
-          // 4. Mapear y procesar los resultados para obtener el tipo DashboardData
-          map(({ batches, allUsers }) => {
+          // 4. Mapear y procesar los resultados
+          map((data: LoadData) => {
 
-            // Filtramos lotes del productor actual para métricas
-            const producerBatches = batches.filter(b => b.producer_id === userId);
+            // Lógica de Lotes (Métricas)
+            const producerBatches = data.batches.filter(b => b.producer_id === userId);
 
-            // Filtramos usuarios de la misma compañía
-            const companyUsers = allUsers.filter(u => u.companyName === companyName);
+            // Lógica de Usuarios y Pasos
+            const companyUsers = data.allUsers.filter(u => u.companyName === companyName);
+            const usersWithSteps = this.calculateStepCounts(companyUsers, data.allSteps);
 
-            return { producerBatches, companyUsers } as DashboardData;
+            return { producerBatches, companyUsers: usersWithSteps } as DashboardData;
           })
         );
       })
     ).subscribe({
-      // 5. El .subscribe ahora espera un único tipo: DashboardData
       next: (data: DashboardData) => {
 
         this.processMetrics(data.producerBatches);
@@ -147,12 +152,30 @@ export class DashboardComponent implements OnInit {
   }
 
   /**
+   * Calcula el número de pasos por usuario.
+   */
+  calculateStepCounts(users: User[], steps: Step[]): UserWithStepCount[] {
+    const stepCounts: { [userId: string]: number } = {};
+
+    // 1. Contar pasos por ID de usuario
+    steps.forEach(step => {
+      const id = step.userId;
+      stepCounts[id] = (stepCounts[id] || 0) + 1;
+    });
+
+    // 2. Asignar el conteo al objeto User
+    return users.map(user => ({
+      ...user,
+      stepCount: stepCounts[user.id] || 0
+    }));
+  }
+
+  /**
    * Calcula las métricas de lotes y estados.
    */
   processMetrics(batches: Batch[]): void {
     this.metrics.totalLotes = batches.length;
 
-    // Calcular el número de estados distintos (tiposEstado)
     const distinctStates = new Set(batches.map(b => b.state));
     this.metrics.tiposEstado = distinctStates.size;
   }
@@ -160,7 +183,7 @@ export class DashboardComponent implements OnInit {
   /**
    * Filtra los usuarios de la compañía, excluyendo al usuario logueado, y establece la métrica total.
    */
-  processCompanyUsers(allUsers: User[], currentUserId: string): void {
+  processCompanyUsers(allUsers: UserWithStepCount[], currentUserId: string): void {
     // La métrica cuenta a todos, incluido el usuario logueado
     this.metrics.totalPersonal = allUsers.length;
 

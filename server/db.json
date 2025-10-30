@@ -263,6 +263,17 @@
       "state": "Draft",
       "imageUrl": "https://res.cloudinary.com/dwrfcod77/image/upload/v1761784791/xfzoimyzjocqarxsonjf.png",
       "producer_id": "8"
+    },
+    {
+      "id": 28,
+      "lotName": "Limonade",
+      "farmName": "GreenX",
+      "variety": "podremosss?",
+      "harvestDate": "2025-10-11",
+      "createdDate": "2025-10-30T08:32:38.546Z",
+      "state": "Activo",
+      "imageUrl": "https://res.cloudinary.com/dwrfcod77/image/upload/v1761813158/b6orlxfsihelg8yyzk3v.png",
+      "producer_id": "8"
     }
   ],
   "users": [
@@ -477,6 +488,17 @@
       "stepTime": "08:00",
       "location": "Colmenares Del Bosque",
       "observations": "Extracción de miel de panales y envasado en cubetas de 20kg.",
+      "hash": ""
+    },
+    {
+      "id": 7,
+      "lotId": "25",
+      "userId": "8",
+      "stepType": "Productor",
+      "stepDate": "2025-10-30",
+      "stepTime": "03:41",
+      "location": "-12.1470976, -76.9785856",
+      "observations": "",
       "hash": ""
     }
   ]

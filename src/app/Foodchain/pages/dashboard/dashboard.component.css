@@ -112,12 +112,12 @@
 }
 
 .table-responsive {
-  overflow-x: auto; /* Permite scroll horizontal en pantallas pequeñas */
+  overflow-x: auto;
 }
 
 .users-table {
   width: 100%;
-  min-width: 600px; /* Asegura una anchura mínima para móviles */
+  min-width: 700px; /* Anchura mínima para móviles */
   border-collapse: collapse;
   font-size: 0.95rem;
 }
@@ -138,6 +138,20 @@
 
 .users-table tr:hover {
   background-color: #fcfdff;
+}
+
+/* Estilos de la Columna de Pasos Registrados */
+.users-table th:nth-child(4),
+.users-table td:nth-child(4) {
+  width: 15%;
+  text-align: center;
+}
+
+.step-count-value {
+  font-weight: 700;
+  color: #4a55a2;
+  font-size: 1.1rem;
+  display: block;
 }
 
 /* Etiquetas de Rol */
@@ -162,7 +176,7 @@
   height: 8px;
   border-radius: 50%;
   margin-right: 6px;
-  background-color: #4caf50; /* Verde para Activo */
+  background-color: #4caf50;
 }
 
 .loading-state, .no-data-message {
