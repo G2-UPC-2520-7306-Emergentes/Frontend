@@ -6,10 +6,15 @@
 
   <form [formGroup]="stepForm" (ngSubmit)="onSubmit()">
 
+    <div *ngIf="isLoading" class="text-muted alert alert-info">Cargando lotes disponibles y geolocalización...</div>
+    <div *ngIf="errorMessage && !isLoading" class="text-danger alert alert-warning">
+      {{ errorMessage }}
+    </div>
+
     <div class="form-group-row">
 
       <div class="form-group">
-        <label for="lotId">Lote</label>
+        <label for="lotId">Lote <span class="required">*</span></label>
         <select
           id="lotId"
           formControlName="lotId"
@@ -22,17 +27,13 @@
           </option>
         </select>
 
-        <div *ngIf="isLoading" class="text-muted">Cargando lotes...</div>
-        <div *ngIf="errorMessage && !isLoading" class="text-danger">
-          {{ errorMessage }}
-        </div>
-        <div *ngIf="f['lotId'].invalid" class="text-danger">
+        <div *ngIf="f['lotId'].invalid" class="text-danger validation-error">
           El Lote es requerido.
         </div>
       </div>
 
       <div class="form-group">
-        <label for="stepType">Tipo de paso</label>
+        <label for="stepType">Tipo de paso <span class="required">*</span></label>
         <select
           id="stepType"
           formControlName="stepType"
@@ -42,7 +43,7 @@
           <option value="" disabled>Seleccionar Tipo</option>
           <option *ngFor="let type of stepTypes" [value]="type">{{ type }}</option>
         </select>
-        <div *ngIf="f['stepType'].invalid" class="text-danger">
+        <div *ngIf="f['stepType'].invalid" class="text-danger validation-error">
           El Tipo de paso es requerido.
         </div>
       </div>
@@ -52,7 +53,7 @@
     <div class="form-group-row">
 
       <div class="form-group">
-        <label for="stepDate">Fecha</label>
+        <label for="stepDate">Fecha <span class="required">*</span></label>
         <input
           type="date"
           id="stepDate"
@@ -60,13 +61,13 @@
           class="form-control"
           [class.is-invalid]="f['stepDate'].invalid"
         >
-        <div *ngIf="f['stepDate'].invalid" class="text-danger">
+        <div *ngIf="f['stepDate'].invalid" class="text-danger validation-error">
           La Fecha es requerida.
         </div>
       </div>
 
       <div class="form-group">
-        <label for="stepTime">Hora</label>
+        <label for="stepTime">Hora <span class="required">*</span></label>
         <input
           type="time"
           id="stepTime"
@@ -74,14 +75,14 @@
           class="form-control"
           [class.is-invalid]="f['stepTime'].invalid"
         >
-        <div *ngIf="f['stepTime'].invalid" class="text-danger">
+        <div *ngIf="f['stepTime'].invalid" class="text-danger validation-error">
           La Hora es requerida.
         </div>
       </div>
     </div>
 
     <div class="form-group-full">
-      <label for="location">Ubicación</label>
+      <label for="location">Ubicación <span class="required">*</span></label>
       <input
         type="text"
         id="location"
@@ -92,7 +93,7 @@
         readonly
       >
       <small class="text-muted">Ubicación capturada automáticamente. No editable.</small>
-      <div *ngIf="f['location'].invalid" class="text-danger">
+      <div *ngIf="f['location'].invalid" class="text-danger validation-error">
         La Ubicación es requerida.
       </div>
     </div>
@@ -113,7 +114,7 @@
     <small class="text-muted map-reference">Vista de referencia de la ubicación capturada</small>
 
     <div class="form-group-full observations-group">
-      <label for="observations">Observaciones</label>
+      <label for="observations">Observaciones (Opcional)</label>
       <textarea id="observations" formControlName="observations" class="form-control" rows="4"></textarea>
     </div>
 
@@ -123,7 +124,7 @@
         class="register-button"
         [disabled]="stepForm.invalid || isLoading || availableLots.length === 0"
       >
-        Registrar Paso
+        <i class="fas fa-save"></i> Registrar Paso
       </button>
       <button type="button" class="cancel-button" (click)="router.navigate(['/sidenav/view-batch'])">Cancelar</button>
     </div>

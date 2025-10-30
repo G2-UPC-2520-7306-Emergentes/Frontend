@@ -3,7 +3,7 @@
   <aside class="sidebar">
     <nav class="sidebar-nav">
       <ul>
-        <li>
+        <li *ngIf="isCompanyCreate">
           <a routerLink="/sidenav/dashboard" routerLinkActive="active" class="nav-item">    <i class="icon">🏠</i> Dashboard
           </a>
         </li>

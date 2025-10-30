@@ -1,23 +1,26 @@
-// (El código TypeScript permanece idéntico al de la respuesta anterior, ya que no tenía referencias a .touched en el TS)
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { first } from 'rxjs/operators';
+import { first, switchMap, catchError} from 'rxjs/operators'; // 💡 Agregamos switchMap y forkJoin
+import {of, EMPTY, forkJoin} from 'rxjs'; // 💡 Agregamos EMPTY
 import { GoogleMapsModule } from '@angular/google-maps';
 
-import {Batch} from '../../../model/batch.entity';
-import {StepCreatePayload, StepService} from '../../../services/step.service';
-import {SessionService} from '../../../services/session.service';
-import {BatchService} from '../../../services/batch.service';
-import {Step} from '../../../model/step.entity';
+import { Batch } from '../../../model/batch.entity';
+import { User } from '../../../model/user.entity'; // Asegúrate de importar User
+import { StepCreatePayload, StepService } from '../../../services/step.service';
+import { SessionService } from '../../../services/session.service';
+import { BatchService } from '../../../services/batch.service';
+import { Step } from '../../../model/step.entity';
+import { UserService } from '../../../services/user.service'; // 💡 Importamos UserService
 
 @Component({
   selector: 'app-register-step',
   standalone: true,
   templateUrl: './register-step.component.html',
   styleUrls: ['./register-step.component.css'],
+  // 💡 Asegúrate de que HttpClientModule esté en un AppModule o similar si usas standalone
   imports: [ReactiveFormsModule, CommonModule, HttpClientModule, RouterLink, GoogleMapsModule]
 })
 export class RegisterStepComponent implements OnInit {
@@ -27,6 +30,7 @@ export class RegisterStepComponent implements OnInit {
   stepTypes: string[] = ['Productor', 'Procesador', 'Empacador', 'Inspector de Calidad', 'Distribuidor', 'Retailer'];
   isLoading: boolean = false;
   errorMessage: string | null = null;
+  currentUser!: User; // 💡 Propiedad para almacenar el usuario actual
 
   mapOptions: google.maps.MapOptions = {};
   markerOptions: google.maps.MarkerOptions = { draggable: false };
@@ -39,12 +43,13 @@ export class RegisterStepComponent implements OnInit {
     protected router: Router,
     private stepService: StepService,
     private sessionService: SessionService,
-    private batchService: BatchService
+    private batchService: BatchService,
+    private userService: UserService // 💡 Inyectamos UserService
   ) { }
 
   ngOnInit(): void {
     this.initForm();
-    this.loadUserBatches();
+    this.loadUserBatches(); // Ahora gestionará la lógica de filtrado compleja
     this.loadGeolocation();
   }
 
@@ -75,6 +80,7 @@ export class RegisterStepComponent implements OnInit {
   }
 
   loadGeolocation(): void {
+    // ... (Lógica de geolocalización sin cambios)
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -106,6 +112,9 @@ export class RegisterStepComponent implements OnInit {
     }
   }
 
+  /**
+   * 💡 LÓGICA MODIFICADA: Carga lotes basados en companyOption (create vs join).
+   */
   loadUserBatches(): void {
     this.isLoading = true;
     this.errorMessage = null;
@@ -117,24 +126,77 @@ export class RegisterStepComponent implements OnInit {
       return;
     }
 
-    this.batchService.getAllBatches()
-      .pipe(first())
-      .subscribe({
-        next: (allBatches: Batch[]) => {
-          this.availableLots = allBatches.filter(
-            (batch: Batch) => batch.producer_id === connectedUserId
-          );
-          this.isLoading = false;
+    // 1. Obtener el usuario actual para saber su rol y compañía
+    this.userService.getById(connectedUserId).pipe(
+      first(),
 
-          if (this.availableLots.length === 0) {
-            this.errorMessage = 'No tienes lotes para registrar un paso.';
-            this.stepForm.get('lotId')?.disable();
+      catchError((error) => {
+        console.error('Error al cargar el usuario:', error);
+        this.errorMessage = 'No se pudo cargar la información de su perfil.';
+        this.isLoading = false;
+        return EMPTY;
+      }),
+
+      // 2. Usar switchMap para obtener todos los lotes y todos los usuarios de la base de datos
+      switchMap((user: User) => {
+        this.currentUser = user;
+
+        return forkJoin({
+          allBatches: this.batchService.getAllBatches().pipe(
+            catchError(() => of([] as Batch[]))
+          ),
+          allUsers: this.userService.getAll().pipe(
+            catchError(() => of([] as User[]))
+          )
+        });
+      }),
+
+      // 3. Filtrar los lotes basado en la lógica de companyOption
+      catchError((error) => {
+        console.error('Error al cargar datos:', error);
+        this.errorMessage = 'Ocurrió un error al cargar los datos necesarios.';
+        this.isLoading = false;
+        return of({ allBatches: [], allUsers: [] });
+      })
+    )
+      .subscribe(({ allBatches, allUsers }) => {
+        let lotesVisibles: Batch[] = [];
+        const currentUserIdString = String(connectedUserId);
+
+        // --- Lógica de Filtrado de Lotes ---
+        if (this.currentUser.companyOption === 'create') {
+          // Caso 'create' (Administrador/Propietario): Solo ve sus lotes
+          lotesVisibles = allBatches.filter(
+            (batch: Batch) => String(batch.producer_id) === currentUserIdString
+          );
+        } else if (this.currentUser.companyOption === 'join') {
+          // Caso 'join' (Miembro/Empleado): Ve los lotes del Administrador de su empresa
+
+          // Buscar al administrador (companyOption: 'create') de la misma compañía
+          const adminUser = allUsers.find(
+            u => u.companyName === this.currentUser.companyName && u.companyOption === 'create'
+          );
+
+          if (adminUser) {
+            const adminIdString = String(adminUser.id);
+            // Filtrar lotes por el ID del administrador
+            lotesVisibles = allBatches.filter(
+              (batch: Batch) => String(batch.producer_id) === adminIdString
+            );
+          } else {
+            this.errorMessage = 'Empresa sin administrador registrado para asignar lotes.';
           }
-        },
-        error: (error) => {
-          console.error('Error al cargar lotes para el usuario:', error);
-          this.errorMessage = 'Error al conectar con el servicio de lotes.';
-          this.isLoading = false;
+        }
+
+        this.availableLots = lotesVisibles;
+        this.isLoading = false;
+
+        if (this.availableLots.length === 0) {
+          this.errorMessage = 'No tienes lotes activos disponibles para registrar un paso.';
+          this.stepForm.get('lotId')?.disable();
+        } else {
+          // Si hay lotes, habilitamos el selector
+          this.stepForm.get('lotId')?.enable();
         }
       });
   }

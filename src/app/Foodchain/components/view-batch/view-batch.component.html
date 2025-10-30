@@ -1,13 +1,19 @@
 <div class="batch-list-container">
   <div class="header-section">
     <div class="title-and-description">
-      <h2>Mis Lotes</h2>
+      <h2>Lotes de {{ currentUser?.companyName || 'la Compañía' }}</h2>
       <p *ngIf="errorMessage && !isLoading" class="error-message">{{ errorMessage }}</p>
-      <p *ngIf="!errorMessage && !isLoading">Visualiza y gestiona tus lotes de productos.</p>
+
+      <p *ngIf="!errorMessage && !isLoading && currentUser?.companyOption === 'create'">
+        Visualiza y gestiona tus lotes de productos.
+      </p>
+      <p *ngIf="!errorMessage && !isLoading && currentUser?.companyOption === 'join'">
+        Visualiza los lotes activos de tu empresa.
+      </p>
       <p *ngIf="isLoading">Cargando lotes...</p>
     </div>
 
-    <button class="create-button" routerLink="/sidenav/create-batch">
+    <button class="create-button" routerLink="/sidenav/create-batch" *ngIf="currentUser?.companyOption === 'create'">
       <i class="fas fa-plus"></i> Crear Nuevo Lote
     </button>
   </div>
@@ -53,13 +59,17 @@
         <td>{{ batch.harvestDate | date: 'yyyy-MM-dd' }}</td>
 
         <td class="action-links">
-          <a (click)="viewDetail(batch.id)">Ver detalle</a> |
-          <a (click)="editBatch(batch.id)">Editar</a> |
-          <a (click)="generateQR(batch.id)">Generar QR</a>
+          <a (click)="viewDetail(batch.id)">Ver detalle</a>
 
-          <ng-container *ngIf="batch.state === 'Activo' || batch.state === 'Draft'">
-            | <a (click)="closeBatch(batch.id)">Cerrar lote</a>
+          <ng-container *ngIf="currentUser?.companyOption === 'create'">
+            | <a (click)="editBatch(batch.id)">Editar</a>
+            | <a (click)="generateQR(batch.id)">Generar QR</a>
+
+            <ng-container *ngIf="batch.state === 'Activo' || batch.state === 'Draft'">
+              | <a (click)="closeBatch(batch.id)">Cerrar lote</a>
+            </ng-container>
           </ng-container>
+
         </td>
       </tr>
       <tr *ngIf="!filteredBatches.length && !isLoading && !errorMessage">

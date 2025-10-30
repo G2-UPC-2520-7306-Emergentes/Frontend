@@ -1,31 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common'; // Agregamos DatePipe si no estaba
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { first } from 'rxjs/operators';
-
-
+import { first, catchError, switchMap } from 'rxjs/operators';
+import { of, EMPTY, forkJoin } from 'rxjs'; // Importamos forkJoin y EMPTY
 
 import { QRCodeComponent } from 'angularx-qrcode';
 
-import {Batch} from '../../model/batch.entity';
-import {BatchService} from '../../services/batch.service';
-import {SessionService} from '../../services/session.service';
-import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { Batch } from '../../model/batch.entity'; // Asegúrate de que la ruta sea correcta
+import { User } from '../../model/user.entity'; // 💡 Asegúrate de que la ruta sea correcta
+import { BatchService } from '../../services/batch.service';
+import { SessionService } from '../../services/session.service';
+import { UserService } from '../../services/user.service'; // 💡 UserService es necesario
 
 @Component({
   selector: 'app-view-batch',
   standalone: true,
-
-  imports: [CommonModule, RouterLink, FormsModule, QRCodeComponent],
+  // DatePipe no es necesario aquí si solo se usa en el template, pero lo incluimos por buenas prácticas
+  imports: [CommonModule, RouterLink, FormsModule, QRCodeComponent, DatePipe],
   templateUrl: './view-batch.component.html',
   styleUrls: ['./view-batch.component.css'],
 })
 export class ViewBatchComponent implements OnInit {
 
   filteredBatches: Batch[] = [];
+  currentUser!: User; // 💡 Propiedad para almacenar el usuario actual
 
   searchText: string = '';
   currentPage: number = 1;
@@ -34,7 +34,6 @@ export class ViewBatchComponent implements OnInit {
   isLoading: boolean = false;
   errorMessage: string | null = null;
 
-
   showQrModal: boolean = false;
   qrData: string = '';
   qrCodeBatchId: string = '';
@@ -42,14 +41,18 @@ export class ViewBatchComponent implements OnInit {
   constructor(
     private router: Router,
     private batchService: BatchService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private userService: UserService // 💡 Servicio de usuario inyectado
   ) { }
 
   ngOnInit(): void {
-    this.loadBatchesByProducer();
+    this.loadBatches();
   }
 
-  loadBatchesByProducer(): void {
+  /**
+   * Carga los lotes basándose en el companyOption del usuario.
+   */
+  loadBatches(): void {
     this.isLoading = true;
     this.errorMessage = null;
 
@@ -62,34 +65,84 @@ export class ViewBatchComponent implements OnInit {
       return;
     }
 
-    this.batchService.getAllBatches()
-      .pipe(
-        first(),
-        catchError((error) => {
-          console.error('Error al cargar lotes:', error);
-          this.errorMessage = 'Ocurrió un error al cargar los lotes desde el servidor.';
-          this.isLoading = false;
-          return of([]);
-        })
-      )
-      .subscribe((allBatches: Batch[]) => {
-        this.filteredBatches = allBatches.filter(
+    // 1. Obtener el usuario actual
+    this.userService.getById(connectedUserId).pipe(
+      first(),
 
-          (batch: Batch) => batch.producer_id === connectedUserId
-        );
+      catchError((error) => {
+        console.error('Error al cargar el usuario:', error);
+        this.errorMessage = 'No se pudo cargar la información de su perfil.';
+        this.isLoading = false;
+        return EMPTY; // Detiene el flujo
+      }),
 
+      // 2. Usar switchMap para obtener todos los lotes y todos los usuarios
+      switchMap((user: User) => {
+        this.currentUser = user; // Guardamos el usuario
+
+        return forkJoin({
+          allBatches: this.batchService.getAllBatches().pipe(
+            catchError(() => of([] as Batch[]))
+          ),
+          allUsers: this.userService.getAll().pipe(
+            catchError(() => of([] as User[]))
+          )
+        });
+      }),
+
+      // 3. Filtrar los lotes basado en la lógica de companyOption
+      catchError((error) => {
+        console.error('Error al cargar datos:', error);
+        this.errorMessage = 'Ocurrió un error al cargar los datos necesarios.';
+        this.isLoading = false;
+        return of({ allBatches: [], allUsers: [] });
+      })
+    )
+      .subscribe(({ allBatches, allUsers }) => {
+        let lotesVisibles: Batch[] = [];
+
+        const currentUserIdString = String(connectedUserId);
+
+        // Lógica de Filtrado
+        if (this.currentUser.companyOption === 'create') {
+          // Caso 'create' (Administrador/Propietario): Solo ve sus lotes
+          lotesVisibles = allBatches.filter(
+            (batch: Batch) => String(batch.producer_id) === currentUserIdString
+          );
+        } else if (this.currentUser.companyOption === 'join') {
+          // Caso 'join' (Miembro/Empleado): Ve los lotes del Administrador de su empresa
+
+          // Buscar al administrador (companyOption: 'create') de la misma compañía
+          const adminUser = allUsers.find(
+            u => u.companyName === this.currentUser.companyName && u.companyOption === 'create'
+          );
+
+          if (adminUser) {
+            const adminIdString = String(adminUser.id);
+            // Filtrar lotes por el ID del administrador
+            lotesVisibles = allBatches.filter(
+              (batch: Batch) => String(batch.producer_id) === adminIdString
+            );
+          } else {
+            this.errorMessage = 'Empresa sin administrador registrado para visualizar lotes.';
+          }
+        }
+
+        this.filteredBatches = lotesVisibles;
         this.isLoading = false;
 
         if (this.filteredBatches.length === 0 && !this.errorMessage) {
-          this.errorMessage = `¡Hola Productor ${connectedUserId}! Aún no tienes lotes registrados.`;
+          const roleText = this.currentUser.companyOption === 'join' ? 'Miembro' : 'Productor';
+          this.errorMessage = `¡Hola ${roleText}! Aún no tienes lotes visibles.`;
         }
       });
   }
 
-  viewDetail(batchId: string): void {
-    this.router.navigate([`/sidenav/details-batch/${batchId}`]); }
+  viewDetail(batchId: string | number): void {
+    this.router.navigate([`/sidenav/details-batch/${batchId}`]);
+  }
 
-  editBatch(batchId: string): void {
+  editBatch(batchId: string | number): void {
     this.router.navigate([`/sidenav/edit-batch/${batchId}`]);
   }
 
@@ -102,13 +155,10 @@ export class ViewBatchComponent implements OnInit {
 
     const qrCodeUrl = `${baseUrl}/view-qrcode/${batchId}`;
 
-
     this.qrData = qrCodeUrl;
     this.qrCodeBatchId = String(batchId);
 
-
     this.showQrModal = true;
-
 
     console.log("Generando QR para URL:", this.qrData);
   }
@@ -122,7 +172,8 @@ export class ViewBatchComponent implements OnInit {
     this.qrCodeBatchId = '';
   }
 
-  closeBatch(batchId: string): void {
+  closeBatch(batchId: string | number): void {
     console.log(`Acción: Cerrar lote para el lote: ${batchId}`);
+    // Aquí iría la lógica para cambiar el estado del lote a 'Cerrado' o similar.
   }
 }
