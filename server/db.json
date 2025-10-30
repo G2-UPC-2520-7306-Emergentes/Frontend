@@ -241,6 +241,28 @@
       "state": "Draft",
       "imageUrl": "https://res.cloudinary.com/dwrfcod77/image/upload/v1761784791/xfzoimyzjocqarxsonjf.png",
       "producer_id": "8"
+    },
+    {
+      "id": 26,
+      "lotName": "Prueba1 (Copia - 2025-10-30)",
+      "farmName": "LosMejores",
+      "variety": "podremosss?",
+      "harvestDate": "2025-10-30",
+      "createdDate": "2025-10-30T04:05:39.517Z",
+      "state": "Draft",
+      "imageUrl": "https://res.cloudinary.com/dwrfcod77/image/upload/v1761784791/xfzoimyzjocqarxsonjf.png",
+      "producer_id": "8"
+    },
+    {
+      "id": 27,
+      "lotName": "Prueba1 (Copia - 2025-10-30) (Copia - 2025-10-30)",
+      "farmName": "funcióno??",
+      "variety": "podremosss?",
+      "harvestDate": "2025-10-30",
+      "createdDate": "2025-10-30T04:10:56.297Z",
+      "state": "Draft",
+      "imageUrl": "https://res.cloudinary.com/dwrfcod77/image/upload/v1761784791/xfzoimyzjocqarxsonjf.png",
+      "producer_id": "8"
     }
   ],
   "users": [

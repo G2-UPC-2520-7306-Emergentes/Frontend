@@ -13,6 +13,7 @@ import {CreateBatchComponent} from './Foodchain/components/create-batch/create-b
 import {RegisterStepComponent} from './Foodchain/components/steps/register-step/register-step.component';
 import {HistoryBatchComponent} from './Foodchain/pages/history-batch/history-batch.component';
 import {ViewQrcodeComponent} from './Foodchain/pages/view-qrcode/view-qrcode.component';
+import {DuplicateFormComponent} from './Foodchain/components/duplicate-form/duplicate-form.component';
 export const routes: Routes = [
 
   { path: 'login', component: LoginComponent },
@@ -29,6 +30,7 @@ export const routes: Routes = [
       { path: 'create-batch', component: CreateBatchComponent },
       { path: 'register-step', component: RegisterStepComponent },
       { path: 'history-batch', component: HistoryBatchComponent },
+      { path: 'duplicate-form/:id', component: DuplicateFormComponent },
        ]},
   { path: 'view-qrcode/:lotId', component: ViewQrcodeComponent },
 

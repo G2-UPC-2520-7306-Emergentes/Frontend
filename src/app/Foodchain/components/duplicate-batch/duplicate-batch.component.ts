@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
 import { Batch } from '../../model/batch.entity'; // Asegúrate de que esta entidad Batch esté correcta
 import { BatchService } from '../../services/batch.service';
 import {SessionService} from '../../services/session.service'; // Asegúrate de la ruta
-
+import { Router } from '@angular/router'; // 👈 IMPORTANTE: Asegúrate de importar Router
 // Nota: Puedes reutilizar o adaptar esta interfaz.
 // Si los datos de BatchService ya coinciden, podrías usar directamente Batch.
 interface DuplicableBatch {
@@ -38,7 +38,8 @@ export class DuplicateBatchComponent implements OnInit {
   // 💡 Inyectar los servicios
   constructor(
     private batchService: BatchService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -105,8 +106,8 @@ export class DuplicateBatchComponent implements OnInit {
    */
   duplicateBatch(batchId: string): void {
     console.log(`Función Duplicar llamada para el ID: ${batchId}`);
-    // 🚨 FUTURO: Aquí iría la lógica de llamada a la API y navegación.
-    // this.batchService.duplicate(batchId).subscribe(...)
+
+    this.router.navigate(['/sidenav/duplicate-form', batchId]);
   }
 
 }

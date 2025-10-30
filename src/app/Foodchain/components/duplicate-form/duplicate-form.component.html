@@ -1,0 +1,96 @@
+<div class="container-duplicate">
+
+  <header class="header-section">
+    <h1 class="main-title">Duplicar Lote</h1>
+    <p class="subtitle">Copia los datos del lote original <strong>{{ originalBatchId || '...' }}</strong> para crear un nuevo registro.</p>
+  </header>
+
+  @if (isLoading) {
+    <div class="alert loading-state">
+      <div class="spinner"></div>
+      <span>Cargando datos del lote original...</span>
+    </div>
+  } @else if (errorMessage && !successMessage) {
+    <div class="alert alert-error" role="alert">
+      <p class="alert-title">Error al duplicar</p>
+      <p>{{ errorMessage }}</p>
+    </div>
+  } @else if (successMessage) {
+    <div class="alert alert-success" role="alert">
+      <p class="alert-title">¡Éxito!</p>
+      <p>{{ successMessage }}</p>
+    </div>
+  }
+
+  @if (!isLoading && originalBatch) {
+    <form [formGroup]="batchForm" (ngSubmit)="onSubmit()" class="duplicate-form">
+
+      <h2 class="form-title">Datos del Nuevo Lote</h2>
+
+      <div class="form-group">
+        <label for="lotName">Nombre del Lote (Nuevo)</label>
+        <input id="lotName" type="text" formControlName="lotName"
+               [class.is-invalid]="isFieldInvalid('lotName')"
+               placeholder="Ej: Maíz Orgánico - Diciembre 2025">
+        @if (isFieldInvalid('lotName')) {
+          <p class="error-message">El nombre del lote es obligatorio y debe ser único.</p>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="harvestDate">Fecha de Cosecha</label>
+        <input id="harvestDate" type="date" formControlName="harvestDate"
+               [class.is-invalid]="isFieldInvalid('harvestDate')">
+        @if (isFieldInvalid('harvestDate')) {
+          <p class="error-message">La fecha de cosecha es obligatoria.</p>
+        }
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label for="farmName">Finca</label>
+          <input id="farmName" type="text" formControlName="farmName"
+                 [class.is-invalid]="isFieldInvalid('farmName')"
+                 placeholder="Ej: Milpa de Oro">
+          @if (isFieldInvalid('farmName')) {
+            <p class="error-message">La finca es obligatoria.</p>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="variety">Variedad</label>
+          <input id="variety" type="text" formControlName="variety"
+                 [class.is-invalid]="isFieldInvalid('variety')"
+                 placeholder="Ej: Choclo">
+          @if (isFieldInvalid('variety')) {
+            <p class="error-message">La variedad es obligatoria.</p>
+          }
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="imageUrl">URL de Imagen (Opcional)</label>
+        <input id="imageUrl" type="text" formControlName="imageUrl"
+               placeholder="URL de la imagen del lote">
+      </div>
+
+      <div class="button-group">
+        <button type="button" (click)="router.navigate(['//sidenav/duplicate-batch'])"
+                class="btn btn-secondary">
+          Cancelar
+        </button>
+        <button type="submit" [disabled]="batchForm.invalid || isSaving"
+                class="btn btn-primary">
+          @if (isSaving) {
+            <div class="spinner-small"></div>
+            Creando Copia...
+          } @else {
+            Crear Nuevo Lote Duplicado
+          }
+        </button>
+      </div>
+    </form>
+  }
+
+</div>
