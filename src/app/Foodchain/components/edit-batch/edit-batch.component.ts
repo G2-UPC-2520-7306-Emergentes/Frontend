@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { HttpClient, HttpClientModule } from '@angular/common/http'; // 💡 Importamos HttpClient
 import { first } from 'rxjs/operators';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
-import {BatchService, BatchUpdatePayload} from '../../services/batch.service';
 import {Batch} from '../../model/batch.entity';
+import {BatchService, BatchUpdatePayload} from '../../services/batch.service';
 
 
 
@@ -14,7 +15,8 @@ import {Batch} from '../../model/batch.entity';
 @Component({
   selector: 'app-edit-batch',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  // 💡 Agregamos HttpClientModule
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './edit-batch.component.html',
   styleUrls: ['./edit-batch.component.css'],
 })
@@ -22,27 +24,32 @@ export class EditBatchComponent implements OnInit {
 
   editForm!: FormGroup;
   isLoading: boolean = true;
+  isSaving: boolean = false; // 💡 Nuevo estado para el guardado
   errorMessage: string | null = null;
   batchId!: string;
-  private currentBatchData!: Batch;
+  // 💡 CORREGIDO: Permite ser null al inicio para evitar TS2531
+  protected currentBatchData: Batch | null = null;
 
-  // 💡 Valor de placeholder para la imagen que no se enviará al API si no se modifica
-  private defaultImageUrlPlaceholder: string = 'NO_IMAGE_UPLOADED';
+  // 💡 Nuevo: Estado para el archivo seleccionado
+  selectedFile: File | null = null;
+
+  // 🔑 CONFIGURACIONES DE CLOUDINARY (Usa tus credenciales)
+  private CLOUDINARY_CLOUD_NAME = 'dwrfcod77';
+  private CLOUDINARY_UPLOAD_PRESET = 'lote_images'; // <-- Asegúrate que este preset es UNSEIGNED
 
 
   constructor(
     private fb: FormBuilder,
     protected router: Router,
     private route: ActivatedRoute,
-    private batchService: BatchService
+    private batchService: BatchService,
+    private http: HttpClient // 💡 Inyectamos HttpClient
   ) {
     this.editForm = this.fb.group({
       nombreLote: ['', Validators.required],
       nombreFinca: ['', Validators.required],
       variedad: ['', Validators.required],
       fechaCosecha: ['', Validators.required],
-      // 💡 Agregamos el control de la imagen, con el placeholder inicial
-      imageUrl: [this.defaultImageUrlPlaceholder]
     });
   }
 
@@ -55,7 +62,6 @@ export class EditBatchComponent implements OnInit {
       this.isLoading = false;
       return;
     }
-
     this.loadBatchData(this.batchId);
   }
 
@@ -82,8 +88,6 @@ export class EditBatchComponent implements OnInit {
             nombreFinca: batch.farmName,
             variedad: batch.variety,
             fechaCosecha: batch.harvestDate,
-            // 💡 Usamos la URL real si existe, o el placeholder para mantener el estado del control
-            imageUrl: batch.imageUrl || this.defaultImageUrlPlaceholder,
           });
         } else {
           this.errorMessage = this.errorMessage || 'Lote no encontrado o error en el servicio.';
@@ -92,79 +96,118 @@ export class EditBatchComponent implements OnInit {
       });
   }
 
-  get f() { return this.editForm.controls; }
-
   /**
-   * Maneja el envío del formulario: Actualiza el lote.
+   * 💡 Nuevo: Captura el archivo de imagen seleccionado por el usuario.
    */
-  onSubmit(): void {
-    if (this.editForm.valid && this.batchId) {
-      this.isLoading = true;
-
-      const formValues = this.editForm.value;
-
-      // 1. Mapear los datos editables
-      const editedFields: BatchUpdatePayload = {
-        lotName: formValues.nombreLote,
-        farmName: formValues.nombreFinca,
-        variety: formValues.variedad,
-        harvestDate: formValues.fechaCosecha,
-      };
-
-      // LÓGICA DE IMAGEN
-      const currentImageUrl = formValues.imageUrl;
-      if (currentImageUrl !== this.defaultImageUrlPlaceholder) {
-        editedFields.imageUrl = currentImageUrl;
-      } else if (this.currentBatchData.imageUrl) {
-        editedFields.imageUrl = this.currentBatchData.imageUrl;
-      } else {
-        delete editedFields.imageUrl;
-      }
-
-      // 2. Fusionar el lote original con los campos editados
-      const fullUpdatePayload = {
-        ...this.currentBatchData, // Copia todos los campos originales
-        ...editedFields           // Sobreescribe los campos editados
-      };
-
-      // 3. 💡 SOLUCIÓN TS2790: Usar desestructuración para crear un nuevo objeto sin 'id'
-      // Extraemos el id y el resto de las propiedades las metemos en payloadToSend
-      const { id, ...payloadToSend } = fullUpdatePayload;
-
-      // Aseguramos el tipo final para el servicio
-      const finalPayload = payloadToSend as unknown as BatchUpdatePayload;
-
-
-      // 4. Enviar el payload completo sin el ID
-      this.batchService.updateBatch(this.batchId, finalPayload)
-        .pipe(
-          first(),
-          catchError((error) => {
-            console.error('Fallo final en la actualización:', error);
-            this.isLoading = false;
-            return of(null);
-          })
-        )
-        .subscribe((response) => {
-          if (response) {
-            alert('Datos de lote actualizados exitosamente.');
-            this.router.navigate(['/sidenav/view-batch']);
-          }
-          this.isLoading = false;
-        });
-
+  onFileSelected(event: any): void {
+    if (event.target.files.length > 0) {
+      this.selectedFile = event.target.files[0];
+      // 💡 Seguridad extra en la consola:
+      console.log('Archivo seleccionado:', this.selectedFile?.name);
     } else {
-      console.log('El formulario no es válido. Revise los campos requeridos.');
-      this.editForm.markAllAsTouched();
+      this.selectedFile = null;
+      console.log('Selección de archivo cancelada.');
     }
   }
 
-  // 💡 Función simulada para manejar la carga de imagen desde el botón "Buscar archivo"
-  onImageFileSelect(event: any): void {
-    // Simulación: Asigna una URL de ejemplo al control del formulario
-    const simulatedUrl = 'https://example.com/new-batch-image-upload-2025.jpg';
-    this.f['imageUrl'].setValue(simulatedUrl);
-    alert('Simulación: Imagen cargada y lista para guardar.');
+  get f() { return this.editForm.controls; }
+
+  /**
+   * Maneja el envío del formulario: 1. Sube imagen (si existe), 2. Actualiza el lote.
+   */
+  async onSubmit(): Promise<void> {
+    if (this.editForm.invalid || this.isSaving) {
+      this.editForm.markAllAsTouched();
+      return;
+    }
+
+    // Si el lote original no se cargó por alguna razón, no continuar.
+    if (!this.currentBatchData) {
+      alert('Error interno: Los datos del lote original no están disponibles.');
+      return;
+    }
+
+    this.isSaving = true;
+    let newImageUrl: string | undefined;
+
+    // --- FASE 1: SUBIDA A CLOUDINARY (Solo si se seleccionó un nuevo archivo) ---
+    if (this.selectedFile) {
+      try {
+        const cloudinaryFormData = new FormData();
+        // 💡 Uso seguro de 'selectedFile' y 'selectedFile.name' ya que está dentro del IF
+        cloudinaryFormData.append('file', this.selectedFile, this.selectedFile.name);
+        cloudinaryFormData.append('upload_preset', this.CLOUDINARY_UPLOAD_PRESET);
+
+        const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${this.CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+        // Nota: toPromise() está deprecado, pero se mantiene por consistencia
+        const cloudinaryResponse = await this.http
+          .post<any>(cloudinaryUrl, cloudinaryFormData)
+          .toPromise();
+
+        newImageUrl = cloudinaryResponse!.secure_url;
+        console.log('Nueva imagen subida a Cloudinary. URL:', newImageUrl);
+
+      } catch (error) {
+        console.error('Error al subir la imagen a Cloudinary:', error);
+        alert('Error crítico al subir la imagen. La actualización del lote ha sido cancelada.');
+        this.isSaving = false;
+        return;
+      }
+    }
+
+    // --- FASE 2: CONSTRUCCIÓN DEL PAYLOAD Y ACTUALIZACIÓN ---
+
+    // Mapear los datos editables a la estructura real de la entidad Batch
+    const editedFields: BatchUpdatePayload = {
+      lotName: this.f['nombreLote'].value,
+      farmName: this.f['nombreFinca'].value,
+      variety: this.f['variedad'].value,
+      harvestDate: this.f['fechaCosecha'].value,
+    };
+
+    // Lógica de URL de Imagen:
+    if (newImageUrl) {
+      // Caso 1: Se subió una nueva imagen.
+      editedFields.imageUrl = newImageUrl;
+    } else if (this.currentBatchData.imageUrl) {
+      // Caso 2: No se subió una nueva imagen, pero el lote ya tenía una.
+      editedFields.imageUrl = this.currentBatchData.imageUrl;
+    }
+    // Si no hay newImageUrl ni currentBatchData.imageUrl, la propiedad imageUrl simplemente no se incluye
+    // en editedFields, preservando el comportamiento de la API.
+
+
+    // Fusionar el lote original con los campos editados para preservar metadatos
+    const fullUpdatePayload = {
+      ...this.currentBatchData,
+      ...editedFields
+    };
+
+    // Usar desestructuración para crear un nuevo objeto sin 'id' (soluciona TS2790)
+    const { id, ...payloadToSend } = fullUpdatePayload;
+    // Aseguramos que la descripción (que es opcional y no estaba en el FormGroup) se mantenga
+
+    const finalPayload = payloadToSend as unknown as BatchUpdatePayload;
+
+
+    // Enviar la actualización
+    this.batchService.updateBatch(this.batchId, finalPayload)
+      .pipe(
+        first(),
+        catchError((error) => {
+          console.error('Fallo final en la actualización:', error);
+          this.isSaving = false;
+          return of(null);
+        })
+      )
+      .subscribe((response) => {
+        this.isSaving = false;
+        if (response) {
+          alert('Datos de lote actualizados exitosamente.');
+          this.router.navigate(['/sidenav/view-batch']);
+        }
+      });
   }
 
   cancelEdit(): void {

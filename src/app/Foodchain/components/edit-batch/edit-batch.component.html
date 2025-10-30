@@ -2,6 +2,7 @@
   <h2>Editar información de lote</h2>
   <p class="description">Modifica los detalles básicos de tu lote activo.</p>
 
+  <!-- Manejo del estado de carga inicial y errores -->
   <div *ngIf="isLoading && !errorMessage" class="loading-message">
     <i class="fas fa-spinner fa-spin"></i> Cargando información del lote...
   </div>
@@ -12,8 +13,10 @@
     <button (click)="router.navigate(['/sidenav/view-batch'])">Volver a Lotes</button>
   </div>
 
+  <!-- Mostrar formulario solo si no está cargando y no hay error -->
   <form [formGroup]="editForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading && !errorMessage">
 
+    <!-- Nombre del Lote -->
     <div class="form-group">
       <label for="nombreLote">Nombre del lote <span class="required">*</span></label>
       <input
@@ -27,6 +30,7 @@
       </div>
     </div>
 
+    <!-- Nombre de la Finca -->
     <div class="form-group">
       <label for="nombreFinca">Nombre de la finca <span class="required">*</span></label>
       <input
@@ -40,6 +44,7 @@
       </div>
     </div>
 
+    <!-- Variedad -->
     <div class="form-group">
       <label for="variedad">Variedad <span class="required">*</span></label>
       <input
@@ -53,6 +58,7 @@
       </div>
     </div>
 
+    <!-- Fecha de Cosecha -->
     <div class="form-group">
       <label for="fechaCosecha">Fecha de cosecha <span class="required">*</span></label>
       <div class="input-with-icon">
@@ -70,27 +76,58 @@
       </div>
     </div>
 
+    <!-- Descripción (Opcional) - Nota: No está en el TS, pero se mantiene si lo quieres agregar después -->
+    <!--
     <div class="form-group">
       <label for="descripcion">Descripción o notas</label>
       <textarea id="descripcion" formControlName="descripcion" rows="5"></textarea>
     </div>
+    -->
 
+    <!-- Área de subida de Imagen (Ajustada para input type="file") -->
     <div class="image-upload-area">
       <p class="upload-text">
         Imagen representativa (opcional)
       </p>
+
+      <!-- 💡 INPUT REAL DE ARCHIVO -->
+      <input
+        type="file"
+        id="imageFile"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+        style="display: none;"
+        #fileInput
+      >
+
       <p class="upload-subtext">
-        Arrastra y suelta un archivo aquí o busca un archivo
-        <span *ngIf="f['imageUrl'].value !== 'NO_IMAGE_UPLOADED'" class="image-preview-text">
-            | Archivo listo: {{ f['imageUrl'].value | slice:0:30 }}...
-        </span>
+        <span *ngIf="selectedFile">Archivo seleccionado: <strong>{{ selectedFile?.name }}</strong></span>
+
+        <span *ngIf="!selectedFile && currentBatchData?.imageUrl">
+    URL actual: {{ currentBatchData?.imageUrl | slice:0:30 }}...
+  </span>
+
+        <span *ngIf="!selectedFile && currentBatchData && !currentBatchData.imageUrl">
+    No hay imagen actualmente.
+  </span>
       </p>
-      <button type="button" class="search-file-button" (click)="onImageFileSelect($event)">
-        Buscar archivo
+
+      <!-- Botón que simula el clic en el input de tipo file -->
+      <button type="button" class="search-file-button" (click)="fileInput.click()">
+        {{ selectedFile ? 'Cambiar archivo' : 'Buscar archivo' }}
+      </button>
+
+      <!-- Botón para limpiar (opcional) -->
+      <button
+        *ngIf="selectedFile"
+        type="button"
+        class="cancel-button"
+        (click)="selectedFile = null; fileInput.value = ''"
+        [disabled]="isSaving"
+      >
+        Quitar
       </button>
     </div>
-
-    <input type="hidden" formControlName="imageUrl">
 
     <p class="trazability-message">
       Los cambios se firmarán digitalmente y se registrarán en blockchain para garantizar la integridad y trazabilidad de la información.
@@ -99,17 +136,17 @@
     <div class="action-buttons">
       <button
         type="submit"
-        [disabled]="editForm.invalid || isLoading"
+        [disabled]="editForm.invalid || isSaving"
         class="save-button"
       >
-        <i *ngIf="isLoading" class="fas fa-spinner fa-spin"></i>
-        {{ isLoading ? ' Guardando...' : 'Guardar cambios' }}
+        <i *ngIf="isSaving" class="fas fa-spinner fa-spin"></i>
+        {{ isSaving ? ' Guardando...' : 'Guardar cambios' }}
       </button>
       <button
         type="button"
         (click)="cancelEdit()"
         class="cancel-button"
-        [disabled]="isLoading"
+        [disabled]="isSaving"
       >
         Cancelar
       </button>
