@@ -36,7 +36,6 @@
 /* Contenido Principal */
 .content-area {
   flex-grow: 1;
-  padding: 30px;
   overflow-y: auto;
   background-color: var(--clr-bg-light);
   transition: background-color 0.3s ease;
@@ -194,7 +193,7 @@
 }
 
 :host-context(body.dark-theme) .nav-item.active .icon {
-  filter: none; 
+  filter: none;
 }
 
 :host-context(body.dark-theme) .theme-toggle-container,

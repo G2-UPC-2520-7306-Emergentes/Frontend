@@ -1,9 +1,7 @@
 /* ------------------------------------------- */
 /* LAYOUT PRINCIPAL */
 /* ------------------------------------------- */
-.profile-container {
-  padding: 30px;
-}
+
 
 .content-grid {
   display: grid;
@@ -235,8 +233,6 @@ input:focus {
   background-color: #ffffff;
   /* Un poco de padding interior */
   padding: 30px;
-  /* Esquinas redondeadas */
-  border-radius: 8px;
   /* Sombra suave para darle profundidad */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   /* Borde sutil (opcional) */
