@@ -1,0 +1,183 @@
+/* --- Contenedor General --- */
+.dashboard-container {
+  padding: 30px;
+  background-color: #f7f9fc; /* Fondo suave fuera de las tarjetas */
+  min-height: 100vh;
+}
+
+.dashboard-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+/* --- Estilo Base de Tarjeta (Card) --- */
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+}
+
+/* =================================== */
+/* === 1. HEADER Y MÉTRICAS (GRID) === */
+/* =================================== */
+.dashboard-header-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr; /* Info de usuario más ancha, métricas flexibles */
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+/* --- A. Tarjeta de Información del Usuario --- */
+.user-info-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 25px;
+}
+
+.user-avatar {
+  font-size: 3.5rem;
+  color: #4a55a2; /* Color principal */
+}
+
+.user-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.user-role {
+  font-weight: 600;
+  color: #10b981; /* Verde de distinción */
+  margin-bottom: 5px;
+  text-transform: capitalize;
+}
+
+.user-company, .user-email {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* --- B. Contenedor de Métricas --- */
+.metrics-card-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Tres métricas en fila */
+  gap: 20px;
+}
+
+.metric-item {
+  text-align: center;
+  padding: 20px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.metric-icon {
+  font-size: 1.5rem;
+  color: #4a55a2;
+  margin-bottom: 10px;
+}
+
+.metric-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #333;
+}
+
+.metric-label {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 5px;
+}
+
+/* ======================================= */
+/* === 2. LISTA DE PERSONAL (TABLA) === */
+/* ======================================= */
+.users-list-section {
+  padding: 25px 30px;
+}
+
+.section-title {
+  font-size: 1.4rem;
+  color: #444;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.table-responsive {
+  overflow-x: auto; /* Permite scroll horizontal en pantallas pequeñas */
+}
+
+.users-table {
+  width: 100%;
+  min-width: 600px; /* Asegura una anchura mínima para móviles */
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.users-table th, .users-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.users-table th {
+  background-color: #f7f9fc;
+  color: #555;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.users-table tr:hover {
+  background-color: #fcfdff;
+}
+
+/* Etiquetas de Rol */
+.role-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* Colores de roles (ejemplos) */
+.role-tag.role-distribuidor { background-color: #ffe0b2; color: #ff9800; }
+.role-tag.role-productor { background-color: #c8e6c9; color: #4caf50; }
+.role-tag.role-admin { background-color: #bbdefb; color: #2196f3; }
+
+/* Indicadores de Estado */
+.status-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background-color: #4caf50; /* Verde para Activo */
+}
+
+.loading-state, .no-data-message {
+  text-align: center;
+  padding: 30px;
+  color: #777;
+  font-style: italic;
+}
+
+/* --- Media Queries (Para Responsividad) --- */
+@media (max-width: 992px) {
+  .dashboard-header-grid {
+    grid-template-columns: 1fr; /* Colapsar a una columna */
+  }
+  .metrics-card-container {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Métricas flexibles */
+  }
+}

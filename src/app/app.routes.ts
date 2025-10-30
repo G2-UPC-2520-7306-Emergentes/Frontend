@@ -14,6 +14,7 @@ import {RegisterStepComponent} from './Foodchain/components/steps/register-step/
 import {HistoryBatchComponent} from './Foodchain/pages/history-batch/history-batch.component';
 import {ViewQrcodeComponent} from './Foodchain/pages/view-qrcode/view-qrcode.component';
 import {DuplicateFormComponent} from './Foodchain/components/duplicate-form/duplicate-form.component';
+import {DashboardComponent} from './Foodchain/pages/dashboard/dashboard.component';
 export const routes: Routes = [
 
   { path: 'login', component: LoginComponent },
@@ -21,6 +22,7 @@ export const routes: Routes = [
   { path: 'recover-password', component: RecoverLoginComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'sidenav', component: SidenavComponent, children: [
+      { path: 'dashboard', component: DashboardComponent },
       { path: 'details-batch/:batchId', component: DetailsBatchComponent },
       { path: 'duplicate-batch', component: DuplicateBatchComponent },
       { path: 'view-batch', component: ViewBatchComponent },

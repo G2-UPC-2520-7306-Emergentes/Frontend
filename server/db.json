@@ -385,6 +385,30 @@
       "companyOption": "join",
       "taxId": "",
       "id": 10
+    },
+    {
+      "firstName": "Carlos",
+      "lastName": "Mendoza",
+      "email": "carlos.mendoza@foodchain.com",
+      "companyName": "Distribuidora Central",
+      "phoneNumber": "+51 555 123 789",
+      "requestedRole": "TRANSPORTER",
+      "password": "admin1",
+      "companyOption": "join",
+      "taxId": "",
+      "id": 11
+    },
+    {
+      "firstName": "Carlos",
+      "lastName": "Mendoza",
+      "email": "carlos.mendoza@foodchain.com",
+      "companyName": "Los mas chingones",
+      "phoneNumber": "+51 555 123 789",
+      "requestedRole": "PRODUCER",
+      "password": "admin1",
+      "companyOption": "join",
+      "taxId": "",
+      "id": 12
     }
   ],
   "qrcode": [],

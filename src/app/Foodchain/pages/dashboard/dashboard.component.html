@@ -1,0 +1,77 @@
+<div class="dashboard-container">
+
+  <h1 class="dashboard-title">Resumen de Operaciones</h1>
+
+  <div class="dashboard-header-grid">
+
+    <div class="user-info-card card">
+      <div class="user-avatar">
+        <i class="fas fa-user-circle"></i>
+      </div>
+      <div class="user-details">
+        <h3 class="user-name">{{ userFullName }}</h3>
+        <p class="user-role">{{ currentUser.requestedRole || 'Rol' }}</p>
+        <p class="user-company">{{ currentUser.companyName || 'Compañía' }}</p>
+        <p class="user-email">{{ currentUser.email || 'correo@ejemplo.com' }}</p>
+      </div>
+    </div>
+
+    <div class="metrics-card-container">
+
+      <div class="metric-item card">
+        <i class="fas fa-cubes metric-icon"></i>
+        <div class="metric-value">{{ metrics.totalLotes || 0 }}</div>
+        <div class="metric-label">Total de Lotes</div>
+      </div>
+
+      <div class="metric-item card">
+        <i class="fas fa-users metric-icon"></i>
+        <div class="metric-value">{{ metrics.totalPersonal || 0 }}</div>
+        <div class="metric-label">Personal en {{ currentUser.companyName }}</div>
+      </div>
+
+      <div class="metric-item card">
+        <i class="fas fa-chart-pie metric-icon"></i>
+        <div class="metric-value">{{ metrics.tiposEstado || 0 }}</div>
+        <div class="metric-label">Tipos de Estado Activos</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="users-list-section card">
+    <h2 class="section-title">Personal de la Compañía: {{ currentUser.companyName }}</h2>
+
+    @if (isLoadingUsers) {
+      <div class="loading-state">Cargando personal...</div>
+    } @else if (companyUsers.length === 0) {
+      <div class="no-data-message">No hay otros usuarios registrados en esta compañía.</div>
+    } @else {
+      <div class="table-responsive">
+        <table class="users-table">
+          <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Rol</th>
+            <th>Estado</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (user of companyUsers; track user.id) {
+              <tr>
+                <td>{{ user.firstName }} {{ user.lastName }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.phoneNumber || 'N/A' }}</td>
+                <td><span class="role-tag role-{{ user.requestedRole | lowercase }}">{{ user.requestedRole }}</span></td>
+                <td><span class="status-indicator status-active"></span> Activo</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+</div>
