@@ -1,19 +1,62 @@
 /* history-batch.component.css */
 
+/* ------------------------------------------- */
+/* VARIABLES (para asegurar consistencia)       */
+/* ------------------------------------------- */
+:root {
+  /* Modo Claro */
+  --clr-bg-light: #f7f7f7;
+  --clr-card-light: #ffffff;
+  --clr-text-dark: #333;
+  --clr-text-muted: #666;
+  --clr-border-light: #eee;
+  --clr-primary-green: #4CAF50;
+  --clr-primary-green-hover: #45a049;
+  --clr-secondary-text: #555;
+  --clr-step-bg-light: #f7f7f7;
+  --clr-selector-bg-light: #f9f9f9;
+  --clr-line-light: #ddd;
+  --clr-danger: #e74c3c;
+  --clr-warning: #e67e22;
+}
+
+:host-context(body.dark-theme) {
+  /* Modo Oscuro: Usando tonos verdes coherentes */
+  --clr-bg-dark: #1e3c23;        /* Fondo principal (Verde Oscuro Suave) */
+  --clr-card-dark: #122b15;      /* Fondo del contenedor (Verde Oscuro Fuerte) */
+  --clr-text-light: #f0f0f0;
+  --clr-text-muted-dark: #a0a0a0;
+  --clr-border-dark: #284e2c;
+  --clr-input-bg-dark: #1a2a1d;
+  --clr-primary-green-dark: #81C784;
+  --clr-secondary-text-dark: #a0a0a0;
+  --clr-step-bg-dark: #17331a;     /* Fondo de cada paso */
+  --clr-selector-bg-dark: #1a381d; /* Fondo del selector de lote */
+  --clr-line-dark: #38643c;        /* Línea de tiempo */
+  --clr-danger-dark: #ff8a80;
+  --clr-warning-dark: #f1c40f;
+}
+
+/* ------------------------------------------- */
+/* ESTILOS DE MODO CLARO Y LAYOUT              */
+/* ------------------------------------------- */
+
 .history-batch-container {
   max-width: 900px;
   margin: 30px auto;
   padding: 30px;
-  background-color: #ffffff;
+  background-color: var(--clr-card-light);
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .header-section h1 {
-  color: #333;
-  border-bottom: 2px solid #eee;
+  color: var(--clr-text-dark);
+  border-bottom: 2px solid var(--clr-border-light);
   padding-bottom: 10px;
   margin-bottom: 25px;
+  transition: color 0.3s, border-color 0.3s;
 }
 
 /* Selector de Lote */
@@ -22,14 +65,16 @@
   padding: 15px;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
-  background-color: #f9f9f9;
+  background-color: var(--clr-selector-bg-light);
+  transition: background-color 0.3s, border-color 0.3s;
 }
 
 .lot-selector-section label {
   display: block;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #555;
+  color: var(--clr-secondary-text);
+  transition: color 0.3s;
 }
 
 .form-control {
@@ -39,40 +84,40 @@
   border-radius: 6px;
   box-sizing: border-box;
   font-size: 1rem;
+  background-color: var(--clr-card-light);
+  color: var(--clr-text-dark);
+  transition: all 0.3s;
 }
 
 /* Mensajes de Estado */
 .message-error {
-  color: #e74c3c;
+  color: var(--clr-danger);
   margin-top: 10px;
   font-size: 0.9rem;
+  transition: color 0.3s;
 }
 
 .message-loading {
-  color: #4CAF50;
+  color: var(--clr-primary-green);
   margin-top: 10px;
   font-size: 0.9rem;
+  transition: color 0.3s;
 }
 
 /* Sección de la Línea de Tiempo */
 .history-timeline-section h2 {
   font-size: 1.5rem;
-  color: #4CAF50;
+  color: var(--clr-primary-green);
   margin-bottom: 20px;
+  transition: color 0.3s;
 }
 
 .timeline {
   position: relative;
-  padding-left: 50px; /* Espacio para la línea y los íconos */
+  padding-left: 50px;
 }
 
-/* Contenedor del Paso */
-.timeline-step {
-  display: flex;
-  margin-bottom: 30px;
-}
-
-/* Línea y Ícono */
+/* Contenedor del Paso (Línea y Ícono) */
 .timeline-icon-container {
   position: absolute;
   left: 0;
@@ -86,10 +131,11 @@
 
 .timeline-line {
   width: 2px;
-  background-color: #ddd;
+  background-color: black;
   flex-grow: 1;
   height: 100%;
   margin-top: 10px;
+  transition: background-color 0.3s;
 }
 
 .timeline-icon {
@@ -103,14 +149,15 @@
   align-items: center;
   font-size: 14px;
   z-index: 10;
-  border: 2px solid white;
+  border: 2px solid white; /* Borde siempre blanco en modo claro */
+  transition: background-color 0.3s, border-color 0.3s;
 }
 
 .timeline-icon.unlocked {
-  background-color: #4CAF50; /* Verde, si tiene hash */
+  background-color: var(--clr-primary-green);
 }
 .timeline-icon:not(.unlocked) {
-  background-color: #aaa; /* Gris oscuro, si está bloqueado */
+  background-color: #aaa;
 }
 
 /* Contenido del Paso */
@@ -118,22 +165,25 @@
   flex-grow: 1;
   padding: 15px;
   border-radius: 6px;
-  background-color: #f7f7f7;
+  background-color: whitesmoke;
   position: relative;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .role-title {
   font-size: 0.9rem;
   color: #777;
   margin-bottom: 5px;
+  transition: color 0.3s;
 }
 
 .step-type {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #333;
+  color: var(--clr-text-dark);
   margin-bottom: 10px;
+  transition: color 0.3s;
 }
 
 .details-row {
@@ -146,13 +196,15 @@
 .detail-item {
   margin-right: 20px;
   font-size: 0.9rem;
-  color: #666;
-  white-space: nowrap; /* Evita que el timestamp se rompa */
+  color: var(--clr-text-muted);
+  white-space: nowrap;
+  transition: color 0.3s;
 }
 
 .detail-item .label {
   font-weight: 600;
   color: #444;
+  transition: color 0.3s;
 }
 
 .hash-detail {
@@ -168,12 +220,12 @@
 }
 
 .status-badge.blocked {
-  background-color: #e74c3c; /* Rojo/Bloqueado */
+  background-color: red;
   color: white;
 }
 
 .status-badge.unlocked {
-  background-color: #4CAF50; /* Verde/Trazado */
+  background-color: greenyellow;
   color: white;
 }
 
@@ -182,7 +234,8 @@
   padding-top: 5px;
   border-top: 1px dashed #e0e0e0;
   font-size: 0.9rem;
-  color: #555;
+  color: var(--clr-secondary-text);
+  transition: color 0.3s, border-color 0.3s;
 }
 
 /* Ajuste para el último paso (sin línea) */
@@ -190,6 +243,102 @@
   display: none;
 }
 
+/* ------------------------------------------- */
+/* === ADAPTACIÓN AL MODO OSCURO (DARK MODE) === */
+/* ------------------------------------------- */
+
+:host-context(body.dark-theme) {
+  background-color: var(--clr-bg-dark); /* Aplica el fondo verde oscuro al host */
+}
+
+/* 1. Contenedor Principal */
+:host-context(body.dark-theme) .history-batch-container {
+  background-color: var(--clr-card-dark);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* 2. Encabezado y Títulos */
+:host-context(body.dark-theme) .header-section h1 {
+  color: var(--clr-text-light);
+  border-bottom: 2px solid var(--clr-border-dark);
+}
+
+:host-context(body.dark-theme) .history-timeline-section h2 {
+  color: var(--clr-primary-green-dark); /* Verde brillante para el título de la línea de tiempo */
+}
+
+/* 3. Selector de Lote */
+:host-context(body.dark-theme) .lot-selector-section {
+  background-color: var(--clr-selector-bg-dark);
+  border: 1px solid var(--clr-border-dark);
+}
+
+:host-context(body.dark-theme) .lot-selector-section label {
+  color: var(--clr-text-light);
+}
+
+/* Input/Select dentro del selector de lote */
+:host-context(body.dark-theme) .form-control {
+  background-color: var(--clr-input-bg-dark);
+  border: 1px solid var(--clr-border-dark);
+  color: var(--clr-text-light);
+}
+:host-context(body.dark-theme) .form-control option {
+  background-color: var(--clr-card-dark);
+  color: var(--clr-text-light);
+}
+
+
+/* 4. Mensajes de Estado */
+:host-context(body.dark-theme) .message-error {
+  color: var(--clr-danger-dark);
+}
+
+:host-context(body.dark-theme) .message-loading {
+  color: var(--clr-primary-green-dark);
+}
+
+/* 5. Línea de Tiempo y Contenido de Pasos */
+:host-context(body.dark-theme) .timeline-line {
+  background-color: var(--clr-line-dark);
+}
+
+:host-context(body.dark-theme) .timeline-icon {
+  border: 2px solid var(--clr-card-dark); /* Borde del ícono debe ser el color de fondo del contenedor principal */
+}
+
+:host-context(body.dark-theme) .timeline-content {
+  background-color: var(--clr-step-bg-dark);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+:host-context(body.dark-theme) .role-title,
+:host-context(body.dark-theme) .step-type,
+:host-context(body.dark-theme) .detail-item .label {
+  color: var(--clr-text-light);
+}
+
+:host-context(body.dark-theme) .detail-item {
+  color: var(--clr-text-muted-dark);
+}
+
+/* 6. Observaciones */
+:host-context(body.dark-theme) .observations {
+  border-top: 1px dashed var(--clr-border-dark);
+  color: var(--clr-secondary-text-dark);
+}
+
+/* 7. Badges (Bloqueado/Trazado) */
+:host-context(body.dark-theme) .status-badge.blocked {
+  background-color: var(--clr-danger-dark);
+}
+
+:host-context(body.dark-theme) .status-badge.unlocked {
+  background-color: var(--clr-primary-green-dark);
+}
+
+
+/* Responsividad (ajuste para pantallas pequeñas) */
 @media (max-width: 600px) {
   .details-row {
     flex-direction: column;
