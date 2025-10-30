@@ -1,141 +1,146 @@
-/* ------------------------------------------- */
-/* SECCIÓN PRINCIPAL Y ENCABEZADO */
-/* ------------------------------------------- */
-.user-registration-container {
+/* --- Estilos del Contenedor de la Página --- */
+.page-wrapper {
+  min-height: 100vh;
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Alineación arriba */
+}
+
+/* ==================================== */
+/* === EL ESTILO DE LA CARD PRINCIPAL === */
+/* ==================================== */
+.user-registration-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   max-width: 800px;
-  margin: 30px auto;
-  padding: 20px;
+  width: 100%;
+  margin: 20px 0;
+  overflow: hidden; /* Para contener bordes redondeados */
 }
 
+/* --- Estilos Comunes de Sección --- */
+.content-section, .footer-section {
+  padding: 25px 30px;
+}
+
+.card-divider {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 0; /* La línea ocupa todo el ancho de la card */
+}
+
+/* --- Encabezado --- */
 .header-section {
-  margin-bottom: 25px;
+  background-color: #2b5c2a; /* Color principal de la marca */
+  color: white;
+  padding: 25px 30px;
 }
 
-h2 {
-  font-size: 1.8em;
-  font-weight: 600;
-  color: #333;
-  margin-top: 0;
+.main-title {
+  font-size: 1.8rem;
+  margin-bottom: 5px;
 }
 
 .description {
-  color: #555;
-  margin-bottom: 0;
-  font-size: 0.95em;
+  font-size: 0.95rem;
+  opacity: 0.9;
 }
 
-/* ------------------------------------------- */
-/* TARJETA DE INFORMACIÓN DEL USUARIO */
-/* ------------------------------------------- */
-.info-section-card {
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 25px;
-  margin-bottom: 30px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.info-section-card h3 {
-  font-size: 1.3em;
-  font-weight: 600;
+/* --- Sección de Información y Roles --- */
+.info-section-card h3, .role-section h3 {
+  font-size: 1.4rem;
   color: #333;
-  margin-top: 0;
   margin-bottom: 5px;
 }
 
 .section-subtitle {
-  color: #777;
+  font-size: 0.9rem;
+  color: #666;
   margin-bottom: 20px;
-  font-size: 0.9em;
 }
 
+/* --- Grid de Formulario --- */
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Dos columnas */
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
 }
 
+/* --- Estilos de Formulario General --- */
 .form-group {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
-label {
+.form-group label {
   display: block;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 5px;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="tel"],
-select {
+.form-group input,
+.form-group select {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 1rem;
   box-sizing: border-box;
-  font-size: 1em;
-  color: #333;
+  transition: border-color 0.2s;
 }
 
-input:focus,
-select:focus {
-  border-color: #1a4314;
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #4a55a2;
   outline: none;
-  box-shadow: 0 0 0 1px #a4d8a1;
+  box-shadow: 0 0 0 3px rgba(74, 85, 162, 0.2);
 }
 
-/* ------------------------------------------- */
-/* SECCIÓN DE ROL Y PERMISOS */
-/* ------------------------------------------- */
-
-.role-section {
-  margin-bottom: 30px;
-}
-
-/* Estilos del Dropdown de Rol */
+/* --- Estilo de Rol (Dropdown con Icono) --- */
 .role-dropdown {
-  max-width: 50%;
+  max-width: 350px; /* Limitar el ancho del selector de rol */
 }
 
-.role-dropdown .input-with-icon {
+.input-with-icon {
   position: relative;
 }
 
-.role-icon {
+.input-with-icon .role-icon {
   position: absolute;
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  color: #888;
+  color: #999;
   pointer-events: none;
 }
 
-.role-dropdown select {
-  padding-left: 35px; /* Espacio para el icono */
-  /* Asegura que la flecha del dropdown se mantenga */
-  -webkit-appearance: menulist;
+.input-with-icon select {
+  padding-left: 35px; /* Dejar espacio para el icono */
+  appearance: none; /* Ocultar flecha nativa si es necesario */
 }
 
-/* Bloque de Permisos */
+/* --- Bloque de Permisos --- */
 .permissions-block {
-  background-color: #fff8ee; /* Fondo naranja muy claro */
-  border: 1px solid #ffcc80; /* Borde naranja */
-  border-radius: 6px;
-  padding: 15px;
   margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #f9f9f9;
 }
 
 .permissions-header {
-  color: #e65100; /* Texto naranja oscuro */
   font-weight: 600;
+  color: #4a55a2;
   margin-bottom: 10px;
-  font-size: 1em;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
 }
 
-.permissions-header .fa-shield-alt {
+.permissions-header .fas {
   margin-right: 8px;
 }
 
@@ -145,100 +150,97 @@ select:focus {
   margin: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 10px 20px; /* Espaciado entre elementos de la lista */
 }
 
 .permissions-list li {
-  color: #333;
-  font-size: 0.9em;
-  flex-basis: calc(50% - 15px); /* Dos columnas en la lista */
+  font-size: 0.85rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+  width: calc(50% - 10px); /* Dos columnas en desktop */
+}
+
+.check-icon {
+  color: #38a169; /* Verde para los checks */
+  margin-right: 5px;
+}
+
+/* --- Pie de Página --- */
+.footer-section {
+  background-color: #f5f6f8;
+  border-top: 1px solid #e0e0e0;
+  font-size: 0.85rem;
+  color: #777;
+  padding: 20px 30px;
+}
+
+.footer-title {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 5px;
+}
+
+/* --- Botones de Acción --- */
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 15px;
+}
+
+.create-user-button, .cancel-button {
+  padding: 10px 20px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s, opacity 0.2s;
+  font-size: 1rem;
   display: flex;
   align-items: center;
 }
 
-.check-icon {
-  color: #e65100; /* Iconos naranja */
-  margin-right: 8px;
-}
-
-/* ------------------------------------------- */
-/* BOTONES DE ACCIÓN */
-/* ------------------------------------------- */
-.action-buttons {
-  display: flex;
-  justify-content: flex-start;
-  gap: 15px;
-  margin-top: 30px;
-}
-
-.create-user-button,
-.cancel-button {
-  padding: 12px 25px;
-  border-radius: 4px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: opacity 0.2s, background-color 0.2s;
-  font-size: 1em;
-}
-
 .create-user-button {
-  background-color: #000; /* Botón Crear Negro */
+  background-color: #38a169; /* Verde para acción principal */
   color: white;
-  border: none;
+  border: 1px solid #38a169;
 }
 
-.create-user-button:disabled {
-  background-color: #666;
-  cursor: not-allowed;
+.create-user-button:hover:not(:disabled) {
+  background-color: #2f855a;
 }
 
 .cancel-button {
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: #ffffff;
+  color: #666;
   border: 1px solid #ccc;
 }
 
 .cancel-button:hover:not(:disabled) {
-  background-color: #e0e0e0;
+  background-color: #f0f0f0;
 }
 
-/* ------------------------------------------- */
-/* BLOQUE DE INFORMACIÓN INFERIOR */
-/* ------------------------------------------- */
-
-.info-footer-block {
-  background-color: #e3f2fd; /* Fondo azul claro */
-  border: 1px solid #90caf9; /* Borde azul */
-  border-radius: 6px;
-  padding: 20px;
-  margin-top: 30px;
+/* Iconos en botones */
+.create-user-button .fas {
+  margin-right: 8px;
 }
 
-.info-footer-block h3 {
-  color: #1e88e5; /* Título azul */
-  font-weight: 600;
-  margin-top: 0;
-  margin-bottom: 10px;
-  font-size: 1.1em;
+.create-user-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.info-footer-block p {
-  color: #333;
-  margin: 5px 0;
-  font-size: 0.9em;
-}
-
-/* ------------------------------------------- */
-/* MEDIA QUERIES */
-/* ------------------------------------------- */
-@media (max-width: 700px) {
-  .form-grid {
-    grid-template-columns: 1fr; /* Una sola columna en móvil */
+/* --- Media Queries (Para Responsividad) --- */
+@media (max-width: 768px) {
+  .user-registration-card {
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
   }
-  .role-dropdown {
-    max-width: 100%;
+  .form-grid {
+    grid-template-columns: 1fr; /* Una columna en móvil */
   }
   .permissions-list li {
-    flex-basis: 100%; /* Una sola columna en permisos */
+    width: 100%; /* Permisos en una sola columna en móvil */
   }
 }
