@@ -219,6 +219,17 @@
       "state": "Draft",
       "imageUrl": "https://placehold.co/600x400/D2B48C/333333?text=Azucar+Lote+20",
       "producer_id": "4"
+    },
+    {
+      "id": 21,
+      "lotName": "Prueba1",
+      "farmName": "LosMejores",
+      "variety": "Mejores",
+      "harvestDate": "2025-10-23",
+      "createdDate": "2025-10-30T00:39:52.484Z",
+      "state": "Draft",
+      "imageUrl": "https://res.cloudinary.com/dwrfcod77/image/upload/v1761784791/xfzoimyzjocqarxsonjf.png",
+      "producer_id": "9"
     }
   ],
   "users": [

@@ -17,25 +17,25 @@
       <div class="form-group">
         <label for="lotName">Lot Name</label>
         <input id="lotName" type="text" formControlName="lotName" placeholder="e.g., Batch 2023-A">
-        <div *ngIf="batchForm.get('lotName')?.invalid" class="validation-error"> This field is required.</div>
+        <div *ngIf="batchForm.get('lotName')?.invalid && batchForm.get('lotName')?.touched" class="validation-error"> This field is required.</div>
       </div>
 
       <div class="form-group">
         <label for="farmName">Farm Name</label>
         <input id="farmName" type="text" formControlName="farmName" placeholder="e.g., Green Acres">
-        <div *ngIf="batchForm.get('farmName')?.invalid" class="validation-error"> This field is required.</div>
+        <div *ngIf="batchForm.get('farmName')?.invalid && batchForm.get('farmName')?.touched" class="validation-error"> This field is required.</div>
       </div>
 
       <div class="form-group">
         <label for="variety">Variety</label>
         <input id="variety" type="text" formControlName="variety" placeholder="e.g., Heirloom Tomatoes">
-        <div *ngIf="batchForm.get('variety')?.invalid" class="validation-error"> This field is required.</div>
+        <div *ngIf="batchForm.get('variety')?.invalid && batchForm.get('variety')?.touched" class="validation-error"> This field is required.</div>
       </div>
 
       <div class="form-group">
         <label for="harvestDate">Harvest Date</label>
         <input id="harvestDate" type="date" formControlName="harvestDate" class="date-input">
-        <div *ngIf="batchForm.get('harvestDate')?.invalid" class="validation-error"> Please select a date.</div>
+        <div *ngIf="batchForm.get('harvestDate')?.invalid && batchForm.get('harvestDate')?.touched" class="validation-error"> Please select a date.</div>
       </div>
 
       <div class="form-group">
@@ -44,17 +44,31 @@
       </div>
 
       <div id="upload-area">
-        <p>Upload Image (Optional)</p>
-        <p>Drag and drop or browse to upload an image of the lot</p>
-        <div>
-          <button type="button" class="upload-button">
-            Browse Files
-          </button>
-          <input type="file" formControlName="imageUrl" class="hidden-input">
+        <p>Upload Image (Required)</p>
+        <p>Browse to upload an image of the lot</p>
+
+        <div class="form-group file-upload-group">
+          <label for="batchFile" class="custom-file-label">
+            {{ selectedFile ? selectedFile.name : 'Click para seleccionar un archivo' }}
+          </label>
+
+          <input
+            type="file"
+            id="batchFile"
+            (change)="onFileSelected($event)"
+            class="hidden-input"
+            accept="image/*"
+            required>
+        </div>
+
+        <div *ngIf="!selectedFile && batchForm.touched" class="validation-error">
+          Por favor, selecciona una imagen para el lote.
         </div>
       </div>
-
-      <button type="submit" [disabled]="batchForm.invalid" class="submit-button">
+      <button
+        type="submit"
+        [disabled]="batchForm.invalid || !selectedFile"
+        class="submit-button">
         Create Lot
       </button>
 
