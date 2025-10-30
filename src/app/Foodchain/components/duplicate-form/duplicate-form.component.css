@@ -3,46 +3,95 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 2rem 1rem;
-  background-color: #f7f7f9;
+  background-color: var(--clr-bg-light);
   min-height: 100vh;
+  transition: background-color 0.3s;
 }
+
+/* ------------------------------------------- */
+/* VARIABLES (para asegurar consistencia)       */
+/* ------------------------------------------- */
+:root {
+  /* Modo Claro */
+  --clr-bg-light: #f7f7f9;
+  --clr-card-light: #ffffff;
+  --clr-text-dark: #333;
+  --clr-text-muted: #666;
+  --clr-border-light: #e0e0e0;
+
+  /* ✅ ACENTOS AHORA SON VERDES */
+  --clr-primary-green: #4CAF50; /* El verde principal */
+  --clr-primary-green-hover: #45a049;
+
+  --clr-alert-error: #e53e3e;
+  --clr-alert-success: #10b981;
+  --clr-alert-loading: #4CAF50; /* Usamos verde para loading en claro */
+}
+
+:host-context(body.dark-theme) {
+  /* Modo Oscuro: Tonos verdes */
+  --clr-bg-dark: #1e3c23;        /* Fondo principal (Verde Oscuro Suave) */
+  --clr-card-dark: #122b15;      /* Fondo del contenedor/formulario (Verde Oscuro Fuerte) */
+  --clr-text-light: #f0f0f0;
+  --clr-text-muted-dark: #a0a0a0;
+  --clr-border-dark: #284e2c;
+  --clr-input-bg-dark: #1a2a1d;
+
+  /* ✅ ACENTOS AHORA SON VERDES OSCUROS */
+  --clr-primary-green-dark: #81C784; /* Verde más brillante para contraste */
+  --clr-primary-green-dark-hover: #66BB6A;
+
+  --clr-alert-error-dark: #ff8a80;
+  --clr-alert-success-dark: #4ade80;
+  --clr-alert-loading-dark: #81C784; /* Usamos verde claro para loading en oscuro */
+}
+
+/* ------------------------------------------- */
+/* ESTILOS DE MODO CLARO                       */
+/* ------------------------------------------- */
 
 /* --- Títulos y Encabezado --- */
 .header-section {
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid var(--clr-border-light);
+  transition: border-color 0.3s;
 }
 
 .main-title {
   font-size: 2.2rem;
   font-weight: 800;
-  color: #4a55a2; /* Tono de índigo/azul */
+  /* ✅ CAMBIO: De índigo a verde */
+  color: var(--clr-primary-green);
   margin-bottom: 0.25rem;
+  transition: color 0.3s;
 }
 
 .subtitle {
-  color: #666;
+  color: var(--clr-text-muted);
   font-size: 1rem;
+  transition: color 0.3s;
 }
 
 /* --- Formulario General --- */
 .duplicate-form {
-  background-color: #ffffff;
+  background-color: var(--clr-card-light);
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .form-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #333;
+  color: var(--clr-text-dark);
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--clr-border-light);
+  transition: color 0.3s, border-color 0.3s;
 }
 
 /* --- Grupo de Formulario --- */
@@ -52,6 +101,7 @@
   font-weight: 500;
   color: #444;
   margin-bottom: 0.4rem;
+  transition: color 0.3s;
 }
 
 .form-group input[type="text"],
@@ -62,14 +112,17 @@
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 1rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  box-sizing: border-box; /* Asegura que el padding no cambie el ancho total */
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.3s, color 0.3s;
+  box-sizing: border-box;
+  background-color: var(--clr-card-light);
+  color: var(--clr-text-dark);
 }
 
 .form-group input:focus,
 .form-group select:focus {
-  border-color: #4a55a2;
-  box-shadow: 0 0 0 3px rgba(74, 85, 162, 0.3);
+  /* ✅ CAMBIO: De índigo a verde */
+  border-color: var(--clr-primary-green);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3); /* Usamos el RGB del verde */
   outline: none;
 }
 
@@ -85,13 +138,14 @@
 
 /* --- Validación y Errores --- */
 .is-invalid {
-  border-color: #e53e3e !important;
+  border-color: var(--clr-alert-error) !important;
 }
 
 .error-message {
-  color: #e53e3e;
+  color: var(--clr-alert-error);
   font-size: 0.75rem;
   margin-top: 0.25rem;
+  transition: color 0.3s;
 }
 
 /* --- Botones --- */
@@ -108,7 +162,7 @@
   font-weight: 600;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s, opacity 0.2s;
+  transition: background-color 0.2s, opacity 0.2s, color 0.2s, border-color 0.2s;
   text-align: center;
   display: flex;
   align-items: center;
@@ -121,17 +175,19 @@
 }
 
 .btn-primary {
-  background-color: #4a55a2;
-  color: #ffffff;
-  border: 1px solid #4a55a2;
+  /* ✅ CAMBIO: De índigo a verde */
+  background-color: #4ade80;
+  color: var(--clr-card-light);
+  border: 1px solid var(--clr-primary-green);
 }
 
 .btn-primary:not(:disabled):hover {
-  background-color: #3e488d;
+  /* ✅ CAMBIO: De índigo a verde */
+  background-color: var(--clr-primary-green-hover);
 }
 
 .btn-secondary {
-  background-color: #ffffff;
+  background-color: var(--clr-card-light);
   color: #444;
   border: 1px solid #ccc;
 }
@@ -141,13 +197,14 @@
 }
 
 
-/* --- Alertas y Estados --- */
+/* --- Alertas y Estados (Modo Claro) --- */
 .alert {
   padding: 1rem;
   border-left: 4px solid;
   border-radius: 8px;
   margin-bottom: 1.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
 
 .alert-title {
@@ -163,14 +220,15 @@
 
 .alert-success {
   background-color: #d1fae5;
-  border-color: #10b981;
+  border-color: var(--clr-alert-success);
   color: #065f46;
 }
 
 .loading-state {
-  background-color: #e0e7ff;
-  border-color: #6366f1;
-  color: #3730a3;
+  /* ✅ CAMBIO: De azul claro a verde */
+  background-color: #e6f7e6; /* Tono de verde muy claro */
+  border-color: var(--clr-primary-green);
+  color: #3730a3; /* Mantenemos un color oscuro para el texto en claro */
   display: flex;
   align-items: center;
 }
@@ -178,7 +236,7 @@
 /* Spinner */
 .spinner {
   border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top: 4px solid #ffffff;
+  border-top: 4px solid var(--clr-card-light);
   border-radius: 50%;
   width: 20px;
   height: 20px;
@@ -188,7 +246,7 @@
 
 .spinner-small {
   border: 3px solid rgba(255, 255, 255, 0.3);
-  border-top: 3px solid #ffffff;
+  border-top: 3px solid var(--clr-card-light);
   border-radius: 50%;
   width: 1rem;
   height: 1rem;
@@ -199,4 +257,125 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+
+/* =========================================== */
+/* === ADAPTACIÓN AL MODO OSCURO (DARK MODE) === */
+/* =========================================== */
+
+:host-context(body.dark-theme) .container-duplicate {
+  background-color: var(--clr-bg-dark);
+}
+
+:host-context(body.dark-theme) .btn-primary {
+  background-color: var(--clr-bg-dark);
+  color: white; /* Color de texto muy oscuro para contraste */
+  border: 1px solid var(--clr-primary-green-dark);
+}
+
+/* --- Títulos y Encabezado --- */
+:host-context(body.dark-theme) .header-section {
+  border-bottom: 2px solid var(--clr-border-dark);
+}
+
+:host-context(body.dark-theme) .main-title {
+  /* ✅ CAMBIO: De índigo claro a verde claro */
+  color: var(--clr-primary-green-dark);
+}
+
+:host-context(body.dark-theme) .subtitle {
+  color: var(--clr-text-muted-dark);
+}
+
+/* --- Formulario General --- */
+:host-context(body.dark-theme) .duplicate-form {
+  background-color: var(--clr-card-dark);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+:host-context(body.dark-theme) .form-title {
+  color: var(--clr-text-light);
+  border-bottom: 1px solid var(--clr-border-dark);
+}
+
+/* --- Grupo de Formulario --- */
+:host-context(body.dark-theme) .form-group label {
+  color: var(--clr-text-light);
+}
+
+:host-context(body.dark-theme) .form-group input[type="text"],
+:host-context(body.dark-theme) .form-group input[type="date"],
+:host-context(body.dark-theme) .form-group select {
+  background-color: var(--clr-input-bg-dark);
+  border: 1px solid var(--clr-border-dark);
+  color: var(--clr-text-light);
+}
+
+:host-context(body.dark-theme) .form-group input:focus,
+:host-context(body.dark-theme) .form-group select:focus {
+  /* ✅ CAMBIO: De índigo claro a verde claro */
+  border-color: var(--clr-primary-green-dark);
+  box-shadow: 0 0 0 3px rgba(129, 199, 132, 0.4); /* Usamos el RGB del verde claro */
+}
+
+/* --- Validación y Errores --- */
+:host-context(body.dark-theme) .error-message {
+  color: var(--clr-alert-error-dark);
+}
+
+/* --- Botones --- */
+/* El botón primario sigue usando el color definido en el Modo Claro, adaptado con la variable */
+:host-context(body.dark-theme) .btn-secondary {
+  background-color: var(--clr-input-bg-dark);
+  color: var(--clr-text-light);
+  border: 1px solid var(--clr-border-dark);
+}
+
+:host-context(body.dark-theme) .btn-secondary:hover {
+  background-color: #2b452f; /* Tono más oscuro de input-bg */
+}
+
+/* --- Alertas y Estados (Modo Oscuro) --- */
+:host-context(body.dark-theme) .alert-error {
+  background-color: #451a1a;
+  border-color: var(--clr-alert-error-dark);
+  color: var(--clr-alert-error-dark);
+}
+
+:host-context(body.dark-theme) .alert-success {
+  background-color: #103b29;
+  border-color: var(--clr-alert-success-dark);
+  color: var(--clr-alert-success-dark);
+}
+
+.loading-state {
+  /* ✅ CAMBIO: De azul a verde oscuro */
+  background-color: #2b452f;
+  border-color: var(--clr-primary-green-dark);
+  color: var(--clr-primary-green-dark);
+}
+
+/* Spinner */
+:host-context(body.dark-theme) .spinner,
+:host-context(body.dark-theme) .spinner-small {
+  border: 4px solid rgba(240, 240, 240, 0.3);
+  border-top: 4px solid var(--clr-text-light);
+}
+
+/* --- Media Queries --- */
+.form-row {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
