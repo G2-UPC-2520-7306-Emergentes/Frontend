@@ -59,7 +59,7 @@
           <tr>
             <th>Nombre</th>
             <th>Email</th>
-            <th>Rol</th>
+            <th>Teléfono</th> <th>Rol</th>
             <th>Pasos Registrados</th> <th>Estado</th>
           </tr>
           </thead>
@@ -68,9 +68,10 @@
               <tr>
                 <td>{{ user.firstName }} {{ user.lastName }}</td>
                 <td>{{ user.email }}</td>
-                <td><span class="role-tag role-{{ user.requestedRole | lowercase }}">{{ user.requestedRole }}</span></td>
+                <td>{{ user.phoneNumber || 'N/A' }}</td> <td><span class="role-tag role-{{ user.requestedRole | lowercase }}">{{ user.requestedRole }}</span></td>
                 <td>
-                  <span class="step-count-value">{{ user.stepCount }}</span> </td>
+                  <span class="step-count-value">{{ user.stepCount }}</span>
+                </td>
                 <td><span class="status-indicator status-active"></span> Activo</td>
               </tr>
             }

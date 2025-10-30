@@ -186,6 +186,11 @@
   font-style: italic;
 }
 
+.users-table td:nth-child(5) {
+  width: 15%;
+  text-align: center; /* 👈 Esto centra el contenido de la celda */
+}
+
 /* --- Media Queries (Para Responsividad) --- */
 @media (max-width: 992px) {
   .dashboard-header-grid {
