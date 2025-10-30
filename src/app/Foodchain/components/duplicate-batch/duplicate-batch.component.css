@@ -1,64 +1,92 @@
 /* ------------------------------------------- */
+/* VARIABLES (PARA CONTEXTO)                   */
+/* ------------------------------------------- */
+:root {
+  --clr-bg-light: #f4f6f8;
+  --clr-sidebar-light: #ffffff;
+  --clr-text-dark: #2c3e50;
+  --clr-hover-light: #e8ecf1;
+  --clr-border-light: #ececec;
+  --clr-primary: #1a4314; /* Verde FoodChain oscuro */
+}
+
+:host-context(body.dark-theme) {
+  --clr-bg-dark: #1e3c23;
+  --clr-sidebar-dark: #122b15;
+  --clr-text-light: white;
+  --clr-hover-dark: #284e2c;
+  --clr-border-dark: #284e2c;
+  --clr-primary-dark-text: #a7f3d0; /* Verde muy claro para el texto primario en dark */
+}
+
+/* ------------------------------------------- */
 /* ESTILOS GENERALES Y TÍTULO */
 /* ------------------------------------------- */
 :host {
   display: block;
   padding: 20px;
-  background-color: #f7f7f7; /* Fondo ligero para contraste */
+  /* Usamos la variable de fondo */
+  background-color: var(--clr-bg-light);
+  transition: background-color 0.3s ease;
 }
 
 h2 {
   font-size: 2em;
   font-weight: bold;
-  color: #333;
+  color: var(--clr-text-dark);
   margin-bottom: 25px;
+  transition: color 0.3s ease;
 }
 
 /* ------------------------------------------- */
 /* ESTILOS DE LA TARJETA INDIVIDUAL (batch-card) */
 /* ------------------------------------------- */
 .batch-card {
-  display: flex; /* Usamos flexbox para alinear texto e imagen */
-  align-items: center; /* Centrar verticalmente */
-  justify-content: space-between; /* Espaciar el contenido */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
+  background-color: var(--clr-sidebar-light); /* Fondo de tarjeta claro */
+  border: 1px solid var(--clr-border-light); /* Borde claro */
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Sombra suave */
-  transition: transform 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s;
 }
 
 .batch-card:hover {
-  transform: translateY(-3px); /* Efecto de elevación al pasar el ratón */
+  transform: translateY(-3px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--clr-hover-light); /* Hover ligeramente más oscuro */
 }
 
 /* Contenedor de la información textual (izquierda) */
 .batch-info {
-  flex-grow: 1; /* Permite que ocupe el espacio disponible */
+  flex-grow: 1;
 }
 
 .batch-info h3 {
   font-size: 1.25em;
   font-weight: 600;
-  color: #333;
+  color: var(--clr-text-dark);
   margin-top: 0;
   margin-bottom: 8px;
+  transition: color 0.3s ease;
 }
 
 .batch-info p {
   font-size: 0.95em;
   color: #555;
   margin: 4px 0;
+  transition: color 0.3s ease;
 }
 
-/* Estilo para el estado 'Activo' (usando el color verde de tu tema) */
+/* Estilo para el estado 'Activo' */
 .batch-info p strong {
   font-weight: bold;
-  color: #1a4314; /* Verde FoodChain */
+  color: var(--clr-primary); /* Verde FoodChain oscuro */
+  transition: color 0.3s ease;
 }
 
 
@@ -68,7 +96,7 @@ h2 {
 
 /* Contenedor de la imagen (derecha) */
 .batch-image {
-  width: 150px; /* Ancho fijo para la imagen */
+  width: 150px;
   height: 100px;
   margin-left: 20px;
   overflow: hidden;
@@ -78,27 +106,76 @@ h2 {
 .batch-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Asegura que la imagen cubra el contenedor sin distorsionarse */
+  object-fit: cover;
   display: block;
 }
 
-/* Estilos del botón Duplicar (basado en el estilo de tu imagen) */
-button {
+/* Estilos del botón Duplicar */
+.batch-card button {
   background-color: #e6f7e4; /* Fondo verde muy claro */
-  color: #1a4314; /* Texto verde oscuro */
-  border: 1px solid #1a4314; /* Borde verde */
+  color: var(--clr-primary); /* Texto verde oscuro */
+  border: 1px solid var(--clr-primary);
   padding: 8px 16px;
   border-radius: 4px;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
-  margin-top: 10px; /* Espacio superior */
+  /* ¡Importante! Si el botón está dentro del batch-info, es mejor no darle margen-top */
+  /* Lo dejamos, asumiendo que el botón es un elemento separado o parte de otro div de acción */
+  margin-top: 10px;
 }
 
-button:hover {
-  background-color: #d6f2d4; /* Un poco más oscuro al pasar el ratón */
+.batch-card button:hover {
+  background-color: #d6f2d4;
   color: #0d280c;
 }
+
+/* ------------------------------------------- */
+/* ADAPTACIÓN AL MODO OSCURO (DARK MODE) */
+/* ------------------------------------------- */
+
+:host-context(body.dark-theme) {
+  background-color: var(--clr-bg-dark);
+}
+
+:host-context(body.dark-theme) h2 {
+  color: var(--clr-text-light);
+}
+
+:host-context(body.dark-theme) .batch-card {
+  background-color: var(--clr-sidebar-dark);
+  border: 1px solid var(--clr-border-dark);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* Sombra más pronunciada en oscuro */
+}
+
+:host-context(body.dark-theme) .batch-card:hover {
+  background-color: var(--clr-hover-dark);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+  transform: translateY(-3px);
+}
+
+:host-context(body.dark-theme) .batch-info h3,
+:host-context(body.dark-theme) .batch-info p {
+  color: var(--clr-text-light);
+}
+
+:host-context(body.dark-theme) .batch-info p strong {
+  /* Usamos el verde claro para el texto de énfasis */
+  color: var(--clr-primary-dark-text);
+}
+
+/* Botón en Dark Mode */
+:host-context(body.dark-theme) .batch-card button {
+  background-color: #284e2c; /* Fondo de botón verde oscuro */
+  color: var(--clr-primary-dark-text); /* Texto verde claro */
+  border: 1px solid var(--clr-primary-dark-text);
+}
+
+:host-context(body.dark-theme) .batch-card button:hover {
+  background-color: #38643c;
+  color: white;
+}
+
 
 /* ------------------------------------------- */
 /* MEDIA QUERIES (Ajuste para móviles) */
@@ -106,12 +183,12 @@ button:hover {
 
 @media (max-width: 600px) {
   .batch-card {
-    flex-direction: column; /* Apilar elementos en pantallas pequeñas */
+    flex-direction: column;
     align-items: flex-start;
   }
 
   .batch-image {
-    width: 100%; /* Imagen a ancho completo */
+    width: 100%;
     height: 150px;
     margin-top: 15px;
     margin-left: 0;

@@ -1,24 +1,32 @@
+/* ------------------------------------------- */
+/* SECCIÓN PRINCIPAL Y ENCABEZADO (LISTA DE LOTES) */
+/* ------------------------------------------- */
+
 /* --- Contenedor General --- */
 .dashboard-container {
   padding: 30px;
-  background-color: #f7f9fc; /* Fondo suave fuera de las tarjetas */
+  /* Utiliza la variable para el fondo */
+  background-color: var(--clr-bg-light);
   min-height: 100vh;
+  transition: background-color 0.3s ease;
 }
 
 .dashboard-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #333;
+  color: var(--clr-text-dark); /* Color de texto base */
   margin-bottom: 25px;
+  transition: color 0.3s ease;
 }
 
 /* --- Estilo Base de Tarjeta (Card) --- */
 .card {
-  background-color: #ffffff;
+  background-color: var(--clr-sidebar-light); /* Fondo de tarjeta claro */
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   padding: 20px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--clr-border-light); /* Borde claro */
+  transition: all 0.3s ease;
 }
 
 /* =================================== */
@@ -26,7 +34,7 @@
 /* =================================== */
 .dashboard-header-grid {
   display: grid;
-  grid-template-columns: 1.5fr 2fr; /* Info de usuario más ancha, métricas flexibles */
+  grid-template-columns: 1.5fr 2fr;
   gap: 20px;
   margin-bottom: 30px;
 }
@@ -41,32 +49,32 @@
 
 .user-avatar {
   font-size: 3.5rem;
-  color: #4a55a2; /* Color principal */
+  color: var(--clr-primary); /* Color principal: azul en modo claro */
 }
 
 .user-name {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #333;
+  color: var(--clr-text-dark);
   margin-bottom: 5px;
 }
 
 .user-role {
   font-weight: 600;
-  color: #10b981; /* Verde de distinción */
+  color: #10b981; /* Verde de distinción (mantener este color vibrante) */
   margin-bottom: 5px;
   text-transform: capitalize;
 }
 
 .user-company, .user-email {
   font-size: 0.9rem;
-  color: #666;
+  color: #666; /* Gris intermedio */
 }
 
 /* --- B. Contenedor de Métricas --- */
 .metrics-card-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Tres métricas en fila */
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
@@ -80,44 +88,49 @@
 
 .metric-icon {
   font-size: 1.5rem;
-  color: #4a55a2;
+  color: var(--clr-primary);
   margin-bottom: 10px;
 }
 
 .metric-value {
   font-size: 2rem;
   font-weight: 800;
-  color: #333;
+  color: var(--clr-text-dark);
 }
 
 .metric-label {
   font-size: 0.85rem;
-  color: #666;
+  color: #666; /* Gris intermedio */
   margin-top: 5px;
 }
 
 /* ======================================= */
-/* === 2. LISTA DE PERSONAL (TABLA) === */
+/* === 2. LISTA DE PERSONAL Y LOTES === */
 /* ======================================= */
-.users-list-section {
+.users-list-section, .sorted-batches-section {
   padding: 25px 30px;
 }
 
 .section-title {
   font-size: 1.4rem;
-  color: #444;
+  color: var(--clr-text-dark);
   margin-bottom: 20px;
   padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--clr-border-light);
+  transition: all 0.3s ease;
 }
 
-.table-responsive {
-  overflow-x: auto;
+.section-subtitle {
+  font-size: 0.9rem;
+  color: #999;
+  margin-bottom: 20px;
+  transition: color 0.3s ease;
 }
 
+/* --- Estilos de Tabla --- */
 .users-table {
   width: 100%;
-  min-width: 700px; /* Anchura mínima para móviles */
+  min-width: 700px;
   border-collapse: collapse;
   font-size: 0.95rem;
 }
@@ -125,31 +138,32 @@
 .users-table th, .users-table td {
   padding: 12px 15px;
   text-align: left;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0; /* Borde de fila muy claro */
+  color: var(--clr-text-dark);
+  transition: all 0.3s ease;
 }
 
 .users-table th {
-  background-color: #f7f9fc;
+  background-color: #f7f9fc; /* Fondo de cabecera claro */
   color: #555;
   font-weight: 600;
   text-transform: uppercase;
   font-size: 0.85rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .users-table tr:hover {
-  background-color: #fcfdff;
+  background-color: var(--clr-hover-light); /* Hover de fila claro */
 }
 
 /* Estilos de la Columna de Pasos Registrados */
-.users-table th:nth-child(4),
-.users-table td:nth-child(4) {
-  width: 15%;
+.users-table td:nth-child(5) {
   text-align: center;
 }
 
 .step-count-value {
   font-weight: 700;
-  color: #4a55a2;
+  color: var(--clr-primary); /* Valor destacado con color principal */
   font-size: 1.1rem;
   display: block;
 }
@@ -169,41 +183,7 @@
 .role-tag.role-productor { background-color: #c8e6c9; color: #4caf50; }
 .role-tag.role-admin { background-color: #bbdefb; color: #2196f3; }
 
-/* Indicadores de Estado */
-.status-indicator {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin-right: 6px;
-  background-color: #4caf50;
-}
-
-.loading-state, .no-data-message {
-  text-align: center;
-  padding: 30px;
-  color: #777;
-  font-style: italic;
-}
-
-.users-table td:nth-child(5) {
-  width: 15%;
-  text-align: center; /* 👈 Esto centra el contenido de la celda */
-}
-
-/* Estilo para la nueva sección debajo de las tablas existentes */
-.mt-4 {
-  margin-top: 25px;
-}
-
-.section-subtitle {
-  font-size: 0.9rem;
-  color: #999;
-  margin-bottom: 20px;
-}
-
-/* Estilos de la tabla de lotes (usamos .users-table para consistencia) */
-/* Asegúrate de que las etiquetas de estado tengan color si las usas */
+/* Etiquetas de Estado de Lote */
 .status-tag {
   display: inline-block;
   padding: 4px 8px;
@@ -217,12 +197,133 @@
 .status-borrador, .status-draft { background-color: #ffecb3; color: #ff9800; }
 .status-vendido, .status-sold { background-color: #e1bee7; color: #9c27b0; }
 
-/* --- Media Queries (Para Responsividad) --- */
+
+/* Indicadores de Estado */
+.status-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  background-color: #4caf50; /* Verde fijo */
+}
+
+.loading-state, .no-data-message {
+  text-align: center;
+  padding: 30px;
+  color: #777;
+  font-style: italic;
+  transition: color 0.3s ease;
+}
+
+/* Estilos de espaciado */
+.mt-4 {
+  margin-top: 25px;
+}
+
+
+/* =========================================== */
+/* === ADAPTACIÓN AL MODO OSCURO (DARK MODE) === */
+/* =========================================== */
+
+:host-context(body.dark-theme) .dashboard-container {
+  background-color: var(--clr-bg-dark);
+}
+
+:host-context(body.dark-theme) .dashboard-title {
+  color: var(--clr-text-light);
+}
+
+:host-context(body.dark-theme) .card {
+  background-color: var(--clr-sidebar-dark);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--clr-border-dark);
+}
+
+/* --- Tarjeta de Usuario --- */
+:host-context(body.dark-theme) .user-avatar,
+:host-context(body.dark-theme) .metric-icon,
+:host-context(body.dark-theme) .step-count-value {
+  color: var(--clr-primary); /* Verde claro de énfasis */
+}
+
+:host-context(body.dark-theme) .user-name,
+:host-context(body.dark-theme) .metric-value {
+  color: var(--clr-text-light);
+}
+
+:host-context(body.dark-theme) .user-company,
+:host-context(body.dark-theme) .user-email,
+:host-context(body.dark-theme) .metric-label {
+  color: #b0b0b0; /* Gris claro para texto secundario */
+}
+
+:host-context(body.dark-theme) .section-title {
+  color: var(--clr-text-light);
+  border-bottom: 1px solid var(--clr-border-dark);
+}
+
+:host-context(body.dark-theme) .section-subtitle {
+  color: #888;
+}
+
+/* --- Tabla de Personal y Lotes --- */
+:host-context(body.dark-theme) .users-table th,
+:host-context(body.dark-theme) .users-table td {
+  color: var(--clr-text-light);
+  border-bottom: 1px solid var(--clr-border-dark);
+}
+
+:host-context(body.dark-theme) .users-table th {
+  background-color: #1a2a1d; /* Fondo de cabecera oscuro */
+  color: var(--clr-primary); /* Texto de cabecera en verde claro */
+}
+
+:host-context(body.dark-theme) .users-table tr:hover {
+  background-color: var(--clr-hover-dark);
+}
+
+:host-context(body.dark-theme) .loading-state,
+:host-context(body.dark-theme) .no-data-message {
+  color: #aaa;
+}
+
+/* --- Etiquetas de Rol y Estado (Adaptación a Fondo Oscuro) --- */
+:host-context(body.dark-theme) .role-tag.role-distribuidor {
+  background-color: #5c4728;
+  color: #ffcc80;
+}
+:host-context(body.dark-theme) .role-tag.role-productor {
+  background-color: #384e3c;
+  color: #a3ffac;
+}
+:host-context(body.dark-theme) .role-tag.role-admin {
+  background-color: #28394a;
+  color: #90caf9;
+}
+
+:host-context(body.dark-theme) .status-activo,
+:host-context(body.dark-theme) .status-active {
+  background-color: #384e3c;
+  color: #a3ffac;
+}
+:host-context(body.dark-theme) .status-borrador,
+:host-context(body.dark-theme) .status-draft {
+  background-color: #5c4728;
+  color: #ffcc80;
+}
+:host-context(body.dark-theme) .status-vendido,
+:host-context(body.dark-theme) .status-sold {
+  background-color: #52315a;
+  color: #e1bee7;
+}
+
+/* --- Media Queries (Para Responsividad - Mantener sin cambios) --- */
 @media (max-width: 992px) {
   .dashboard-header-grid {
-    grid-template-columns: 1fr; /* Colapsar a una columna */
+    grid-template-columns: 1fr;
   }
   .metrics-card-container {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Métricas flexibles */
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
 }

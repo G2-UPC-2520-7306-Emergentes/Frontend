@@ -1,3 +1,25 @@
+/* ------------------------------------------- */
+/* VARIABLES (INCLUIDAS DEL SIDENAV)           */
+/* ------------------------------------------- */
+:root {
+  --clr-bg-light: #f4f6f8;
+  --clr-sidebar-light: #ffffff;
+  --clr-text-dark: #2c3e50;
+  --clr-hover-light: #e8ecf1;
+  --clr-border-light: #ececec;
+  --clr-primary: #10b981; /* Usamos el verde del formulario para la variable primary */
+}
+
+:host-context(body.dark-theme) {
+  --clr-bg-dark: #1e3c23;
+  --clr-sidebar-dark: #122b15;
+  --clr-text-light: white;
+  --clr-hover-dark: #284e2c;
+  --clr-border-dark: #284e2c;
+  --clr-primary-dark-text: #a7f3d0; /* Verde muy claro para el texto primario en dark */
+  --clr-input-bg-dark: #1a2a1d; /* Fondo de inputs oscuro */
+}
+
 /* -------------------------------------- */
 /* 1. Contenedor y Estructura Principal */
 /* -------------------------------------- */
@@ -6,27 +28,32 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  /* El fondo de la página usa el color base */
+  background-color: var(--clr-bg-light);
+  min-height: 100vh;
+  transition: background-color 0.3s ease;
 }
 
 #batch-card {
   width: 100%;
-  max-width: 42rem; /* max-w-2xl */
-  background-color: white;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
-  border-radius: 0.75rem; /* rounded-xl */
+  max-width: 42rem;
+  background-color: var(--clr-sidebar-light); /* Fondo de tarjeta claro */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border-radius: 0.75rem;
   padding: 2rem;
-  margin-top: 2.5rem; /* mt-10 */
+  margin-top: 2.5rem;
+  transition: all 0.3s ease;
 }
 
 /* Espaciado del contenido */
 #batch-card > * {
-  margin-top: 2rem; /* space-y-8 */
+  margin-top: 2rem;
 }
 #batch-card > *:first-child {
   margin-top: 0;
 }
 #batch-card form > * {
-  margin-top: 1.5rem; /* space-y-6 */
+  margin-top: 1.5rem;
 }
 #batch-card form > *:first-child {
   margin-top: 0;
@@ -43,23 +70,26 @@
 }
 
 #header-row h1 {
-  font-size: 1.875rem; /* text-3xl */
-  font-weight: 800; /* font-extrabold */
-  color: #1f2937; /* text-gray-900 */
+  font-size: 1.875rem;
+  font-weight: 800;
+  color: var(--clr-text-dark); /* Texto oscuro por defecto */
+  transition: color 0.3s ease;
 }
 
 #header-row a {
-  font-size: 0.875rem; /* text-sm */
-  color: #10b981; /* text-green-600 */
-  font-weight: 500; /* font-medium */
+  font-size: 0.875rem;
+  color: #10b981; /* Verde primario (constante) */
+  font-weight: 500;
   text-decoration: none;
+  transition: color 0.3s ease;
 }
 #header-row a:hover {
-  color: #059669; /* hover:text-green-700 */
+  color: #059669;
 }
 
 #batch-card p {
-  color: #6b7280; /* text-gray-500 */
+  color: #6b7280; /* Gris para la descripción */
+  transition: color 0.3s ease;
 }
 
 /* -------------------------------------- */
@@ -69,47 +99,49 @@
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem; /* space-y-1 */
+  gap: 0.25rem;
 }
 
 .form-group label {
   display: block;
-  font-size: 0.875rem; /* text-sm */
-  font-weight: 500; /* font-medium */
-  color: #374151; /* text-gray-700 */
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151; /* Gris oscuro para las etiquetas */
+  transition: color 0.3s ease;
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 0.75rem; /* p-3 */
-  border: 1px solid #d1d5db; /* border border-gray-300 */
-  border-radius: 0.5rem; /* rounded-lg */
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db; /* Borde claro */
+  border-radius: 0.5rem;
+  background-color: white; /* Fondo blanco del input */
+  color: var(--clr-text-dark);
+  transition: all 0.15s ease-in-out;
 }
 
 /* Foco */
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #10b981; /* focus:border-green-500 */
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.5); /* focus:ring-green-500 */
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.5);
 }
 
 /* Estado de Error */
 .form-group input.border-red-500,
 .form-group textarea.border-red-500 {
-  border-color: #ef4444; /* Rojo de Tailwind (500) */
+  border-color: #ef4444;
 }
 .validation-error {
-  font-size: 0.75rem; /* text-xs */
-  color: #ef4444; /* text-red-600 */
-  margin-top: 0.25rem; /* mt-1 */
+  font-size: 0.75rem;
+  color: #ef4444;
+  margin-top: 0.25rem;
 }
 
-/* Estilo para el campo de fecha (date-input) */
+/* Estilo para el campo de fecha (date-input) - Mantener icono */
 .date-input {
-  /* Mantiene los estilos del CSS previo para el icono */
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -129,34 +161,38 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem; /* space-y-2 */
-  border: 2px dashed #d1d5db; /* border-2 border-dashed border-gray-300 */
-  border-radius: 0.5rem; /* rounded-lg */
-  padding: 1.5rem; /* p-6 */
+  gap: 0.5rem;
+  border: 2px dashed #d1d5db; /* Borde de upload claro */
+  border-radius: 0.5rem;
+  padding: 1.5rem;
   text-align: center;
-  background-color: #f9fafb; /* bg-gray-50 */
+  background-color: #f9fafb; /* Fondo suave para el área de upload */
+  transition: all 0.3s ease;
 }
 
 #upload-area p:first-of-type {
-  font-weight: 500; /* font-medium */
-  color: #374151; /* text-gray-700 */
+  font-weight: 500;
+  color: #374151;
 }
 #upload-area p:last-of-type {
-  font-size: 0.875rem; /* text-sm */
-  color: #6b7280; /* text-gray-500 */
+  font-size: 0.875rem;
+  color: #6b7280;
 }
 
-.upload-button {
-  padding: 0.5rem 1rem; /* px-4 py-2 */
-  font-size: 0.875rem; /* text-sm */
-  font-weight: 500; /* font-medium */
+.custom-file-label {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
   color: white;
-  background-color: #10b981; /* bg-green-500 */
-  border-radius: 0.5rem; /* rounded-lg */
+  background-color: #10b981;
+  border-radius: 0.5rem;
   transition: background-color 0.15s ease-in-out;
+  display: block;
 }
-.upload-button:hover {
-  background-color: #059669; /* hover:bg-green-600 */
+
+.custom-file-label:hover {
+  background-color: #059669;
 }
 
 .hidden-input {
@@ -169,30 +205,103 @@
 
 .submit-button {
   width: 100%;
-  padding: 0.75rem 0; /* py-3 */
-  margin-top: 1rem; /* mt-4 */
+  padding: 0.75rem 0;
+  margin-top: 1rem;
   color: white;
-  font-weight: 700; /* font-bold */
-  border-radius: 0.5rem; /* rounded-lg */
+  font-weight: 700;
+  border-radius: 0.5rem;
   transition: all 0.15s ease-in-out;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06); /* shadow-lg */
-  background-color: #059669; /* bg-green-600 */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+  background-color: #059669; /* Verde oscuro del botón */
 }
 .submit-button:hover:not(:disabled) {
-  background-color: #047857; /* hover:bg-green-700 */
+  background-color: #047857;
 }
 
 .submit-button:disabled {
-  background-color: #a7f3d0; /* disabled:bg-green-300 */
+  background-color: #a7f3d0;
   box-shadow: none;
   cursor: not-allowed;
 }
 
 /* Mensaje de error general */
 .error-message {
-  color: #ef4444; /* text-red-500 */
-  font-size: 0.875rem; /* text-sm */
+  color: #ef4444;
+  font-size: 0.875rem;
   text-align: center;
-  padding-top: 0.5rem; /* pt-2 */
+  padding-top: 0.5rem;
 }
 
+
+/* =========================================== */
+/* === ADAPTACIÓN AL MODO OSCURO (DARK MODE) === */
+/* =========================================== */
+
+:host-context(body.dark-theme) #batch-container {
+  background-color: var(--clr-bg-dark);
+}
+
+:host-context(body.dark-theme) #batch-card {
+  background-color: var(--clr-sidebar-dark);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+/* 2. Header y Texto */
+:host-context(body.dark-theme) #header-row h1 {
+  color: var(--clr-text-light);
+}
+
+:host-context(body.dark-theme) #header-row a {
+  color: var(--clr-primary-dark-text); /* Verde claro */
+}
+:host-context(body.dark-theme) #header-row a:hover {
+  color: #7aff85;
+}
+
+:host-context(body.dark-theme) #batch-card p {
+  color: #a0a0a0; /* Gris claro para descripción */
+}
+
+/* 3. Campos de Formulario */
+:host-context(body.dark-theme) .form-group label {
+  color: #c0c0c0; /* Etiqueta en gris claro */
+}
+
+:host-context(body.dark-theme) .form-group input,
+:host-context(body.dark-theme) .form-group textarea {
+  background-color: var(--clr-input-bg-dark);
+  border: 1px solid var(--clr-border-dark);
+  color: var(--clr-text-light);
+}
+
+:host-context(body.dark-theme) .form-group input::placeholder,
+:host-context(body.dark-theme) .form-group textarea::placeholder {
+  color: #707070;
+}
+
+/* Foco en Dark Mode */
+:host-context(body.dark-theme) .form-group input:focus,
+:host-context(body.dark-theme) .form-group textarea:focus {
+  border-color: var(--clr-primary-dark-text);
+  box-shadow: 0 0 0 3px rgba(163, 255, 172, 0.3); /* Sombra verde claro */
+}
+
+/* 4. Área de Subida (Upload) */
+:host-context(body.dark-theme) #upload-area {
+  border: 2px dashed #4b5563; /* Borde dashed más oscuro */
+  background-color: #1a2a1d; /* Fondo de área de upload oscuro */
+}
+
+:host-context(body.dark-theme) #upload-area p:first-of-type {
+  color: var(--clr-text-light);
+}
+
+:host-context(body.dark-theme) #upload-area p:last-of-type {
+  color: #a0a0a0;
+}
+
+/* Icono del date-input en dark mode */
+:host-context(body.dark-theme) .date-input {
+  /* Filtro CSS para invertir el color del SVG del icono a blanco */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
+}

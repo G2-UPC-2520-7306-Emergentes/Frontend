@@ -1,34 +1,81 @@
 /* ------------------------------------------- */
-/* SECCIÓN PRINCIPAL Y ENCABEZADO */
+/* VARIABLES Y ESTILOS BASE (DE TU SIDENAV)    */
 /* ------------------------------------------- */
+
+/* Colores Base (Modo Claro) */
+:root {
+  --clr-primary: #1976d2;      /* Azul */
+  --clr-active: #388e3c;       /* Verde oscuro */
+  --clr-bg-light: #f4f6f8;     /* Fondo principal claro */
+  --clr-sidebar-light: #ffffff;
+  --clr-text-dark: #2c3e50;    /* Texto principal oscuro */
+  --clr-hover-light: #e8ecf1;
+  --clr-border-light: #ececec;
+  --clr-logout-light: #d32f2f;
+}
+
+/* Modo Oscuro - Tonalidades Verdes */
+:host-context(body.dark-theme) {
+  --clr-primary: #a3ffac;      /* Verde claro (Énfasis/Íconos) */
+  --clr-active:   #9b9b9b;      /* Gris para activo en sidenav */
+  --clr-bg-dark: #1e3c23;      /* Fondo principal oscuro */
+  --clr-sidebar-dark: #122b15;
+  --clr-text-light: white;     /* Texto principal claro */
+  --clr-hover-dark: #284e2c;
+  --clr-border-dark: #284e2c;
+  --clr-logout-dark: #ffb3b3;
+}
+
+
+/* ------------------------------------------- */
+/* SECCIÓN PRINCIPAL Y ENCABEZADO (LISTA DE LOTES) */
+/* ------------------------------------------- */
+
 :host {
   display: block;
   padding: 20px 30px;
-  background-color: #fcfcfc;
+  /* Utiliza las variables para el fondo */
+  background-color: var(--clr-bg-light);
+  transition: background-color 0.3s ease;
 }
 
+/* REGLA CRÍTICA REFORZADA: Alineación Título-Botón */
 .header-section {
   display: flex;
-  justify-content: space-between;
+  /* Esto asegura que ocupe todo el ancho disponible */
+  width: 100%;
+  /* Esto es lo que pone los elementos a los extremos */
+  justify-content: space-between !important;
   align-items: center;
   margin-bottom: 20px;
+  flex-wrap: wrap; /* Para manejo en pantallas pequeñas */
+  gap: 15px; /* Espacio entre título y botón */
 }
 
+/* Título y texto general */
 h2 {
   font-size: 1.8em;
   font-weight: 600;
-  color: #333;
+  color: var(--clr-text-dark);
   margin: 0;
+  transition: color 0.3s ease;
+}
+
+.title-and-description {
+  /* Aseguramos que el contenedor del título no intente forzar un ancho innecesario */
+  flex-shrink: 1;
 }
 
 .title-and-description p {
   color: #666;
   margin: 5px 0 0 0;
   font-size: 0.9em;
+  transition: color 0.3s ease;
 }
 
+/* Botón de Creación */
 .create-button {
-  background-color: #1a4314; /* Verde FoodChain */
+  background-color: #1a4314; /* Verde FoodChain (Fuerte) */
   color: white;
   border: none;
   padding: 10px 18px;
@@ -36,6 +83,8 @@ h2 {
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s;
+  /* Asegura que el botón no se encoja */
+  flex-shrink: 0;
 }
 
 .create-button:hover {
@@ -49,14 +98,9 @@ h2 {
   display: flex;
   justify-content: flex-start;
   padding: 10px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--clr-border-light);
   margin-bottom: 20px;
-}
-
-.toolbar-icons {
-  /* Aquí iría el input de búsqueda si lo incluyes en el HTML */
-  display: flex;
-  align-items: center;
+  transition: border-color 0.3s ease;
 }
 
 .icon-button {
@@ -65,11 +109,27 @@ h2 {
   margin-right: 15px;
   cursor: pointer;
   padding: 5px;
+  transition: color 0.2s;
 }
 
 .icon-button:hover {
-  color: #1a4314;
+  color: var(--clr-primary);
 }
+
+.search-input {
+  /* Estilos para el input de búsqueda */
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 15px;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--clr-primary);
+}
+
 
 /* ------------------------------------------- */
 /* ESTILOS DE TABLA */
@@ -85,6 +145,7 @@ table {
 
 thead {
   background-color: #f9f9f9;
+  transition: background-color 0.3s ease;
 }
 
 th, td {
@@ -92,7 +153,8 @@ th, td {
   text-align: left;
   border-bottom: 1px solid #eee;
   font-size: 0.9em;
-  color: #333;
+  color: var(--clr-text-dark);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 th {
@@ -104,10 +166,7 @@ tbody tr:hover {
   background-color: #f5fff5;
 }
 
-/* ------------------------------------------- */
-/* ETIQUETAS DE ESTADO */
-/* ------------------------------------------- */
-
+/* Etiquetas de estado */
 .status-tag {
   display: inline-block;
   padding: 4px 10px;
@@ -132,15 +191,13 @@ tbody tr:hover {
   color: #f57f17; /* Texto naranja */
 }
 
-/* ------------------------------------------- */
-/* ENLACES DE ACCIÓN */
-/* ------------------------------------------- */
+/* Enlaces de Acción */
 .action-links a {
-  color: #1a4314; /* Verde FoodChain */
+  color: #1a4314;
   text-decoration: none;
   cursor: pointer;
   transition: color 0.2s;
-  white-space: nowrap; /* Evita que los enlaces se rompan en varias líneas */
+  white-space: nowrap;
 }
 
 .action-links a:hover {
@@ -148,24 +205,14 @@ tbody tr:hover {
   text-decoration: underline;
 }
 
-/* ------------------------------------------- */
-/* PAGINACIÓN */
-/* ------------------------------------------- */
-.pagination-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 15px 0;
-  margin-top: 10px;
-}
-
+/* Paginación (si se usa en este componente) */
 .pagination-section a {
   color: #666;
   text-decoration: none;
   padding: 5px 10px;
   margin: 0 4px;
   border-radius: 4px;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, color 0.2s;
   font-size: 0.9em;
 }
 
@@ -177,4 +224,102 @@ tbody tr:hover {
   background-color: #1a4314;
   color: white;
   font-weight: bold;
+}
+
+/* ------------------------------------------- */
+/* ADAPTACIÓN AL MODO OSCURO (DARK MODE) */
+/* ------------------------------------------- */
+
+:host-context(body.dark-theme) {
+  background-color: var(--clr-bg-dark); /* Fondo del host/sección */
+}
+
+:host-context(body.dark-theme) h2 {
+  color: var(--clr-text-light); /* Texto blanco */
+}
+
+:host-context(body.dark-theme) .title-and-description p {
+  color: #b0b0b0; /* Gris claro para la descripción */
+}
+
+/* Barra de herramientas */
+:host-context(body.dark-theme) .toolbar-section {
+  border-bottom: 1px solid var(--clr-border-dark); /* Borde oscuro */
+}
+
+:host-context(body.dark-theme) .icon-button {
+  color: #b0b0b0; /* Iconos en gris claro */
+}
+
+:host-context(body.dark-theme) .icon-button:hover {
+  color: var(--clr-primary); /* Énfasis verde claro */
+}
+
+:host-context(body.dark-theme) .search-input {
+  background-color: #223f26; /* Fondo oscuro del input */
+  border-color: var(--clr-border-dark);
+  color: var(--clr-text-light);
+}
+
+:host-context(body.dark-theme) .search-input::placeholder {
+  color: #a0a0a0;
+}
+
+
+/* Tabla */
+:host-context(body.dark-theme) thead {
+  background-color: #1a2a1d; /* Fondo de cabecera oscuro */
+}
+
+:host-context(body.dark-theme) th,
+:host-context(body.dark-theme) td {
+  border-bottom: 1px solid var(--clr-border-dark); /* Borde de fila oscuro */
+  color: var(--clr-text-light); /* Texto claro */
+}
+
+:host-context(body.dark-theme) th {
+  color: var(--clr-primary); /* Color de la cabecera verde claro */
+}
+
+:host-context(body.dark-theme) tbody tr:hover {
+  background-color: var(--clr-hover-dark); /* Fondo de hover oscuro */
+}
+
+/* Etiquetas de estado */
+:host-context(body.dark-theme) .status-tag.active {
+  background-color: #384e3c;
+  color: #a3ffac;
+}
+
+:host-context(body.dark-theme) .status-tag.closed {
+  background-color: #5c1b2c;
+  color: var(--clr-logout-dark);
+}
+
+:host-context(body.dark-theme) .status-tag.review {
+  background-color: #5c4728;
+  color: #ffcc80;
+}
+
+/* Enlaces de acción */
+:host-context(body.dark-theme) .action-links a {
+  color: var(--clr-primary); /* Verde FoodChain claro */
+}
+
+:host-context(body.dark-theme) .action-links a:hover {
+  color: #7aff85; /* Un verde aún más claro */
+}
+
+/* Paginación */
+:host-context(body.dark-theme) .pagination-section a {
+  color: #b0b0b0;
+}
+
+:host-context(body.dark-theme) .pagination-section a:hover {
+  background-color: var(--clr-hover-dark);
+}
+
+:host-context(body.dark-theme) .pagination-section a.active-page {
+  background-color: var(--clr-active); /* Gris claro */
+  color: var(--clr-text-dark); /* Texto oscuro */
 }

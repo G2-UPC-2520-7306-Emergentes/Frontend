@@ -2,6 +2,7 @@
   <div class="header-section">
     <div class="title-and-description">
       <h2>Lotes de {{ currentUser?.companyName || 'la Compañía' }}</h2>
+
       <p *ngIf="errorMessage && !isLoading" class="error-message">{{ errorMessage }}</p>
 
       <p *ngIf="!errorMessage && !isLoading && currentUser?.companyOption === 'create'">
@@ -72,23 +73,12 @@
 
         </td>
       </tr>
+
       <tr *ngIf="!filteredBatches.length && !isLoading && !errorMessage">
         <td colspan="5" style="text-align: center; color: #6b7280; padding: 20px;">No se encontraron lotes para este usuario.</td>
       </tr>
       </tbody>
     </table>
-  </div>
-
-  <div class="pagination-section">
-    <i class="fas fa-angle-left icon-button"></i>
-    <span>
-      <a [class.active-page]="currentPage === 1">1</a>
-      <a [class.active-page]="currentPage === 2">2</a>
-      <a [class.active-page]="currentPage === 3">3</a>
-      ...
-      <a [class.active-page]="currentPage === totalPages">{{ totalPages }}</a>
-    </span>
-    <i class="fas fa-angle-right icon-button"></i>
   </div>
 </div>
 
@@ -99,7 +89,6 @@
     <p>Escanea este código para ver la trazabilidad del lote.</p>
 
     <div class="qr-code-display">
-
       <qrcode
         [qrdata]="qrData"
         [width]="256"

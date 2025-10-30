@@ -1,15 +1,53 @@
 /* ------------------------------------------- */
+/* VARIABLES (PARA CONTEXTO)                   */
+/* ------------------------------------------- */
+:root {
+  --clr-bg-light: #f7f7f7;
+  --clr-sidebar-light: #ffffff;
+  --clr-text-dark: #333;
+  --clr-hover-light: #e8ecf1;
+  --clr-border-light: #e0e0e0;
+  --clr-primary-green: #388e3c;
+  --clr-dark-green: #1a4314;
+}
+
+:host-context(body.dark-theme) {
+  --clr-bg-dark: #1e3c23;
+  --clr-sidebar-dark: #122b15;
+  --clr-text-light: white;
+  --clr-hover-dark: #284e2c;
+  --clr-border-dark: #284e2c;
+  --clr-input-bg-dark: #1a2a1d;
+  --clr-primary-dark-text: #a7f3d0;
+}
+
+
+/* ------------------------------------------- */
 /* LAYOUT PRINCIPAL */
 /* ------------------------------------------- */
 
+:host {
+  display: block;
+  padding: 20px;
+  background-color: var(--clr-bg-light);
+  transition: background-color 0.3s ease;
+}
 
 .content-grid {
   display: grid;
-  /* Dos columnas: Formulario (2) más ancho que Info (1.5) */
-  grid-template-columns: 2fr 1.5fr;
+  grid-template-columns: 3fr 2fr;
   gap: 40px;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+/* Estilos para la Tarjeta Contenedora Principal */
+.card {
+  background-color: var(--clr-sidebar-light);
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--clr-border-light);
+  transition: all 0.3s ease;
 }
 
 /* ------------------------------------------- */
@@ -17,9 +55,7 @@
 /* ------------------------------------------- */
 .header-actions {
   display: flex;
-  /* Alinea el título a la izquierda y el botón a la derecha */
   justify-content: space-between;
-  /* Alinea los elementos verticalmente */
   align-items: center;
   margin-bottom: 5px;
 }
@@ -27,23 +63,22 @@
 .profile-form-area h2 {
   font-size: 2em;
   font-weight: 600;
-  color: #333;
-  /* Crucial para la alineación con el botón */
+  color: var(--clr-text-dark);
   margin: 0;
+  transition: color 0.3s ease;
 }
 
 .profile-form-area .description {
-  color: #388e3c; /* Verde del texto de la imagen */
+  color: var(--clr-primary-green);
   margin-bottom: 25px;
   font-size: 0.95em;
+  transition: color 0.3s ease;
 }
 
 /* ------------------------------------------- */
-/* ESTILO DEL BOTÓN AGREGAR USUARIO */
+/* ESTILO DEL BOTÓN AGREGAR USUARIO (¡SOLUCIÓN DE VISIBILIDAD APLICADA!) */
 /* ------------------------------------------- */
 .add-user-button {
-  background-color: #1a4314; /* Verde oscuro para destacar */
-  color: white;
   border: none;
   padding: 8px 15px;
   border-radius: 4px;
@@ -52,14 +87,22 @@
   transition: background-color 0.2s;
   font-size: 0.9em;
   height: fit-content;
+
+  /* === SOLUCIÓN === */
+  visibility: visible !important;
+  opacity: 1 !important;
+  /* ================ */
 }
 
 .add-user-button:hover {
   background-color: #276221;
+  color: white;
 }
 
 .add-user-button i {
   margin-right: 5px;
+  background-color: #276221;
+  color: white;
 }
 
 /* ------------------------------------------- */
@@ -72,8 +115,9 @@
 label {
   display: block;
   font-weight: 500;
-  color: #333;
+  color: var(--clr-text-dark);
   margin-bottom: 5px;
+  transition: color 0.3s ease;
 }
 
 input[type="text"],
@@ -85,10 +129,13 @@ input[type="tel"] {
   border-radius: 4px;
   box-sizing: border-box;
   font-size: 1em;
+  background-color: white;
+  color: var(--clr-text-dark);
+  transition: all 0.2s ease;
 }
 
 input:focus {
-  border-color: #1a4314;
+  border-color: var(--clr-dark-green);
   outline: none;
   box-shadow: 0 0 0 1px #a4d8a1;
 }
@@ -111,7 +158,7 @@ input:focus {
 }
 
 .save-signature-button {
-  background-color: #388e3c; /* Verde FoodChain */
+  background-color: #276221;
   color: white;
   border: none;
   flex-grow: 1;
@@ -124,7 +171,7 @@ input:focus {
 
 .cancel-button {
   background-color: #f0f0f0;
-  color: #333;
+  color: var(--clr-text-dark);
   border: 1px solid #ccc;
   flex-grow: 0;
 }
@@ -133,6 +180,7 @@ input:focus {
   font-size: 0.85em;
   color: #777;
   margin-top: 15px;
+  transition: color 0.3s ease;
 }
 
 /* Firma Actual Placeholder */
@@ -140,6 +188,8 @@ input:focus {
   margin-top: 30px;
   font-size: 1.5em;
   font-weight: 600;
+  color: var(--clr-text-dark);
+  transition: color 0.3s ease;
 }
 
 .signature-image-placeholder {
@@ -151,6 +201,7 @@ input:focus {
   justify-content: center;
   align-items: center;
   color: #aaa;
+  transition: all 0.3s ease;
 }
 
 /* ------------------------------------------- */
@@ -159,14 +210,16 @@ input:focus {
 .signature-info-area h3 {
   font-size: 1.5em;
   font-weight: 600;
-  color: #333;
+  color: var(--clr-text-dark);
   margin-bottom: 15px;
+  transition: color 0.3s ease;
 }
 
 .info-block {
   margin-bottom: 30px;
   padding-bottom: 20px;
   border-bottom: 1px solid #eee;
+  transition: border-color 0.3s ease;
 }
 
 .definition-grid {
@@ -180,6 +233,8 @@ input:focus {
   font-weight: 600;
   margin-bottom: 5px;
   margin-top: 0;
+  color: var(--clr-text-dark);
+  transition: color 0.3s ease;
 }
 
 .definition-item p {
@@ -187,10 +242,12 @@ input:focus {
   color: #555;
   margin-top: 0;
   margin-bottom: 15px;
+  transition: color 0.3s ease;
 }
 
 .green-text {
-  color: #388e3c;
+  color: var(--clr-primary-green);
+  transition: color 0.3s ease;
 }
 
 /* Historial de Firmas */
@@ -201,6 +258,7 @@ input:focus {
 .history-item {
   padding: 10px 0;
   border-bottom: 1px dashed #eee;
+  transition: border-color 0.3s ease;
 }
 
 .history-item:last-child {
@@ -210,55 +268,121 @@ input:focus {
 .hash-text {
   font-weight: 500;
   font-size: 0.95em;
-  color: #333;
+  color: var(--clr-text-dark);
   margin-bottom: 3px;
+  transition: color 0.3s ease;
 }
 
 .details-text {
   font-size: 0.85em;
   color: #777;
   margin-top: 0;
+  transition: color 0.3s ease;
 }
 
 .history-note {
   font-style: italic;
   font-size: 0.85em;
-  color: #388e3c;
+  color: var(--clr-primary-green);
   margin-top: 15px;
+  transition: color 0.3s ease;
 }
 
-/* Estilos para la Tarjeta Contenedora Principal */
-.card {
-  /* Fondo claro */
-  background-color: #ffffff;
-  /* Un poco de padding interior */
-  padding: 30px;
-  /* Sombra suave para darle profundidad */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  /* Borde sutil (opcional) */
-  border: 1px solid #e0e0e0;
+/* =========================================== */
+/* === ADAPTACIÓN AL MODO OSCURO (DARK MODE) === */
+/* =========================================== */
+
+:host-context(body.dark-theme) {
+  background-color: var(--clr-bg-dark);
 }
 
-/* Estilos para organizar el contenido en dos columnas */
-.content-grid {
-  display: grid;
-  /* Ajusta las proporciones de las columnas (ej: 60% para el formulario, 40% para la información) */
-  grid-template-columns: 3fr 2fr;
-  gap: 40px; /* Espacio entre las columnas */
+:host-context(body.dark-theme) .card {
+  background-color: var(--clr-sidebar-dark);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--clr-border-dark);
 }
 
-/* Estilos de responsividad para que la tarjeta se vea bien en móviles */
+/* 1. Títulos y Texto */
+:host-context(body.dark-theme) h2,
+:host-context(body.dark-theme) label,
+:host-context(body.dark-theme) .current-signature-area h3,
+:host-context(body.dark-theme) .signature-info-area h3,
+:host-context(body.dark-theme) .definition-item h4 {
+  color: var(--clr-text-light);
+}
+
+:host-context(body.dark-theme) .hash-text {
+  color: var(--clr-text-light);
+}
+
+:host-context(body.dark-theme) .profile-form-area .description,
+:host-context(body.dark-theme) .green-text,
+:host-context(body.dark-theme) .history-note {
+  color: var(--clr-primary-dark-text);
+}
+
+:host-context(body.dark-theme) .definition-item p,
+:host-context(body.dark-theme) .details-text,
+:host-context(body.dark-theme) .signature-note {
+  color: #a0a0a0;
+}
+
+/* 2. Inputs y Formularios */
+:host-context(body.dark-theme) input[type="text"],
+:host-context(body.dark-theme) input[type="email"],
+:host-context(body.dark-theme) input[type="tel"] {
+  background-color: var(--clr-input-bg-dark);
+  border: 1px solid var(--clr-border-dark);
+  color: var(--clr-text-light);
+}
+
+:host-context(body.dark-theme) input:focus {
+  border-color: var(--clr-primary-dark-text);
+  box-shadow: 0 0 0 1px rgba(167, 243, 208, 0.5);
+}
+
+/* 3. Botones */
+:host-context(body.dark-theme) .save-signature-button {
+  background-color: var(--clr-primary-dark-text);
+  color: var(--clr-dark-green);
+  border: none;
+}
+
+:host-context(body.dark-theme) .save-signature-button:disabled {
+  background-color: #38643c;
+  color: #a0a0a0;
+}
+
+:host-context(body.dark-theme) .cancel-button {
+  background-color: #38643c;
+  color: var(--clr-text-light);
+  border: 1px solid var(--clr-border-dark);
+}
+
+/* 4. Áreas y Bordes */
+:host-context(body.dark-theme) .info-block {
+  border-bottom: 1px solid var(--clr-border-dark);
+}
+
+:host-context(body.dark-theme) .history-item {
+  border-bottom: 1px dashed #4b5563;
+}
+
+:host-context(body.dark-theme) .signature-image-placeholder {
+  background-color: #223f26;
+  border: 1px solid #38643c;
+  color: #777;
+}
+
+
+/* ------------------------------------------- */
+/* MEDIA QUERIES (Mantener) */
+/* ------------------------------------------- */
 @media (max-width: 992px) {
   .content-grid {
-    /* En pantallas pequeñas, apila las columnas */
     grid-template-columns: 1fr;
   }
 }
-
-
-/* ------------------------------------------- */
-/* MEDIA QUERIES */
-/* ------------------------------------------- */
 @media (max-width: 900px) {
   .content-grid {
     grid-template-columns: 1fr;
