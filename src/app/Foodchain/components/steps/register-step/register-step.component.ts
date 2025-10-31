@@ -105,7 +105,7 @@ export class RegisterStepComponent implements OnInit {
           console.error('Error de geolocalización:', error);
           this.stepForm.get('location')?.setValue('Geolocalización no disponible. Permiso denegado.');
         },
-        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+        { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 }
       );
     } else {
       this.stepForm.get('location')?.setValue('Geolocation no soportada por este navegador.');
