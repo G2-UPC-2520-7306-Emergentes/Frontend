@@ -1,7 +1,0 @@
-node_modules
-.angular
-.git
-server
-src
-*.md
-*.log
