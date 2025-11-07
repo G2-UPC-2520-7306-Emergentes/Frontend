@@ -1,329 +1,511 @@
-/* ------------------------------------------- */
-/* SECCIÓN PRINCIPAL Y ENCABEZADO (LISTA DE LOTES) */
-/* ------------------------------------------- */
+/* ===================================
+   DASHBOARD - MODERN DESIGN
+   =================================== */
 
-/* --- Contenedor General --- */
 .dashboard-container {
-  padding: 30px;
-  /* Utiliza la variable para el fondo */
-  background-color: var(--clr-bg-light);
+  padding: var(--space-8);
+  background-color: var(--bg-secondary);
   min-height: 100vh;
-  transition: background-color 0.3s ease;
+  animation: fadeIn var(--transition-slow) ease-out;
 }
 
 .dashboard-title {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--clr-text-dark); /* Color de texto base */
-  margin-bottom: 25px;
-  transition: color 0.3s ease;
+  color: var(--text-primary);
+  margin-bottom: var(--space-8);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
 }
 
-/* --- Estilo Base de Tarjeta (Card) --- */
-.card {
-  background-color: var(--clr-sidebar-light); /* Fondo de tarjeta claro */
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  padding: 20px;
-  border: 1px solid var(--clr-border-light); /* Borde claro */
-  transition: all 0.3s ease;
+.dashboard-title::before {
+  content: '';
+  width: 4px;
+  height: 32px;
+  background: linear-gradient(180deg, var(--primary-500), var(--primary-700));
+  border-radius: var(--radius-full);
 }
 
-/* =================================== */
-/* === 1. HEADER Y MÉTRICAS (GRID) === */
-/* =================================== */
+/* === HEADER GRID === */
 .dashboard-header-grid {
   display: grid;
   grid-template-columns: 1.5fr 2fr;
-  gap: 20px;
-  margin-bottom: 30px;
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
 }
 
-/* --- A. Tarjeta de Información del Usuario --- */
+/* User Info Card */
 .user-info-card {
+  background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-700) 100%);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-lg);
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding: 25px;
+  gap: var(--space-6);
+  color: white;
+  animation: slideInLeft var(--transition-slow) ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.user-info-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: pulse 3s ease-in-out infinite;
 }
 
 .user-avatar {
-  font-size: 3.5rem;
-  color: var(--clr-primary); /* Color principal: azul en modo claro */
+  font-size: 4rem;
+  color: white;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+  z-index: 1;
+}
+
+.user-details {
+  z-index: 1;
 }
 
 .user-name {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
-  color: var(--clr-text-dark);
-  margin-bottom: 5px;
+  margin-bottom: var(--space-2);
+  color: white;
 }
 
 .user-role {
+  font-size: 0.875rem;
   font-weight: 600;
-  color: #10b981; /* Verde de distinción (mantener este color vibrante) */
-  margin-bottom: 5px;
-  text-transform: capitalize;
+  padding: var(--space-1) var(--space-3);
+  background: rgba(255,255,255,0.2);
+  border-radius: var(--radius-full);
+  display: inline-block;
+  margin-bottom: var(--space-3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.user-company, .user-email {
-  font-size: 0.9rem;
-  color: #666; /* Gris intermedio */
+.user-company,
+.user-email {
+  font-size: 0.875rem;
+  color: rgba(255,255,255,0.9);
+  margin-bottom: var(--space-1);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 
-/* --- B. Contenedor de Métricas --- */
+.user-company::before {
+  content: '\f1ad';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+}
+
+.user-email::before {
+  content: '\f0e0';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+}
+
+/* === METRICS CARDS === */
 .metrics-card-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: var(--space-4);
 }
 
 .metric-item {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
   text-align: center;
-  padding: 20px 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  border: 2px solid transparent;
+  animation: scaleIn var(--transition-slow) ease-out;
+}
+
+.metric-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.metric-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.metric-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.metric-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--primary-500);
 }
 
 .metric-icon {
-  font-size: 1.5rem;
-  color: var(--clr-primary);
-  margin-bottom: 10px;
+  font-size: 2rem;
+  color: var(--primary-500);
+  margin-bottom: var(--space-4);
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
+  border-radius: var(--radius-full);
+  transition: transform var(--transition-base);
+}
+
+[data-theme="dark"] .metric-icon {
+  background: linear-gradient(135deg, rgba(0,168,107,0.1), rgba(0,168,107,0.2));
+}
+
+.metric-item:hover .metric-icon {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .metric-value {
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 800;
-  color: var(--clr-text-dark);
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+  background: linear-gradient(135deg, var(--primary-600), var(--primary-400));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .metric-label {
-  font-size: 0.85rem;
-  color: #666; /* Gris intermedio */
-  margin-top: 5px;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
 }
 
-/* ======================================= */
-/* === 2. LISTA DE PERSONAL Y LOTES === */
-/* ======================================= */
-.users-list-section, .sorted-batches-section {
-  padding: 25px 30px;
+/* === SECTIONS === */
+.users-list-section,
+.sorted-batches-section {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-md);
+  animation: slideInRight var(--transition-slow) ease-out;
+}
+
+.sorted-batches-section {
+  animation: fadeIn var(--transition-slow) ease-out;
+  animation-delay: 0.2s;
 }
 
 .section-title {
-  font-size: 1.4rem;
-  color: var(--clr-text-dark);
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--clr-border-light);
-  transition: all 0.3s ease;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
 }
 
 .section-subtitle {
-  font-size: 0.9rem;
-  color: #999;
-  margin-bottom: 20px;
-  transition: color 0.3s ease;
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-6);
+  padding-left: 2.25rem;
 }
 
-/* --- Estilos de Tabla --- */
+/* === TABLE STYLES === */
+.table-responsive {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+}
+
 .users-table {
   width: 100%;
   min-width: 700px;
-  border-collapse: collapse;
-  font-size: 0.95rem;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
-.users-table th, .users-table td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #f0f0f0; /* Borde de fila muy claro */
-  color: var(--clr-text-dark);
-  transition: all 0.3s ease;
+.users-table thead {
+  background: var(--bg-tertiary);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .users-table th {
-  background-color: #f7f9fc; /* Fondo de cabecera claro */
-  color: #555;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.users-table tr:hover {
-  background-color: var(--clr-hover-light); /* Hover de fila claro */
-}
-
-/* Estilos de la Columna de Pasos Registrados */
-.users-table td:nth-child(5) {
-  text-align: center;
-}
-
-.step-count-value {
+  padding: var(--space-4) var(--space-5);
+  text-align: left;
+  font-size: 0.75rem;
   font-weight: 700;
-  color: var(--clr-primary); /* Valor destacado con color principal */
-  font-size: 1.1rem;
-  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  border-bottom: 2px solid var(--border-color);
 }
 
-/* Etiquetas de Rol */
+.users-table td {
+  padding: var(--space-5) var(--space-5);
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-light);
+  font-size: 0.875rem;
+}
+
+.users-table tbody tr {
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.users-table tbody tr:hover {
+  background: var(--bg-tertiary);
+  transform: scale(1.01);
+}
+
+.users-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* === BADGES === */
 .role-tag {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
   font-size: 0.75rem;
   font-weight: 600;
+  border-radius: var(--radius-full);
   text-transform: capitalize;
+  letter-spacing: 0.025em;
 }
 
-/* Colores de roles (ejemplos) */
-.role-tag.role-distribuidor { background-color: #ffe0b2; color: #ff9800; }
-.role-tag.role-productor { background-color: #c8e6c9; color: #4caf50; }
-.role-tag.role-admin { background-color: #bbdefb; color: #2196f3; }
+.role-tag.role-producer {
+  background: var(--success-light);
+  color: var(--success-dark);
+}
 
-/* Etiquetas de Estado de Lote */
+.role-tag.role-processor {
+  background: var(--info-light);
+  color: var(--info-dark);
+}
+
+.role-tag.role-transporter {
+  background: var(--warning-light);
+  color: var(--warning-dark);
+}
+
+.role-tag.role-distributor {
+  background: #fce7f3;
+  color: #be185d;
+}
+
+.role-tag.role-retailer {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.role-tag.role-administrator {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+[data-theme="dark"] .role-tag.role-producer {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+}
+
+[data-theme="dark"] .role-tag.role-processor {
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+}
+
+[data-theme="dark"] .role-tag.role-transporter {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fcd34d;
+}
+
+/* Status Tags */
 .status-tag {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
   font-size: 0.75rem;
   font-weight: 600;
+  border-radius: var(--radius-full);
   text-transform: capitalize;
 }
 
-.status-activo, .status-active { background-color: #c8e6c9; color: #4caf50; }
-.status-borrador, .status-draft { background-color: #ffecb3; color: #ff9800; }
-.status-vendido, .status-sold { background-color: #e1bee7; color: #9c27b0; }
+.status-activo,
+.status-active,
+.status-tag.activo {
+  background: var(--success-light);
+  color: var(--success-dark);
+}
 
+.status-borrador,
+.status-draft,
+.status-tag.draft {
+  background: var(--warning-light);
+  color: var(--warning-dark);
+}
 
-/* Indicadores de Estado */
+.status-cerrado,
+.status-closed,
+.status-tag.cerrado {
+  background: var(--info-light);
+  color: var(--info-dark);
+}
+
+[data-theme="dark"] .status-activo,
+[data-theme="dark"] .status-active {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+}
+
+[data-theme="dark"] .status-borrador,
+[data-theme="dark"] .status-draft {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fcd34d;
+}
+
+/* Status Indicator */
 .status-indicator {
   display: inline-block;
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  margin-right: 6px;
-  background-color: #4caf50; /* Verde fijo */
+  margin-right: var(--space-2);
+  animation: pulse 2s ease-in-out infinite;
 }
 
-.loading-state, .no-data-message {
+.status-active {
+  background: var(--success);
+}
+
+/* Step Count */
+.step-count-value {
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--primary-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.step-count-value::before {
+  content: '\f1b2';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  font-size: 0.875rem;
+}
+
+/* === STATES === */
+.loading-state,
+.no-data-message {
   text-align: center;
-  padding: 30px;
-  color: #777;
-  font-style: italic;
-  transition: color 0.3s ease;
+  padding: var(--space-12);
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
 }
 
-/* Estilos de espaciado */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.loading-state::before {
+  content: '';
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border-color);
+  border-top-color: var(--primary-500);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.alert {
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-6);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  animation: slideInRight var(--transition-fast) ease-out;
+}
+
+.alert-error {
+  background: var(--error-light);
+  color: var(--error-dark);
+  border-left: 4px solid var(--error);
+}
+
+.alert-error::before {
+  content: '\f071';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  font-size: 1.25rem;
+}
+
+/* === UTILITIES === */
+hr {
+  border: none;
+  height: 1px;
+  background: var(--border-light);
+  margin: var(--space-8) 0;
+}
+
 .mt-4 {
-  margin-top: 25px;
+  margin-top: var(--space-6);
 }
 
-
-/* =========================================== */
-/* === ADAPTACIÓN AL MODO OSCURO (DARK MODE) === */
-/* =========================================== */
-
-:host-context(body.dark-theme) .dashboard-container {
-  background-color: var(--clr-bg-dark);
-}
-
-:host-context(body.dark-theme) .dashboard-title {
-  color: var(--clr-text-light);
-}
-
-:host-context(body.dark-theme) .card {
-  background-color: var(--clr-sidebar-dark);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-  border: 1px solid var(--clr-border-dark);
-}
-
-/* --- Tarjeta de Usuario --- */
-:host-context(body.dark-theme) .user-avatar,
-:host-context(body.dark-theme) .metric-icon,
-:host-context(body.dark-theme) .step-count-value {
-  color: var(--clr-primary); /* Verde claro de énfasis */
-}
-
-:host-context(body.dark-theme) .user-name,
-:host-context(body.dark-theme) .metric-value {
-  color: var(--clr-text-light);
-}
-
-:host-context(body.dark-theme) .user-company,
-:host-context(body.dark-theme) .user-email,
-:host-context(body.dark-theme) .metric-label {
-  color: #b0b0b0; /* Gris claro para texto secundario */
-}
-
-:host-context(body.dark-theme) .section-title {
-  color: var(--clr-text-light);
-  border-bottom: 1px solid var(--clr-border-dark);
-}
-
-:host-context(body.dark-theme) .section-subtitle {
-  color: #888;
-}
-
-/* --- Tabla de Personal y Lotes --- */
-:host-context(body.dark-theme) .users-table th,
-:host-context(body.dark-theme) .users-table td {
-  color: var(--clr-text-light);
-  border-bottom: 1px solid var(--clr-border-dark);
-}
-
-:host-context(body.dark-theme) .users-table th {
-  background-color: #1a2a1d; /* Fondo de cabecera oscuro */
-  color: var(--clr-primary); /* Texto de cabecera en verde claro */
-}
-
-:host-context(body.dark-theme) .users-table tr:hover {
-  background-color: var(--clr-hover-dark);
-}
-
-:host-context(body.dark-theme) .loading-state,
-:host-context(body.dark-theme) .no-data-message {
-  color: #aaa;
-}
-
-/* --- Etiquetas de Rol y Estado (Adaptación a Fondo Oscuro) --- */
-:host-context(body.dark-theme) .role-tag.role-distribuidor {
-  background-color: #5c4728;
-  color: #ffcc80;
-}
-:host-context(body.dark-theme) .role-tag.role-productor {
-  background-color: #384e3c;
-  color: #a3ffac;
-}
-:host-context(body.dark-theme) .role-tag.role-admin {
-  background-color: #28394a;
-  color: #90caf9;
-}
-
-:host-context(body.dark-theme) .status-activo,
-:host-context(body.dark-theme) .status-active {
-  background-color: #384e3c;
-  color: #a3ffac;
-}
-:host-context(body.dark-theme) .status-borrador,
-:host-context(body.dark-theme) .status-draft {
-  background-color: #5c4728;
-  color: #ffcc80;
-}
-:host-context(body.dark-theme) .status-vendido,
-:host-context(body.dark-theme) .status-sold {
-  background-color: #52315a;
-  color: #e1bee7;
-}
-
-/* --- Media Queries (Para Responsividad - Mantener sin cambios) --- */
+/* === RESPONSIVE === */
 @media (max-width: 992px) {
   .dashboard-header-grid {
     grid-template-columns: 1fr;
   }
+
   .metrics-card-container {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  .user-info-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .user-company::before,
+  .user-email::before {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: var(--space-4);
+  }
+
+  .users-list-section,
+  .sorted-batches-section {
+    padding: var(--space-4);
+  }
+
+  .table-responsive {
+    margin: 0 calc(var(--space-4) * -1);
+    padding: 0 var(--space-4);
+  }
+
+  .metric-value {
+    font-size: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
   }
 }

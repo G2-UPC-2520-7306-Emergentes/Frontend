@@ -21,7 +21,13 @@
 
   <div class="toolbar-section">
     <div class="toolbar-icons">
-      <input type="text" [(ngModel)]="searchText" placeholder="Buscar por Lote o ID" class="search-input">
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        (ngModelChange)="onSearchChange()"
+        placeholder="Buscar por Lote o ID"
+        class="search-input"
+      >
 
       <i class="fas fa-filter icon-button"></i>
       <i class="fas fa-calendar-alt icon-button"></i>
