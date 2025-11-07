@@ -1,0 +1,23 @@
+services:
+  # Backend API (JSON Server)
+  - type: web
+    name: food-chain-api
+    env: node
+    region: ohio
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+
+  # Frontend (Angular)
+  - type: web
+    name: food-chain-frontend
+    env: static
+    region: ohio
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist/FoodChain/browser
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
