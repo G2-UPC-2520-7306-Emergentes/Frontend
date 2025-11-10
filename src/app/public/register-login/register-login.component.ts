@@ -17,7 +17,7 @@ import { UserService, RegisterPayload } from '../../Foodchain/services/user.serv
 export class RegisterLoginComponent implements OnInit {
 
   registerForm: FormGroup;
-  roles = ['Administrator', 'Auditor', 'Supply Chain Manager', 'Standard User'];
+  roles = ['Administrator', 'Enterprise Administrator'];
 
   constructor(
     private fb: FormBuilder,
@@ -30,7 +30,7 @@ export class RegisterLoginComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       companyName: ['', Validators.required],
       taxId: [''],
-      companyOption: ['join', Validators.required],
+      companyOption: ['create'],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required],
       phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Requerido y solo números

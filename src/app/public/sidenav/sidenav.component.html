@@ -26,6 +26,12 @@
         </li>
 
         <li *ngIf="isCompanyCreate">
+          <a routerLink="/sidenav/authorize-step" routerLinkActive="active" class="nav-item">
+            <i class="icon">📋</i> Authorize Batch
+          </a>
+        </li>
+
+        <li *ngIf="isCompanyCreate">
           <a routerLink="/sidenav/delete-batch" routerLinkActive="active" class="nav-item">
             <i class="icon">🗑️</i> Delete Batch
           </a>

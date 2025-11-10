@@ -76,6 +76,7 @@ export class RegisterStepComponent implements OnInit {
       stepTime: [{ value: currentDateTime.time, disabled: true }, Validators.required],
       location: [{ value: 'Cargando ubicación...', disabled: true }, Validators.required],
       observations: [''],
+      status: ['pending'],
     });
   }
 

@@ -17,6 +17,8 @@ export class Step {
   observations: string;
   hash: string;
 
+  status: string;
+
   constructor(step: {
 
     lotId: string,
@@ -29,7 +31,8 @@ export class Step {
 
 
     id?: string,
-    hash?: string
+    hash?: string,
+    status?: string,
   }) {
     // Asignación de valores
     this.id = step.id || '';
@@ -41,7 +44,7 @@ export class Step {
     this.location = step.location;
     this.observations = step.observations || '';
 
-
+    this.status = step.status || 'pending';
     this.hash = step.hash || '';
   }
 }

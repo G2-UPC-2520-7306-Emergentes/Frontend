@@ -1,0 +1,41 @@
+<div class="authorize-steps-container">
+  <h2>📋 Autorizar Pasos Pendientes</h2>
+
+  <ng-container *ngIf="pendingSteps$ | async as steps">
+
+    <div *ngIf="steps.length === 0" class="no-steps-message">
+      No hay pasos pendientes de autorización para tu usuario. ¡Todo limpio! 🎉
+    </div>
+
+    <table *ngIf="steps.length > 0" class="steps-table">
+      <thead>
+      <tr>
+        <th>ID Paso</th>
+        <th>Lote ID</th>
+        <th>Tipo</th>
+        <th>Fecha/Hora</th>
+        <th>Observaciones</th>
+        <th>Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let step of steps">
+        <td>{{ step.id }}</td>
+        <td>{{ step.lotId }}</td>
+        <td>{{ step.stepType }}</td>
+        <td>{{ step.stepDate }} / {{ step.stepTime }}</td>
+        <td>{{ step.observations || 'N/A' }}</td>
+        <td class="actions-cell">
+          <button class="accept-btn" (click)="onAccept(step)">Aceptar (accepted)</button>
+          <button class="reject-btn" (click)="onReject(step)">Rechazar (cancelled)</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </ng-container>
+
+  <div *ngIf="!pendingSteps$" class="loading-message">
+    Cargando pasos pendientes...
+  </div>
+
+</div>

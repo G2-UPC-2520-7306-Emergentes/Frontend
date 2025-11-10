@@ -15,6 +15,7 @@ import {HistoryBatchComponent} from './Foodchain/pages/history-batch/history-bat
 import {ViewQrcodeComponent} from './Foodchain/pages/view-qrcode/view-qrcode.component';
 import {DuplicateFormComponent} from './Foodchain/components/duplicate-form/duplicate-form.component';
 import {DashboardComponent} from './Foodchain/pages/dashboard/dashboard.component';
+import {AuthorizeStepComponent} from './Foodchain/components/steps/authorize-step/authorize-step.component';
 export const routes: Routes = [
 
   { path: 'login', component: LoginComponent },
@@ -33,6 +34,7 @@ export const routes: Routes = [
       { path: 'register-step', component: RegisterStepComponent },
       { path: 'history-batch', component: HistoryBatchComponent },
       { path: 'duplicate-form/:id', component: DuplicateFormComponent },
+      { path: 'authorize-step', component: AuthorizeStepComponent },
        ]},
   { path: 'view-qrcode/:lotId', component: ViewQrcodeComponent },
 
