@@ -1,11 +1,48 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms'; // 💡 Añadimos FormControl
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { BatchCreatePayload, BatchService } from '../../services/batch.service';
 import { SessionService } from '../../services/session.service';
-import { Observable, Observer } from 'rxjs'; // Necesario para la conversión a Base64
+import { Observable, Observer } from 'rxjs';
+
+// 1. 📋 ESTRUCTURA DEL CATÁLOGO DE PRODUCTOS Y VARIEDADES
+interface VarietyOption {
+  type: string;
+  varieties: string[];
+}
+
+const PRODUCT_CATALOG: VarietyOption[] = [
+  {
+    type: 'Café',
+    varieties: ['Caturra', 'Typica', 'Geisha', 'Catuai', 'Bourbon', 'Pacamara'],
+  },
+  {
+    type: 'Papa',
+    varieties: ['Amarilla', 'Huayro', 'Canchan', 'Peruanita', 'Tumbay', 'Yungay'],
+  },
+  {
+    type: 'Cacao',
+    varieties: ['Blanco de Piura', 'CCN-51', 'Chuncho', 'Criollo'],
+  },
+  {
+    type: 'Mango', // Fruta de exportación
+    varieties: ['Kent', 'Haden', 'Ataúlfo', 'Edward'],
+  },
+  {
+    type: 'Uva', // Común en la costa
+    varieties: ['Red Globe', 'Sugraone', 'Crimson Seedless', 'Italia'],
+  },
+  {
+    type: 'Quinua', // Grano andino
+    varieties: ['Blanca de Junín', 'Roja', 'Negra', 'Pasankalla'],
+  },
+  {
+    type: 'Maíz', // Ampliamente cultivado
+    varieties: ['Choclo', 'Gigante del Cusco', 'Canchita', 'Maíz Morado'],
+  },
+];
 
 @Component({
   selector: 'app-create-batch',
@@ -18,7 +55,12 @@ export class CreateBatchComponent implements OnInit {
 
   batchForm!: FormGroup;
   selectedFile: File | null = null;
-  isLoading: boolean = false; // Estado de carga para el envío
+  isLoading: boolean = false;
+
+  // 2. 🔑 PROPIEDADES PARA CONTROLAR LA DOBLE LISTA
+  productTypes: string[] = PRODUCT_CATALOG.map(item => item.type);
+  selectedProductType: string = ''; // Almacena la selección del primer dropdown
+  availableVarieties: string[] = []; // Opciones para el segundo dropdown
 
   constructor(
     private fb: FormBuilder,
@@ -32,11 +74,37 @@ export class CreateBatchComponent implements OnInit {
     this.batchForm = this.fb.group({
       lotName: ['', Validators.required],
       farmName: ['', Validators.required],
-      variety: ['', Validators.required],
+
+      // 💡 Necesitas un control para el Tipo de Producto que no se guarda en la entidad,
+      // pero usaremos 'variety' para almacenar el string FINAL.
+      productTypeControl: ['', Validators.required], // ⬅️ NUEVO CONTROL PARA EL PRIMER DROPDOWN
+
+      variety: ['', Validators.required], // ⬅️ SEGUNDO DROPDOWN (almacenará la variedad específica)
+
       harvestDate: ['', Validators.required],
       description: [''],
     });
   }
+
+  // 4. 🔗 LÓGICA DE DEPENDENCIA AL SELECCIONAR EL TIPO DE PRODUCTO
+  onProductTypeSelected(): void {
+    // Obtenemos el valor del control 'productTypeControl'
+    this.selectedProductType = this.batchForm.get('productTypeControl')?.value || '';
+
+    // 1. Resetear el control 'variety' y las opciones disponibles
+    this.batchForm.patchValue({ variety: '' });
+    this.availableVarieties = [];
+
+    // 2. Buscar las variedades correspondientes al tipo seleccionado
+    const selectedCatalog = PRODUCT_CATALOG.find(
+      item => item.type === this.selectedProductType
+    );
+
+    // 3. Actualizar la lista para el dropdown de variedades
+    this.availableVarieties = selectedCatalog ? selectedCatalog.varieties : [];
+  }
+
+  // ... (onFileSelected y convertFileToBase64 se mantienen sin cambios) ...
 
   onFileSelected(event: any): void {
     if (event.target.files.length > 0) {
@@ -46,11 +114,6 @@ export class CreateBatchComponent implements OnInit {
     }
   }
 
-  /**
-   * Convierte un objeto File a una cadena Base64 (Data URL).
-   * @param file El archivo File seleccionado.
-   * @returns Un Observable que emite la cadena Base64.
-   */
   private convertFileToBase64(file: File): Observable<string> {
     return new Observable((observer: Observer<string>) => {
       const reader = new FileReader();
@@ -63,18 +126,18 @@ export class CreateBatchComponent implements OnInit {
       reader.onerror = (error) => {
         observer.error(error);
       };
-
-      // Leemos el archivo como una URL de datos (Base64)
       reader.readAsDataURL(file);
     });
   }
 
+
   /**
-   * Maneja el envío del formulario: 1. Convierte a Base64, 2. Crea el Lote con el string Base64.
+   * Maneja el envío del formulario: 1. Convierte a Base64, 2. Combina Tipo + Variedad, 3. Crea el Lote.
    */
   async onSubmit(): Promise<void> {
 
-    // 1. Validaciones iniciales
+    // 1. Validaciones
+    // Nota: Aunque productTypeControl y variety son requeridos, revisamos el formulario.
     if (this.batchForm.invalid || !this.selectedFile) {
       this.batchForm.markAllAsTouched();
       alert('Por favor, completa todos los campos requeridos y selecciona un archivo de imagen.');
@@ -89,30 +152,39 @@ export class CreateBatchComponent implements OnInit {
     }
 
     this.isLoading = true;
-
-    // Declaramos la variable que contendrá el Base64 (puede ser undefined si toPromise falla)
     let base64ImageString: string | undefined;
 
-    // --- FASE 1 & 2: CONVERSIÓN Y CREACIÓN DEL LOTE (En bloque try unificado) ---
+    // --- FASE 1 & 2: CONVERSIÓN Y CREACIÓN DEL LOTE ---
     try {
 
       // 1. CONVERSIÓN A BASE64
-      // Usamos el operador ! para asegurar a TS que selectedFile no es null aquí.
-      // Usamos 'as string | undefined' para tipar correctamente toPromise, que está obsoleto.
       base64ImageString = await this.convertFileToBase64(this.selectedFile!)
         .toPromise() as string | undefined;
 
-      // 2. VERIFICACIÓN CRÍTICA
       if (!base64ImageString) {
         throw new Error("La conversión Base64 devolvió un valor nulo.");
       }
 
       console.log('Imagen convertida a Base64 (Hash):', base64ImageString.substring(0, 50) + '...');
 
-      // 3. CREACIÓN DEL PAYLOAD (Dentro del contexto seguro donde base64ImageString es string)
+      // 2. 🔑 CREACIÓN DEL STRING UNIFICADO (Ej: "Café - Caturra")
+      const finalVarietyString =
+        `${this.batchForm.get('productTypeControl')?.value} - ${this.batchForm.get('variety')?.value}`;
+
+
+      // 3. CREACIÓN DEL PAYLOAD
+      const formValue = this.batchForm.value;
+
       const payload: BatchCreatePayload = {
-        ...this.batchForm.value,
-        // ✅ base64ImageString es string aquí, sin necesidad del operador !
+        lotName: formValue.lotName,
+        farmName: formValue.farmName,
+
+        // 🔑 ASIGNAMOS EL STRING UNIFICADO AL CAMPO 'variety'
+        variety: finalVarietyString,
+
+        harvestDate: formValue.harvestDate,
+        description: formValue.description,
+
         imageUrl: base64ImageString,
         producer_id: connectedUserId
       };
@@ -128,18 +200,16 @@ export class CreateBatchComponent implements OnInit {
             }
           },
           error: (error) => {
-            // Manejo de error de la API del lote
+            this.isLoading = false;
             console.error('Error al crear el lote JSON:', error);
             alert('Error al crear el lote. Revisa la consola para más detalles.');
           }
         });
 
     } catch (error) {
-      // 5. CAPTURA DE CUALQUIER ERROR (conversión o verificación)
       console.error('Error durante el proceso de lote:', error);
       alert('Error en la creación o procesamiento de la imagen del lote.');
       this.isLoading = false;
-      // Retornar en el catch asegura que el proceso se detiene.
     }
   }
 }

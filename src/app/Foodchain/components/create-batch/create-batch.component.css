@@ -36,10 +36,6 @@
   margin-top: var(--space-8);
 }
 
-#batch-card > *:first-child {
-  margin-top: 0;
-}
-
 #batch-card form > * {
   margin-top: var(--space-6);
 }
@@ -130,9 +126,10 @@
   transition: color var(--transition-fast);
 }
 
-/* === INPUTS === */
+/* === INPUTS & SELECTS (Actualización clave aquí) === */
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group .select-input { /* 💡 Agregado: .select-input */
   width: 100%;
   padding: var(--space-4) var(--space-5);
   border: 2px solid var(--border-color);
@@ -152,7 +149,8 @@
 }
 
 .form-group input:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.form-group .select-input:focus { /* 💡 Agregado: .select-input */
   border-color: var(--border-focus);
   background-color: var(--bg-primary);
   box-shadow: 0 0 0 4px rgba(0, 168, 107, 0.1);
@@ -160,19 +158,55 @@
 }
 
 .form-group input:hover:not(:focus),
-.form-group textarea:hover:not(:focus) {
+.form-group textarea:hover:not(:focus),
+.form-group .select-input:hover:not(:focus):not(:disabled) { /* 💡 Agregado: .select-input */
   border-color: var(--text-disabled);
 }
 
 [data-theme="dark"] .form-group input,
-[data-theme="dark"] .form-group textarea {
+[data-theme="dark"] .form-group textarea,
+[data-theme="dark"] .form-group .select-input { /* 💡 Agregado: .select-input */
   background-color: var(--bg-secondary);
 }
 
 [data-theme="dark"] .form-group input:focus,
-[data-theme="dark"] .form-group textarea:focus {
+[data-theme="dark"] .form-group textarea:focus,
+[data-theme="dark"] .form-group .select-input:focus { /* 💡 Agregado: .select-input */
   background-color: var(--bg-tertiary);
 }
+
+/* === SELECT SPECIFIC STYLES === */
+/* Estilizado para imitar el input, añadiendo el manejo de la flecha de dropdown */
+.form-group .select-input {
+  /* Eliminar la apariencia nativa para un control total */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  /* Añadir flecha custom SVG como background-image */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-4) center;
+  background-size: 18px;
+  padding-right: var(--space-12); /* Espacio para la flecha */
+  cursor: pointer;
+}
+
+[data-theme="dark"] .form-group .select-input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4d4d4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+/* Deshabilitar estilo para el select (cuando no se ha elegido producto padre) */
+.form-group .select-input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+[data-theme="dark"] .form-group .select-input:disabled {
+  background-color: var(--bg-primary);
+}
+
 
 /* Textarea specific */
 .form-group textarea {
@@ -182,7 +216,8 @@
 
 /* === VALIDATION ERROR === */
 .form-group input.border-red-500,
-.form-group textarea.border-red-500 {
+.form-group textarea.border-red-500,
+.form-group .select-input.border-red-500 { /* 💡 Agregado: .select-input */
   border-color: var(--error);
   background-color: var(--error-light);
 }
@@ -434,7 +469,8 @@
   }
 
   .form-group input,
-  .form-group textarea {
+  .form-group textarea,
+  .form-group .select-input { /* 💡 Aseguramos responsive para select */
     font-size: 0.9375rem;
     padding: var(--space-3) var(--space-4);
   }

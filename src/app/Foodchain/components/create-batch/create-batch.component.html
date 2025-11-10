@@ -3,7 +3,7 @@
 
     <div id="header-row">
       <h1>Create New Lot</h1>
-      <a routerLink="/dashboard">
+      <a routerLink="/sidenav/dashboard">
         Back to Dashboard
       </a>
     </div>
@@ -27,9 +27,33 @@
       </div>
 
       <div class="form-group">
-        <label for="variety">Variety</label>
-        <input id="variety" type="text" formControlName="variety" placeholder="e.g., Heirloom Tomatoes">
-        <div *ngIf="batchForm.get('variety')?.invalid && batchForm.get('variety')?.touched" class="validation-error"> This field is required.</div>
+        <label for="productTypeControl">Product Type</label>
+        <select
+          id="productTypeControl"
+          formControlName="productTypeControl"
+          (change)="onProductTypeSelected()"
+          class="select-input">
+
+          <option value="" disabled>Select the product type</option>
+          <option *ngFor="let type of productTypes" [value]="type">{{ type }}</option>
+        </select>
+        <div *ngIf="batchForm.get('productTypeControl')?.invalid && batchForm.get('productTypeControl')?.touched" class="validation-error"> Product type is required.</div>
+      </div>
+
+      <div class="form-group">
+        <label for="variety">Specific Variety</label>
+        <select
+          id="variety"
+          formControlName="variety"
+          class="select-input"
+          [disabled]="availableVarieties.length === 0">
+
+          <option value="" disabled>
+            {{ availableVarieties.length === 0 ? 'Select a Product Type first' : 'Select the variety' }}
+          </option>
+          <option *ngFor="let varietyName of availableVarieties" [value]="varietyName">{{ varietyName }}</option>
+        </select>
+        <div *ngIf="batchForm.get('variety')?.invalid && batchForm.get('variety')?.touched" class="validation-error"> Specific variety is required.</div>
       </div>
 
       <div class="form-group">
@@ -67,12 +91,12 @@
       </div>
       <button
         type="submit"
-        [disabled]="batchForm.invalid || !selectedFile"
+        [disabled]="batchForm.invalid || !selectedFile || isLoading"
         class="submit-button">
-        Create Lot
+        {{ isLoading ? 'Processing...' : 'Create Lot' }}
       </button>
 
-      <p *ngIf="batchForm.invalid" class="error-message">
+      <p *ngIf="batchForm.invalid && batchForm.touched" class="error-message">
         Failed to create lot. Please check all required fields.
       </p>
 
