@@ -160,7 +160,11 @@ export class HistoryBatchComponent implements OnInit {
       .pipe(first())
       .subscribe({
         next: (steps: Step[]) => {
-          this.stepsHistory = steps.sort((a, b) => {
+          // 💡 FILTRO APLICADO: Solo mantener los pasos con status 'accepted'
+          const acceptedSteps = steps.filter(step => step.status === 'accepted');
+
+          this.stepsHistory = acceptedSteps.sort((a, b) => {
+            // Ordenar por fecha y hora (pasos aceptados)
             const dateA = `${a.stepDate} ${a.stepTime}`;
             const dateB = `${b.stepDate} ${b.stepTime}`;
             return dateA.localeCompare(dateB);
@@ -169,7 +173,7 @@ export class HistoryBatchComponent implements OnInit {
           this.isLoadingSteps = false;
 
           if (this.stepsHistory.length === 0) {
-            this.errorStepMessage = 'No hay pasos registrados aún para este lote.';
+            this.errorStepMessage = 'No hay pasos aceptados registrados para este lote.';
           }
         },
         error: (error) => {
