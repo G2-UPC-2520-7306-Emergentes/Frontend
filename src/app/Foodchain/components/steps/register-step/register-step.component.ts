@@ -3,34 +3,130 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { first, switchMap, catchError} from 'rxjs/operators'; // 💡 Agregamos switchMap y forkJoin
-import {of, EMPTY, forkJoin} from 'rxjs'; // 💡 Agregamos EMPTY
+import { first, switchMap, catchError} from 'rxjs/operators';
+import {of, EMPTY, forkJoin} from 'rxjs';
 import { GoogleMapsModule } from '@angular/google-maps';
 
 import { Batch } from '../../../model/batch.entity';
-import { User } from '../../../model/user.entity'; // Asegúrate de importar User
+import { User } from '../../../model/user.entity';
 import { StepCreatePayload, StepService } from '../../../services/step.service';
 import { SessionService } from '../../../services/session.service';
 import { BatchService } from '../../../services/batch.service';
 import { Step } from '../../../model/step.entity';
-import { UserService } from '../../../services/user.service'; // 💡 Importamos UserService
+import { UserService } from '../../../services/user.service';
+
+// ===========================================
+// 1. CATÁLOGO DE PASOS DE PROCESO (Step Catalog)
+// ===========================================
+
+interface StepCatalogItem {
+  productType: string;
+  steps: string[];
+}
+
+const STEP_CATALOG: StepCatalogItem[] = [
+  {
+    productType: 'Café',
+    steps: [
+      'Cosecha',
+      'Despulpado',
+      'Fermentación',
+      'Lavado',
+      'Secado',
+      'Trillado',
+      'Tostado',
+      'Empaque',
+      'Envío a Centro de Distribución',
+      'Recepción en Punto de Venta',
+    ],
+  },
+  {
+    productType: 'Papa',
+    steps: [
+      'Cosecha',
+      'Selección y Calibración',
+      'Almacenamiento en cámara fría',
+      'Empaque para distribución',
+      'Envío a Centro de Distribución',
+      'Recepción en Punto de Venta',
+    ],
+  },
+  {
+    productType: 'Cacao',
+    steps: [
+      'Cosecha',
+      'Fermentación en cajas',
+      'Secado al sol',
+      'Almacenamiento',
+      'Venta a Procesador',
+    ],
+  },
+  {
+    productType: 'Mango',
+    steps: [
+      'Cosecha',
+      'Selección y Limpieza',
+      'Tratamiento Post-cosecha (agua caliente)',
+      'Empaque para exportación',
+      'Envío a Puerto/Aeropuerto',
+      'Recepción en Distribuidor',
+      'Recepción en Punto de Venta',
+    ],
+  },
+  {
+    productType: 'Uva',
+    steps: [
+      'Cosecha Manual',
+      'Despalillado y Prensado',
+      'Fermentación Inicial',
+      'Embotellado/Empaque',
+      'Envío a Centro de Distribución',
+      'Recepción en Punto de Venta',
+    ],
+  },
+  {
+    productType: 'Quinua',
+    steps: [
+      'Cosecha',
+      'Trilla',
+      'Desaponificación (Lavado)',
+      'Secado',
+      'Envasado',
+      'Envío a Centro de Distribución',
+      'Recepción en Punto de Venta',
+    ],
+  },
+  {
+    productType: 'Maíz',
+    steps: [
+      'Cosecha',
+      'Secado de Mazorca',
+      'Desgrane',
+      'Almacenamiento',
+      'Empaque',
+      'Envío a Centro de Distribución',
+      'Recepción en Punto de Venta',
+    ],
+  },
+];
+
 
 @Component({
   selector: 'app-register-step',
   standalone: true,
   templateUrl: './register-step.component.html',
   styleUrls: ['./register-step.component.css'],
-  // 💡 Asegúrate de que HttpClientModule esté en un AppModule o similar si usas standalone
-  imports: [ReactiveFormsModule, CommonModule, HttpClientModule, RouterLink, GoogleMapsModule]
+  imports: [ReactiveFormsModule, CommonModule, HttpClientModule, GoogleMapsModule]
 })
 export class RegisterStepComponent implements OnInit {
 
   stepForm!: FormGroup;
   availableLots: Batch[] = [];
-  stepTypes: string[] = ['Productor', 'Procesador', 'Empacador', 'Inspector de Calidad', 'Distribuidor', 'Retailer'];
+  availableStepTypes: string[] = [];
   isLoading: boolean = false;
   errorMessage: string | null = null;
-  currentUser!: User; // 💡 Propiedad para almacenar el usuario actual
+  currentUser!: User;
+  selectedLot: Batch | undefined;
 
   mapOptions: google.maps.MapOptions = {};
   markerOptions: google.maps.MarkerOptions = { draggable: false };
@@ -44,13 +140,18 @@ export class RegisterStepComponent implements OnInit {
     private stepService: StepService,
     private sessionService: SessionService,
     private batchService: BatchService,
-    private userService: UserService // 💡 Inyectamos UserService
+    private userService: UserService
   ) { }
 
   ngOnInit(): void {
     this.initForm();
-    this.loadUserBatches(); // Ahora gestionará la lógica de filtrado compleja
+    this.loadUserBatches();
     this.loadGeolocation();
+
+    // Suscribirse a cambios en lotId para actualizar la lista de pasos
+    this.stepForm.get('lotId')?.valueChanges.subscribe(() => {
+      this.onLotSelected();
+    });
   }
 
   getCurrentDateTime(): { date: string, time: string } {
@@ -71,7 +172,7 @@ export class RegisterStepComponent implements OnInit {
 
     this.stepForm = this.fb.group({
       lotId: ['', Validators.required],
-      stepType: ['', Validators.required],
+      stepType: [{ value: '', disabled: true }, Validators.required],
       stepDate: [{ value: currentDateTime.date, disabled: true }, Validators.required],
       stepTime: [{ value: currentDateTime.time, disabled: true }, Validators.required],
       location: [{ value: 'Cargando ubicación...', disabled: true }, Validators.required],
@@ -81,7 +182,6 @@ export class RegisterStepComponent implements OnInit {
   }
 
   loadGeolocation(): void {
-    // ... (Lógica de geolocalización sin cambios)
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -114,7 +214,7 @@ export class RegisterStepComponent implements OnInit {
   }
 
   /**
-   * 💡 LÓGICA MODIFICADA: Carga lotes basados en companyOption (create vs join).
+   * Carga lotes visibles para el usuario según su rol/empresa.
    */
   loadUserBatches(): void {
     this.isLoading = true;
@@ -127,21 +227,16 @@ export class RegisterStepComponent implements OnInit {
       return;
     }
 
-    // 1. Obtener el usuario actual para saber su rol y compañía
     this.userService.getById(connectedUserId).pipe(
       first(),
-
       catchError((error) => {
         console.error('Error al cargar el usuario:', error);
         this.errorMessage = 'No se pudo cargar la información de su perfil.';
         this.isLoading = false;
         return EMPTY;
       }),
-
-      // 2. Usar switchMap para obtener todos los lotes y todos los usuarios de la base de datos
       switchMap((user: User) => {
         this.currentUser = user;
-
         return forkJoin({
           allBatches: this.batchService.getAllBatches().pipe(
             catchError(() => of([] as Batch[]))
@@ -151,8 +246,6 @@ export class RegisterStepComponent implements OnInit {
           )
         });
       }),
-
-      // 3. Filtrar los lotes basado en la lógica de companyOption
       catchError((error) => {
         console.error('Error al cargar datos:', error);
         this.errorMessage = 'Ocurrió un error al cargar los datos necesarios.';
@@ -164,23 +257,17 @@ export class RegisterStepComponent implements OnInit {
         let lotesVisibles: Batch[] = [];
         const currentUserIdString = String(connectedUserId);
 
-        // --- Lógica de Filtrado de Lotes ---
         if (this.currentUser.companyOption === 'create') {
-          // Caso 'create' (Administrador/Propietario): Solo ve sus lotes
           lotesVisibles = allBatches.filter(
             (batch: Batch) => String(batch.producer_id) === currentUserIdString
           );
         } else if (this.currentUser.companyOption === 'join') {
-          // Caso 'join' (Miembro/Empleado): Ve los lotes del Administrador de su empresa
-
-          // Buscar al administrador (companyOption: 'create') de la misma compañía
           const adminUser = allUsers.find(
             u => u.companyName === this.currentUser.companyName && u.companyOption === 'create'
           );
 
           if (adminUser) {
             const adminIdString = String(adminUser.id);
-            // Filtrar lotes por el ID del administrador
             lotesVisibles = allBatches.filter(
               (batch: Batch) => String(batch.producer_id) === adminIdString
             );
@@ -196,10 +283,53 @@ export class RegisterStepComponent implements OnInit {
           this.errorMessage = 'No tienes lotes activos disponibles para registrar un paso.';
           this.stepForm.get('lotId')?.disable();
         } else {
-          // Si hay lotes, habilitamos el selector
           this.stepForm.get('lotId')?.enable();
         }
       });
+  }
+
+  /**
+   * Se ejecuta al seleccionar un lote y carga los pasos asociados.
+   */
+  onLotSelected(): void {
+    const lotId = this.stepForm.get('lotId')?.value;
+
+    // 1. Encontrar el lote seleccionado
+    this.selectedLot = this.availableLots.find(lot => String(lot.id) === String(lotId));
+
+    // 2. Resetear el campo de paso y su lista
+    this.stepForm.get('stepType')?.setValue('');
+    this.availableStepTypes = [];
+
+    if (this.selectedLot) {
+
+      // 🐛 DEBUG 1: Muestra el valor completo del campo 'variety' del lote
+      console.log('DEBUG 1: Lote seleccionado:', this.selectedLot.lotName);
+      console.log('DEBUG 2: Campo variety del Lote:', this.selectedLot.variety);
+
+      // El formato de variety es: "TipoProducto - VariedadEspecifica" (Ej: "Café - Caturra")
+      const productType = this.selectedLot.variety.split(' - ')[0];
+
+      // 🐛 DEBUG 3: Muestra el tipo de producto extraído para la búsqueda
+      console.log('DEBUG 3: Tipo de Producto extraído:', productType);
+
+      // 3. Buscar los pasos en el catálogo
+      const catalogEntry = STEP_CATALOG.find(item => item.productType === productType);
+
+      // 🐛 DEBUG 4: Muestra si se encontró la entrada en el catálogo
+      console.log('DEBUG 4: Entrada de Catálogo encontrada:', catalogEntry);
+
+      if (catalogEntry) {
+        this.availableStepTypes = catalogEntry.steps;
+        this.stepForm.get('stepType')?.enable(); // Habilitar el select de pasos
+      } else {
+        this.stepForm.get('stepType')?.disable();
+        this.availableStepTypes = [`No hay pasos definidos para el tipo de producto: ${productType}`];
+        console.error(`ERROR: No se encontró una lista de pasos para el tipo: "${productType}"`);
+      }
+    } else {
+      this.stepForm.get('stepType')?.disable();
+    }
   }
 
   get f() { return this.stepForm.controls; }

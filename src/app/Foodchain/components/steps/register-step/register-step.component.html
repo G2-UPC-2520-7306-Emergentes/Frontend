@@ -19,15 +19,17 @@
           id="lotId"
           formControlName="lotId"
           class="form-control"
-          [class.is-invalid]="f['lotId'].invalid"
+          [class.is-invalid]="f['lotId'].invalid && f['lotId'].touched"
+          (change)="onLotSelected()"
+          [disabled]="isLoading || availableLots.length === 0"
         >
           <option value="" disabled>Seleccionar Lote</option>
           <option *ngFor="let lot of availableLots" [value]="lot.id">
-            {{ lot.lotName }} (ID: {{ lot.id }})
+            {{ lot.lotName }} ({{ lot.variety }})
           </option>
         </select>
 
-        <div *ngIf="f['lotId'].invalid" class="text-danger validation-error">
+        <div *ngIf="f['lotId'].invalid && f['lotId'].touched" class="text-danger validation-error">
           El Lote es requerido.
         </div>
       </div>
@@ -38,12 +40,15 @@
           id="stepType"
           formControlName="stepType"
           class="form-control"
-          [class.is-invalid]="f['stepType'].invalid"
+          [class.is-invalid]="f['stepType'].invalid && f['stepType'].touched"
+          [disabled]="f['stepType'].disabled || availableStepTypes.length === 0"
         >
-          <option value="" disabled>Seleccionar Tipo</option>
-          <option *ngFor="let type of stepTypes" [value]="type">{{ type }}</option>
+          <option value="" disabled>
+            {{ f['lotId'].value ? 'Selecciona un paso para el lote' : 'Selecciona un Lote primero' }}
+          </option>
+          <option *ngFor="let step of availableStepTypes" [value]="step">{{ step }}</option>
         </select>
-        <div *ngIf="f['stepType'].invalid" class="text-danger validation-error">
+        <div *ngIf="f['stepType'].invalid && f['stepType'].touched" class="text-danger validation-error">
           El Tipo de paso es requerido.
         </div>
       </div>
@@ -59,9 +64,9 @@
           id="stepDate"
           formControlName="stepDate"
           class="form-control"
-          [class.is-invalid]="f['stepDate'].invalid"
+          [class.is-invalid]="f['stepDate'].invalid && f['stepDate'].touched"
         >
-        <div *ngIf="f['stepDate'].invalid" class="text-danger validation-error">
+        <div *ngIf="f['stepDate'].invalid && f['stepDate'].touched" class="text-danger validation-error">
           La Fecha es requerida.
         </div>
       </div>
@@ -73,9 +78,9 @@
           id="stepTime"
           formControlName="stepTime"
           class="form-control"
-          [class.is-invalid]="f['stepTime'].invalid"
+          [class.is-invalid]="f['stepTime'].invalid && f['stepTime'].touched"
         >
-        <div *ngIf="f['stepTime'].invalid" class="text-danger validation-error">
+        <div *ngIf="f['stepTime'].invalid && f['stepTime'].touched" class="text-danger validation-error">
           La Hora es requerida.
         </div>
       </div>
@@ -89,11 +94,11 @@
         formControlName="location"
         class="form-control"
         placeholder="Ubicación capturada automáticamente (lat, lon)"
-        [class.is-invalid]="f['location'].invalid"
+        [class.is-invalid]="f['location'].invalid && f['location'].touched"
         readonly
       >
       <small class="text-muted">Ubicación capturada automáticamente. No editable.</small>
-      <div *ngIf="f['location'].invalid" class="text-danger validation-error">
+      <div *ngIf="f['location'].invalid && f['location'].touched" class="text-danger validation-error">
         La Ubicación es requerida.
       </div>
     </div>
