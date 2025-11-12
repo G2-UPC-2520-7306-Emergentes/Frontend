@@ -7,16 +7,13 @@ import {BatchService} from '../../services/batch.service';
 import {StepService} from '../../services/step.service';
 import {SessionService} from '../../services/session.service';
 import {Batch} from '../../model/batch.entity';
-import {NgClass, NgForOf, NgIf, UpperCasePipe} from '@angular/common';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-delete-batch',
+  standalone: true,
   templateUrl: './delete-batch.component.html',
-  imports: [
-    UpperCasePipe,
-    NgClass,
-    NgIf,
-    NgForOf
+  imports: [CommonModule,
   ],
   styleUrls: ['./delete-batch.component.css']
 })
