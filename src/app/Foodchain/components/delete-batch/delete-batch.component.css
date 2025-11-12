@@ -1,43 +1,249 @@
-.delete-batch-container {
-  padding: 20px;
+/* ===================================
+   DELETE BATCH - MODERN DESIGN
+   =================================== */
+
+/* --- Variables de ejemplo (Ajustar según tu proyecto global) --- */
+/*
+:root {
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-16: 64px;
+  --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px; --radius-xl: 16px; --radius-full: 9999px;
+  --bg-primary: #ffffff; --bg-secondary: #f7f9fc; --bg-tertiary: #e9ecf1; --bg-elevated: #ffffff;
+  --text-primary: #1e293b; --text-secondary: #64748b; --text-tertiary: #94a3b8;
+  --primary-500: #00a86b; --primary-700: #008756;
+  --success-light: #ecfdf5; --success-dark: #059669;
+  --warning-light: #fffbeb; --warning-dark: #d97706;
+  --error: #ef4444; --error-light: #fee2e2; --error-dark: #b91c1c;
+  --border-color: #e2e8f0; --border-light: #f1f5f9;
+  --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+  --transition-fast: 0.15s; --transition-base: 0.3s; --transition-slow: 0.5s;
 }
+*/
+/* --- Fin de Variables de ejemplo --- */
+
+
+.delete-batch-container {
+  padding: var(--space-8);
+  background-color: var(--bg-secondary);
+  min-height: 100vh;
+}
+
+/* === HEADER (Título y Mensajes) === */
+.delete-batch-container h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-6);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.delete-batch-container h2::before {
+  content: '';
+  width: 4px;
+  height: 28px;
+  background: linear-gradient(180deg, var(--error), var(--error-dark)); /* Temática de eliminación (rojo/naranja) */
+  border-radius: var(--radius-full);
+}
+
+.loading-message,
+.info-message {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  padding: var(--space-6);
+  text-align: center;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-lg);
+  margin-top: var(--space-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.error-message {
+  color: var(--error);
+  font-size: 0.875rem;
+  padding: var(--space-3) var(--space-4);
+  background: var(--error-light);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--error);
+  margin-bottom: var(--space-6);
+}
+
+/* === TABLE === */
+.batch-list {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
 }
-th, td {
-  padding: 10px;
-  text-align: left;
-  border-bottom: 1px solid #ccc;
+
+thead {
+  background: var(--bg-tertiary);
 }
+
 th {
-  background-color: #f2f2f2;
+  padding: var(--space-5) var(--space-6);
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  border-bottom: 2px solid var(--border-color);
 }
-.action-buttons button {
-  padding: 8px 12px;
-  margin-right: 8px;
+
+tbody tr {
+  transition: all var(--transition-fast);
+  border-bottom: 1px solid var(--border-light);
+}
+
+tbody tr:hover {
+  background: linear-gradient(90deg, transparent, var(--bg-tertiary), transparent);
+  transform: scale(1.005);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+tbody tr:last-child {
+  border-bottom: none;
+}
+
+td {
+  padding: var(--space-5) var(--space-6);
+  font-size: 0.875rem;
+  color: var(--text-primary);
+}
+
+/* === STATUS BADGES (Adaptado al contexto) === */
+.status-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  text-transform: capitalize;
+  letter-spacing: 0.025em;
+  gap: var(--space-1);
+}
+
+.status-tag::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.status-active { /* Lote Activo (Verde) */
+  background: var(--success-light);
+  color: var(--success-dark);
+}
+
+.status-active::before {
+  background: var(--success-dark);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.status-cancelled { /* Lote Cancelado (Naranja/Amarillo) */
+  background: var(--warning-light);
+  color: var(--warning-dark);
+}
+
+.status-cancelled::before {
+  background: var(--warning-dark);
+  animation: none;
+}
+
+/* === ACTION BUTTONS (Botones en la última columna) === */
+.action-buttons {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: nowrap;
+}
+
+.btn {
+  padding: var(--space-3) var(--space-5);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  font-size: 0.875rem;
   cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
 }
+
+/* Botón CANCELAR (Temática naranja/advertencia) */
 .btn-cancel {
-  background-color: #ffc107;
-  color: #333;
-}
-.btn-cancel:disabled {
-  background-color: #e9ecef;
-  cursor: not-allowed;
-  color: #6c757d;
-}
-.btn-delete {
-  background-color: #dc3545;
+  background: var(--warning-dark); /* Color más fuerte para botón de acción */
   color: white;
 }
-.status-cancelled {
-  color: #dc3545;
-  font-weight: bold;
+
+.btn-cancel:hover:not(:disabled) {
+  background: #c26905; /* Un poco más oscuro en hover */
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
-.status-active {
-  color: #28a745;
-  font-weight: bold;
+
+.btn-cancel:disabled {
+  background: var(--bg-tertiary);
+  color: var(--text-tertiary);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Botón ELIMINAR (Temática roja/peligro) */
+.btn-delete {
+  background: var(--error);
+  color: white;
+}
+
+.btn-delete:hover {
+  background: var(--error-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .delete-batch-container {
+    padding: var(--space-4);
+  }
+
+  .delete-batch-container h2 {
+    font-size: 1.5rem;
+  }
+
+  /* Hace la tabla deslizable horizontalmente */
+  .batch-list {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 700px; /* Asegura un ancho mínimo para la tabla */
+  }
+
+  th,
+  td {
+    padding: var(--space-3) var(--space-4);
+    font-size: 0.8125rem;
+  }
+
+  .action-buttons {
+    flex-direction: column; /* Apila los botones en móviles */
+    gap: var(--space-2);
+  }
+
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
 }
