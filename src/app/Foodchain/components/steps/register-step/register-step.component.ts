@@ -177,6 +177,7 @@ export class RegisterStepComponent implements OnInit {
       stepTime: [{ value: currentDateTime.time, disabled: true }, Validators.required],
       location: [{ value: 'Cargando ubicación...', disabled: true }, Validators.required],
       observations: [''],
+      // Valor por defecto en la interfaz, será sobrescrito en onSubmit
       status: ['pending'],
     });
   }
@@ -214,7 +215,7 @@ export class RegisterStepComponent implements OnInit {
   }
 
   /**
-   * Carga lotes visibles para el usuario según su rol/empresa.
+   * Carga lotes visibles para el usuario según su rol/empresa y obtiene la información del usuario.
    */
   loadUserBatches(): void {
     this.isLoading = true;
@@ -236,7 +237,7 @@ export class RegisterStepComponent implements OnInit {
         return EMPTY;
       }),
       switchMap((user: User) => {
-        this.currentUser = user;
+        this.currentUser = user; // 🔑 Se guarda el objeto User (con requestedRole) aquí
         return forkJoin({
           allBatches: this.batchService.getAllBatches().pipe(
             catchError(() => of([] as Batch[]))
@@ -303,21 +304,11 @@ export class RegisterStepComponent implements OnInit {
 
     if (this.selectedLot) {
 
-      // 🐛 DEBUG 1: Muestra el valor completo del campo 'variety' del lote
-      console.log('DEBUG 1: Lote seleccionado:', this.selectedLot.lotName);
-      console.log('DEBUG 2: Campo variety del Lote:', this.selectedLot.variety);
-
       // El formato de variety es: "TipoProducto - VariedadEspecifica" (Ej: "Café - Caturra")
       const productType = this.selectedLot.variety.split(' - ')[0];
 
-      // 🐛 DEBUG 3: Muestra el tipo de producto extraído para la búsqueda
-      console.log('DEBUG 3: Tipo de Producto extraído:', productType);
-
       // 3. Buscar los pasos en el catálogo
       const catalogEntry = STEP_CATALOG.find(item => item.productType === productType);
-
-      // 🐛 DEBUG 4: Muestra si se encontró la entrada en el catálogo
-      console.log('DEBUG 4: Entrada de Catálogo encontrada:', catalogEntry);
 
       if (catalogEntry) {
         this.availableStepTypes = catalogEntry.steps;
@@ -351,22 +342,33 @@ export class RegisterStepComponent implements OnInit {
       return;
     }
 
-    const formValues = rawFormValues;
+    // --- 🎯 LÓGICA PARA ASIGNAR EL STATUS BASADO EN requestedRole ---
+    if (!this.currentUser) {
+      alert('Error: No se pudo obtener la información del usuario para determinar el estado del paso.');
+      return;
+    }
+
+    // El status del paso es 'accepted' si el requestedRole del usuario es 'administrator'.
+    // En cualquier otro caso (ej: 'user', o vacío), será 'pending'.
+    const stepStatus = this.currentUser.requestedRole === 'Administrator' ? 'accepted' : 'pending';
+
+    // --- 🎯 FIN DE LA LÓGICA DE STATUS ---
 
     const payload: StepCreatePayload = {
-      ...formValues,
-      stepDate: formValues.stepDate,
-      stepTime: formValues.stepTime,
-      location: formValues.location,
-      lotId: formValues.lotId,
+      ...rawFormValues,
+      stepDate: rawFormValues.stepDate,
+      stepTime: rawFormValues.stepTime,
+      location: rawFormValues.location,
+      lotId: rawFormValues.lotId,
       userId: connectedUserId,
+      status: stepStatus, // 🔑 Sobrescribe el valor del formulario con el valor calculado
       hash: '',
     };
 
     this.stepService.createStep(payload)
       .subscribe((step: Step | null) => {
         if (step) {
-          alert(`Paso registrado exitosamente para el Lote ID: ${step.lotId}`);
+          alert(`Paso registrado exitosamente con Status: ${step.status} para el Lote ID: ${step.lotId}`);
           this.router.navigate(['/sidenav/view-batch']);
         }
       });
