@@ -177,4 +177,18 @@ export class BatchService extends BaseService<Batch> {
     );
   }
 
+  deleteBatch(id: string): Observable<boolean> {
+    // LLAMADA ASUMIDA: super.delete(id) debe existir en BaseService y manejar el DELETE HTTP
+    return this.delete(id)
+      .pipe(
+        map(() => true), // Si la eliminación es exitosa
+        catchError((error: HttpErrorResponse) => {
+          console.error(`Error de API al eliminar el lote ${id}:`, error);
+          alert(`Error al eliminar el lote: ${error.message}`);
+          return of(false); // Retorna false en caso de error
+        })
+      );
+  }
+
+
 }

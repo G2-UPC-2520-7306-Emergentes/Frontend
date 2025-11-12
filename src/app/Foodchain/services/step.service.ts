@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, forkJoin } from 'rxjs'; // Importamos forkJoin
 import { retry, catchError, map, switchMap } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
 import { BaseService } from '../../shared/services/base.service';
-import { Step } from '../model/step.entity';
+import { Step } from '../model/step.entity'; // Asegúrate de que la ruta a Step.entity sea correcta
 
-// ... (StepCreatePayload no cambia) ...
+// --- Interfaces de Carga ---
 export interface StepCreatePayload {
   stepType: string;
   stepDate: string;
@@ -28,12 +28,51 @@ export class StepService extends BaseService<Step> {
   }
 
   // ------------------------------
-  // 🆕 MÉTODO CREADO: Obtener Step por ID (Filtrando con getAll)
+  // 🆕 MÉTODO: Elimina todos los pasos asociados a un Lote
+  // ------------------------------
+  /**
+   * Obtiene todos los pasos de un lote y los elimina uno por uno utilizando BaseService.delete(id).
+   * @param lotId El ID del lote cuyos pasos se deben eliminar.
+   * @returns Un Observable que emite true si todas las eliminaciones fueron exitosas.
+   */
+  deleteAllStepsByLotId(lotId: string): Observable<boolean> {
+    // 1. Obtener todos los pasos del lote
+    return this.getStepsByLotId(lotId).pipe(
+      // 2. Usar switchMap para cambiar al Observable de las eliminaciones
+      switchMap((steps: Step[]) => {
+        if (steps.length === 0) {
+          console.log(`[StepService] No hay pasos para eliminar para el lote ${lotId}.`);
+          return of(true);
+        }
+
+        console.log(`[StepService] Eliminando ${steps.length} pasos para el lote ${lotId}.`);
+
+        // 3. Mapear cada paso a un Observable de eliminación
+        const deleteObservables = steps.map(step => this.delete(step.id).pipe(
+          catchError((error) => {
+            console.error(`Error al eliminar el paso ${step.id}:`, error);
+            return of(false);
+          })
+        ));
+
+        // 4. Usar forkJoin para esperar a que todas las eliminaciones terminen
+        return forkJoin(deleteObservables).pipe(
+          // Verifica que no haya habido fallas (ningún 'false' en el array de resultados)
+          map(results => results.every(result => result !== false)),
+          catchError((error) => {
+            console.error(`Error en el forkJoin de eliminación de pasos para lote ${lotId}:`, error);
+            return of(false);
+          })
+        );
+      })
+    );
+  }
+
+  // ------------------------------
+  // 🆕 MÉTODO: Obtener Step por ID (Filtrando con getAll)
   // ------------------------------
   /**
    * Obtiene un paso por su ID.
-   * 💡 NOTA: Esto es ineficiente si la API soporta GET /steps/:id,
-   * ya que descarga *todos* los pasos para encontrar solo uno.
    * @param id El ID del paso.
    */
   getStepById(id: string): Observable<Step | null> {
@@ -43,11 +82,10 @@ export class StepService extends BaseService<Step> {
 
     return this.getAll().pipe(
       map((allSteps: Step[]) => {
-        // Filtra la lista completa para encontrar el paso con el ID
         const foundStep = allSteps.find(step => step.id === id);
         return foundStep || null;
       }),
-      retry(1), // Intenta una vez extra por si falla la conexión
+      retry(1),
       catchError((error) => {
         console.error(`[StepService] Error al obtener paso ${id} (en getStepById):`, error);
         return of(null);
@@ -59,14 +97,14 @@ export class StepService extends BaseService<Step> {
   // 🛠️ MÉTODO CORREGIDO: Actualizar Status
   // ------------------------------
   /**
-   * Actualiza el estado de un paso asegurando que todos los datos persistan.
+   * Actualiza el estado de un paso, asegurando que todos los datos persistan (uso de PUT en BaseService).
    * @param stepId El ID del paso a actualizar.
    * @param newStatus El nuevo estado ('accepted' o 'cancelled').
    * @returns Un Observable que emite el objeto Step actualizado o null si falla.
    */
   updateStepStatus(stepId: string, newStatus: 'accepted' | 'cancelled'): Observable<Step | null> {
 
-    // 1. Obtener el paso actual usando el nuevo método getStepById
+    // 1. Obtener el paso actual
     return this.getStepById(stepId).pipe(
       // 2. Usar switchMap para cambiar al Observable de la actualización
       switchMap((currentStep: Step | null) => {
@@ -76,7 +114,6 @@ export class StepService extends BaseService<Step> {
         }
 
         // 3. Crear el objeto de actualización completo
-        // Copiamos todos los campos y sobrescribimos solo el status.
         const updatedStep: Step = {
           ...currentStep,
           status: newStatus
@@ -102,7 +139,7 @@ export class StepService extends BaseService<Step> {
 
 
   // ------------------------------
-  // 🔒 RESTO DE MÉTODOS (SIN CAMBIOS)
+  // 🔒 RESTO DE MÉTODOS
   // ------------------------------
 
   /**
@@ -131,7 +168,6 @@ export class StepService extends BaseService<Step> {
 
   /**
    * Obtiene todos los pasos pendientes asociados a un usuario específico.
-   * NOTA: Requiere que BaseService.getAll() traiga el campo 'status'.
    * @param userId El ID del usuario.
    * @returns Un Observable que emite un array de Step con status 'pending'.
    */
@@ -156,7 +192,7 @@ export class StepService extends BaseService<Step> {
   }
 
   /**
-   * Obtiene todos los pasos registrados (útil para administración o depuración).
+   * Obtiene todos los pasos registrados.
    */
   getAllSteps(): Observable<Step[]> {
     return this.getAll()
@@ -171,7 +207,6 @@ export class StepService extends BaseService<Step> {
 
   /**
    * Obtiene todos los pasos y los filtra por un ID de lote específico.
-   * NOTA: Se asume filtrado en cliente ya que BaseService solo tiene getAll().
    * @param lotId El ID del lote a filtrar.
    * @returns Un Observable que emite un array de Step.
    */
@@ -180,7 +215,7 @@ export class StepService extends BaseService<Step> {
     console.log(`[StepService] Solicitando pasos para Lote ID SANEADO: "${cleanedLotId}"`);
 
     if (!cleanedLotId) {
-      console.warn('[StepService] ID de lote inválido o vacío después del saneamiento. Devolviendo array vacío.');
+      console.warn('[StepService] ID de lote inválido o vacío. Devolviendo array vacío.');
       return of([]);
     }
 
@@ -190,12 +225,7 @@ export class StepService extends BaseService<Step> {
           console.log(`[StepService] Total de Pasos recibidos de la API: ${allSteps.length}`);
           const filteredSteps = allSteps.filter(step => {
             const stepLotId = String(step.lotId || '').trim();
-            const isMatch = stepLotId === cleanedLotId;
-
-            console.log(
-              `[StepService]   - Paso ID: ${step.id} | Lote ID del Paso SANEADO: "${stepLotId}" | Coincide con "${cleanedLotId}"?: ${isMatch}`
-            );
-            return isMatch;
+            return stepLotId === cleanedLotId;
           });
 
           console.log(`[StepService] Pasos filtrados y devueltos: ${filteredSteps.length}`);

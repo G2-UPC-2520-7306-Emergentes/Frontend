@@ -1,1 +1,59 @@
-<p>delete-batch works!</p>
+<div class="delete-batch-container">
+  <h2>🗑️ Gestión de Lotes: Cancelar / Eliminar</h2>
+
+  <div *ngIf="isLoading" class="loading-message">
+    Cargando lista de lotes...
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    Error: {{ errorMessage }}
+    <button (click)="loadBatches()">Reintentar Carga</button>
+  </div>
+
+  <div *ngIf="!isLoading && batches.length === 0 && !errorMessage" class="info-message">
+    No tienes lotes activos registrados para gestionar.
+  </div>
+
+  <div *ngIf="batches.length > 0" class="batch-list">
+    <table>
+      <thead>
+      <tr>
+        <th>Lote</th>
+        <th>Variedad</th>
+        <th>Estado Actual</th>
+        <th>Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let batch of batches">
+        <td>
+          <strong>{{ batch.lotName }}</strong>
+          <small>({{ batch.farmName }})</small>
+        </td>
+        <td>{{ batch.variety }}</td>
+        <td>
+            <span [ngClass]="{'status-cancelled': batch.state === 'cancelled', 'status-active': batch.state === 'active'}">
+              {{ (batch.state|| 'ACTIVE') | uppercase }}
+            </span>
+        </td>
+        <td class="action-buttons">
+          <button
+            class="btn btn-cancel"
+            (click)="onCancelBatch(batch)"
+            [disabled]="batch.state === 'cancelled'"
+            title="Cambiar el estado del lote a 'CANCELADO'.">
+            {{ batch.state === 'cancelled' ? 'CANCELADO' : 'Cancelar' }}
+          </button>
+
+          <button
+            class="btn btn-delete"
+            (click)="onDeleteBatch(batch)"
+            title="Eliminar permanentemente el lote y todos sus pasos.">
+            Eliminar
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
