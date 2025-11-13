@@ -1,16 +1,70 @@
+/* ------------------------------------------- */
+/* VARIABLES (para asegurar consistencia)       */
+/* ------------------------------------------- */
+:root {
+  /* Modo Claro - Mapeo a colores existentes y proporcionados */
+  --clr-bg-light: #f7f7f7; /* Fondo general */
+  --clr-card-light: #ffffff; /* Fondo de la tabla/contenedor */
+  --clr-text-dark: #333; /* Texto principal oscuro */
+  --clr-primary-blue: #007bff; /* Color azul original de acento */
+  --clr-accent-green: #28a745; /* Botón Aceptar */
+  --clr-accent-green-hover: #218838;
+  --clr-accent-red: #dc3545; /* Botón Rechazar */
+  --clr-accent-red-hover: #c82333;
+  --clr-line-light: #ddd; /* Líneas de tabla */
+  --clr-alt-row-light: #f9f9f9; /* Fondo de fila alterna */
+  --clr-hover-row-light: #f1f1f1; /* Fondo de fila hover */
+
+  /* Mensajes de Estado (Amarillo/Warning) */
+  --clr-msg-border-light: #ffc107;
+  --clr-msg-bg-light: #fff3cd;
+  --clr-msg-text-light: #856404;
+}
+
+:host-context(body.dark-theme) {
+  /* Modo Oscuro: Usando tonos verdes coherentes de tu plantilla */
+  --clr-bg-dark: #1e3c23;        /* Fondo principal (Verde Oscuro Suave) */
+  --clr-card-dark: #122b15;      /* Fondo del contenedor/tarjeta (Verde Oscuro Fuerte) */
+  --clr-text-light: #f0f0f0;
+  --clr-border-dark: #284e2c;    /* Borde de tabla y línea */
+
+  /* Colores de Acentuación Oscura (Mapeando Blue -> Dark Green) */
+  --clr-primary-accent-dark: #81C784; /* Verde claro para acentos primarios (título, encabezados) */
+  --clr-accent-green-dark: #4CAF50; /* Verde más vivo para el botón Aceptar */
+  --clr-accent-green-dark-hover: #3e8e41;
+  --clr-accent-red-dark: #ff8a80; /* Rojo claro para el botón Rechazar */
+  --clr-accent-red-dark-hover: #e06c60;
+
+  --clr-alt-row-dark: #1a381d; /* Fondo de fila alterna */
+  --clr-hover-row-dark: #17331a; /* Fondo de fila hover (aún más oscuro) */
+
+  /* Mensajes de Estado (Amarillo/Warning) */
+  --clr-msg-border-dark: #645308;
+  --clr-msg-bg-dark: #2a2205;
+  --clr-msg-text-dark: #f1c40f;
+}
+
+/* ------------------------------------------- */
+/* ESTILOS BASE (Modo Claro con Variables)      */
+/* ------------------------------------------- */
+
 /* Contenedor principal para centrar y dar espacio */
 .authorize-steps-container {
   padding: 30px;
   max-width: 1200px;
   margin: 0 auto;
   font-family: Arial, sans-serif;
+  background-color: var(--clr-bg-light);
+  color: var(--clr-text-dark);
+  transition: background-color 0.3s, color 0.3s;
 }
 
 h2 {
-  color: #333;
-  border-bottom: 2px solid #007bff;
+  color: var(--clr-text-dark);
+  border-bottom: 2px solid green;
   padding-bottom: 10px;
   margin-bottom: 25px;
+  transition: color 0.3s, border-color 0.3s;
 }
 
 /* --- Estilos de la Tabla --- */
@@ -19,19 +73,24 @@ h2 {
   width: 100%;
   border-collapse: collapse;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+  background-color: var(--clr-card-light);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .steps-table th,
 .steps-table td {
   padding: 12px 15px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--clr-line-light);
+  color: var(--clr-text-dark);
+  transition: color 0.3s, border-color 0.3s;
 }
 
 /* Encabezados de la tabla */
 .steps-table th {
-  background-color: #007bff;
+  background-color: green;
   color: white;
   font-weight: bold;
   text-transform: uppercase;
@@ -40,16 +99,16 @@ h2 {
 
 /* Filas alternas para mejor legibilidad */
 .steps-table tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: var(--clr-alt-row-light);
 }
 
 .steps-table tbody tr:hover {
-  background-color: #f1f1f1;
+  background-color: var(--clr-hover-row-light);
 }
 
 /* Celdas de acciones */
 .actions-cell {
-  white-space: nowrap; /* Evita que los botones salten de línea */
+  white-space: nowrap;
 }
 
 /* --- Estilos de los Botones --- */
@@ -62,28 +121,25 @@ h2 {
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s;
   font-size: 14px;
 }
 
 /* Botón Aceptar (Accept) - Verde */
 .accept-btn {
-  background-color: #28a745; /* Verde */
+  background-color: green;
   color: white;
 }
 
-.accept-btn:hover {
-  background-color: #218838;
-}
 
 /* Botón Rechazar (Cancel) - Rojo */
 .reject-btn {
-  background-color: #dc3545; /* Rojo */
+  background-color: red;
   color: white;
 }
 
 .reject-btn:hover {
-  background-color: #c82333;
+  background-color: red;
 }
 
 /* --- Mensajes de Estado --- */
@@ -91,11 +147,90 @@ h2 {
 .no-steps-message,
 .loading-message {
   padding: 20px;
-  border: 1px solid #ffc107;
-  background-color: #fff3cd;
-  color: #856404;
+  border: 1px solid var(--clr-msg-border-light);
+  background-color: greenyellow;
+  color: var(--clr-msg-text-light);
   border-radius: 5px;
   text-align: center;
   font-weight: bold;
   margin-top: 20px;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+
+/* ------------------------------------------- */
+/* === ADAPTACIÓN AL MODO OSCURO (DARK MODE) === */
+/* ------------------------------------------- */
+
+:host-context(body.dark-theme) .authorize-steps-container {
+  background-color: var(--clr-bg-dark);
+  color: var(--clr-text-light);
+}
+
+:host-context(body.dark-theme) h2 {
+  color: var(--clr-text-light);
+  /* Mapeamos el borde azul al verde de acento oscuro para el modo oscuro */
+  border-bottom: 2px solid var(--clr-primary-accent-dark);
+}
+
+/* --- Estilos de la Tabla Oscura --- */
+
+:host-context(body.dark-theme) .steps-table {
+  background-color: var(--clr-card-dark);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+:host-context(body.dark-theme) .steps-table th,
+:host-context(body.dark-theme) .steps-table td {
+  border-bottom: 1px solid var(--clr-border-dark);
+  color: var(--clr-text-light);
+}
+
+/* Encabezados de la tabla Oscura */
+:host-context(body.dark-theme) .steps-table th {
+  /* Usamos el verde de acento primario para el encabezado de la tabla */
+  background-color: var(--clr-primary-accent-dark);
+  color: var(--clr-card-dark); /* Texto oscuro en fondo verde claro para contraste */
+}
+
+/* Filas alternas Oscuras */
+:host-context(body.dark-theme) .steps-table tbody tr:nth-child(even) {
+  background-color: var(--clr-alt-row-dark);
+}
+
+/* Filas hover Oscuras */
+:host-context(body.dark-theme) .steps-table tbody tr:hover {
+  background-color: var(--clr-hover-row-dark);
+}
+
+/* --- Estilos de los Botones Oscuros --- */
+
+/* Botón Aceptar (Accept) - Verde Oscuro */
+:host-context(body.dark-theme) .accept-btn {
+  background-color: var(--clr-accent-green-dark);
+  color: var(--clr-text-dark); /* Texto oscuro en botón claro para contraste */
+}
+
+:host-context(body.dark-theme) .accept-btn:hover {
+  background-color: var(--clr-accent-green-dark-hover);
+}
+
+/* Botón Rechazar (Cancel) - Rojo Oscuro */
+:host-context(body.dark-theme) .reject-btn {
+  background-color: var(--clr-accent-red-dark);
+  color: var(--clr-text-dark); /* Texto oscuro en botón claro para contraste */
+}
+
+:host-context(body.dark-theme) .reject-btn:hover {
+  background-color: var(--clr-accent-red-dark-hover);
+}
+
+
+/* --- Mensajes de Estado Oscuros --- */
+
+:host-context(body.dark-theme) .no-steps-message,
+:host-context(body.dark-theme) .loading-message {
+  border: 1px solid var(--clr-msg-border-dark);
+  background-color: var(--clr-msg-bg-dark);
+  color: var(--clr-msg-text-dark);
 }
