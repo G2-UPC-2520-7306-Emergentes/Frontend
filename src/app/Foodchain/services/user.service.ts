@@ -107,7 +107,51 @@ export class UserService extends BaseService<User> {
     );
   }
 
+  /**
+   * 🔍 Busca un usuario por su correo electrónico.
+   * Método REAL, asumiendo que tu API (o JSON Server) soporta filtrado en la URL:
+   * GET /users?email=usuario@dominio.com
+   * @param email El correo electrónico a buscar.
+   * @returns Un Observable que emite el objeto User o null si no se encuentra.
+   */
+  getUserByEmail(email: string): Observable<User | null> {
+    // Usamos el HttpClient inyectado en BaseService, pero construyendo la URL de filtro.
+    return this.http.get<User[]>(`${this.resourcePath()}?email=${email}`, this.httpOptions)
+      .pipe(
+        // Mapea el array de resultados a un solo usuario o null
+        map(users => users.length > 0 ? users[0] : null),
+        retry(2),
+        catchError((error: HttpErrorResponse) => {
+          console.error('Error de API al buscar usuario por email:', error);
+          // Propagamos el error después de manejarlo o devolvemos un valor seguro
+          return of(null);
+        })
+      );
+  }
 
+  /**
+   * 🔑 Actualiza la contraseña del usuario utilizando el método PUT del BaseService.
+   * @param userId El ID del usuario.
+   * @param newPassword La nueva contraseña.
+   * @returns Un Observable que emite el objeto User actualizado o null si falla.
+   */
+  updatePassword(userId: string, newPassword: string): Observable<User | null> {
+    // Solo enviamos el campo a actualizar (la contraseña)
+    const updatedFields: Partial<User> = { password: newPassword };
+
+    // Usamos el método update heredado que hace la llamada PUT: /users/{userId}
+    return this.update(userId, updatedFields).pipe(
+      map(user => {
+        console.log('Contraseña actualizada con éxito', user);
+        return user;
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error de API durante la actualización de contraseña:', error);
+        // Devolvemos null en caso de error
+        return of(null);
+      })
+    );
+  }
 
 
 

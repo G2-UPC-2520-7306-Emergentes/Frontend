@@ -1,75 +1,85 @@
 <div class="recover-container">
 
   <div *ngIf="currentStep === 1" class="step-content">
+    <h1 class="title">Verificación de Cuenta (1/3)</h1>
+    <p class="subtitle">Ingresa tu email para confirmar tu cuenta.</p>
 
-    <h1 class="title">Forgot your password?</h1>
-    <p class="subtitle">Enter your email and we'll send you a secure link to reset it.</p>
-
-    <form #emailForm (submit)="onSendLink($event, emailForm)" class="form-card">
+    <form #emailForm (submit)="onVerifyEmail($event, emailForm)" class="form-card">
       <div class="form-group">
         <label for="email">Email</label>
         <div class="input-icon-wrapper">
           <input
             id="email"
             type="email"
-            placeholder="Enter your registered email"
+            placeholder="Ingresa tu correo registrado"
             name="email"
             required
-            class="input-field">
+            class="input-field"
+            [value]="userEmail">
           <i class="icon">✉️</i>
         </div>
       </div>
-
-      <button type="submit" class="reset-button">
-        Send reset link
-      </button>
-
+      <button type="submit" class="reset-button">Verificar Correo</button>
       <div *ngIf="stepError" class="validation-error">{{ stepError }}</div>
-
-      <p class="info-text">You will receive an email with a secure link to create a new password.</p>
-
-      <a routerLink="/login" class="resend-link">Didn't get the email? Resend</a>
+      <a routerLink="/login" class="resend-link">Volver al login</a>
     </form>
   </div>
 
-
   <div *ngIf="currentStep === 2" class="step-content">
+    <h1 class="title">Validación de Identidad (2/3)</h1>
+    <p class="subtitle">Confirma tu identidad ingresando tu contraseña anterior.</p>
 
-    <h1 class="title">Set a new password</h1>
-    <p class="subtitle">Create a strong password to secure your account.</p>
+    <form #oldPasswordForm (submit)="onValidatePassword($event, oldPasswordForm)" class="form-card">
+      <div class="form-group">
+        <label for="oldPassword">Contraseña Anterior</label>
+        <input
+          id="oldPassword"
+          type="password"
+          placeholder="Ingresa tu contraseña actual"
+          name="oldPassword"
+          required
+          class="input-field">
+      </div>
+      <button type="submit" class="reset-button">Validar Contraseña</button>
+      <div *ngIf="stepError" class="validation-error">{{ stepError }}</div>
+      <a (click)="currentStep = 1" class="resend-link" style="cursor: pointer;">Cambiar correo</a>
+    </form>
+  </div>
+
+  <div *ngIf="currentStep === 3" class="step-content">
+    <h1 class="title">Establecer Nueva Contraseña (3/3)</h1>
+    <p class="subtitle">Crea una contraseña fuerte para asegurar tu cuenta.</p>
 
     <form #passwordForm (submit)="onSetNewPassword($event,passwordForm)" class="form-card">
       <div class="form-group">
-        <label for="newPassword">New Password</label>
+        <label for="newPassword">Nueva Contraseña</label>
         <input
           id="newPassword"
           type="password"
-          placeholder="Enter new password"
+          placeholder="Ingresa nueva contraseña"
           name="newPassword"
           required
           minlength="8"
           class="input-field">
       </div>
-
       <div class="form-group">
-        <label for="confirmPassword">Confirm Password</label>
+        <label for="confirmPassword">Confirmar Contraseña</label>
         <input
           id="confirmPassword"
           type="password"
-          placeholder="Re-enter new password"
+          placeholder="Reingresa nueva contraseña"
           name="confirmPassword"
           required
           class="input-field">
       </div>
-
-      <p class="security-note">Use at least 8 characters, including letters and numbers, for better security.</p>
+      <p class="security-note">Usa al menos 8 caracteres, incluyendo letras y números, para mejor seguridad.</p>
 
       <button type="submit" class="update-button" [disabled]="passwordUpdated">
-        Update Password
+        Actualizar Contraseña
       </button>
 
       <div *ngIf="passwordUpdated" class="success-message">
-        Your password has been reset successfully. You can now log in.
+        ¡Contraseña actualizada con éxito! Redirigiendo al login...
       </div>
       <div *ngIf="stepError" class="validation-error">{{ stepError }}</div>
     </form>
