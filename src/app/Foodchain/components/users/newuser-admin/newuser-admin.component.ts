@@ -191,10 +191,7 @@ export class NewUserAdminComponent implements OnInit {
           empresaControl?.disable();
           if (user) {
             alert(`Usuario ${user.firstName} ${user.lastName} (ID: ${user.id}) creado con éxito.`);
-            this.userForm.reset();
-            // Restablecer el valor de la empresa y el rol
-            this.userForm.get('rol')?.setValue(this.roles[0].value);
-            this.userForm.get('empresa')?.setValue(this.adminCompanyName);
+            this.router.navigate(['/sidenav/dashboard']);
           }
         },
         error: (error) => {
