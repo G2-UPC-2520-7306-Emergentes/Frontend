@@ -30,7 +30,7 @@ export class Batch {
 
     this.harvestDate = batch.harvestDate || '';
     this.createdDate = batch.createdDate || new Date().toISOString();
-    this.state = batch.state || 'Draft';
+    this.state = batch.state || 'Activo';
     this.imageUrl = batch.imageUrl || '';
     this.producer_id = batch.producer_id || '';
   }

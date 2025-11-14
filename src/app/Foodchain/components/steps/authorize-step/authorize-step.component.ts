@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
- // Ajusta la ruta
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import {StepService} from '../../../services/step.service';
@@ -9,7 +8,7 @@ import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-authorize-step',
-  standalone: true, // Asumiendo que es standalone
+  standalone: true,
   imports: [
     CommonModule,  ],
   templateUrl: './authorize-step.component.html',
@@ -20,7 +19,7 @@ export class AuthorizeStepComponent implements OnInit {
   /** Lista de pasos pendientes a autorizar. */
   pendingSteps$: Observable<Step[]> | undefined;
 
-  /** ID del usuario logueado. */
+  /** ID del usuario logueado. (Se mantiene pero solo se usa si se requiere en el futuro, o para el guardado) */
   private loggedUserId: string | null;
 
   constructor(
@@ -35,15 +34,16 @@ export class AuthorizeStepComponent implements OnInit {
   }
 
   /**
-   * Carga los pasos pendientes asociados al usuario logueado.
+   * Carga *todos* los pasos pendientes, sin filtrar por el ID del usuario.
+   * 💡 Se asume que el servicio tiene un método para obtener todos los 'pending'.
    */
   loadPendingSteps(): void {
-    if (this.loggedUserId) {
-      this.pendingSteps$ = this.stepService.getPendingStepsByUserId(this.loggedUserId);
-    } else {
-      console.error('No hay un usuario logueado.');
-      // Opcional: Redirigir al login o mostrar un mensaje
-    }
+    // ❌ Se elimina el filtro por loggedUserId.
+    this.pendingSteps$ = this.stepService.getPendingSteps();
+
+    // Opcional: Si el servicio solo tiene 'getPendingStepsByUserId', puedes pasar un ID vacío/nulo
+    // y la lógica de backend debe interpretarlo como 'todos'.
+    // Ejemplo: this.pendingSteps$ = this.stepService.getPendingStepsByUserId('');
   }
 
   /**
@@ -54,7 +54,6 @@ export class AuthorizeStepComponent implements OnInit {
     if (!step.id) return;
 
     this.stepService.updateStepStatus(step.id, 'accepted').pipe(
-      // Después de la actualización exitosa, recargar la lista de pasos
       tap(result => {
         if (result) {
           alert(`Paso ${step.id} aceptado con éxito.`);
@@ -63,11 +62,10 @@ export class AuthorizeStepComponent implements OnInit {
         }
       }),
       switchMap(() => {
-        // Recarga la lista para reflejar el cambio (el paso aceptado desaparecerá)
-        return this.stepService.getPendingStepsByUserId(this.loggedUserId!);
+        // Recarga *todos* los pasos pendientes (sin filtro de usuario)
+        return this.stepService.getPendingSteps(); // 💡 Llamada al nuevo método
       })
     ).subscribe(updatedSteps => {
-      // Reemplaza el Observable para actualizar la vista
       this.pendingSteps$ = new Observable<Step[]>(observer => observer.next(updatedSteps));
     });
   }
@@ -80,7 +78,6 @@ export class AuthorizeStepComponent implements OnInit {
     if (!step.id) return;
 
     this.stepService.updateStepStatus(step.id, 'cancelled').pipe(
-      // Después de la actualización exitosa, recargar la lista de pasos
       tap(result => {
         if (result) {
           alert(`Paso ${step.id} rechazado (cancelled) con éxito.`);
@@ -89,11 +86,10 @@ export class AuthorizeStepComponent implements OnInit {
         }
       }),
       switchMap(() => {
-        // Recarga la lista para reflejar el cambio (el paso rechazado desaparecerá)
-        return this.stepService.getPendingStepsByUserId(this.loggedUserId!);
+        // Recarga *todos* los pasos pendientes (sin filtro de usuario)
+        return this.stepService.getPendingSteps(); // 💡 Llamada al nuevo método
       })
     ).subscribe(updatedSteps => {
-      // Reemplaza el Observable para actualizar la vista
       this.pendingSteps$ = new Observable<Step[]>(observer => observer.next(updatedSteps));
     });
   }

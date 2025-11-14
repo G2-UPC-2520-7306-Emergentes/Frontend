@@ -136,7 +136,21 @@ export class StepService extends BaseService<Step> {
       })
     );
   }
+  getPendingSteps(): Observable<Step[]> {
 
+    // Utilizamos el método getAll() existente que trae todos los pasos.
+    return this.getAll().pipe(
+      map((allSteps: Step[]) => {
+        // Filtramos localmente para devolver solo aquellos con status 'pending'.
+        return allSteps.filter(step => step.status === 'pending');
+      }),
+      retry(2), // Reintentar la llamada en caso de error temporal.
+      catchError((error) => {
+        console.error('[StepService] ERROR al obtener TODOS los pasos pendientes:', error);
+        return of([]); // Devuelve un array vacío en caso de error.
+      })
+    );
+  }
 
   // ------------------------------
   // 🔒 RESTO DE MÉTODOS
