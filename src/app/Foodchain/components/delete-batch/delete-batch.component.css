@@ -1,31 +1,78 @@
-/* ===================================
-   DELETE BATCH - MODERN DESIGN
-   =================================== */
-
-/* --- Variables de ejemplo (Ajustar según tu proyecto global) --- */
-/*
+/* ------------------------------------------- */
+/* 1. VARIABLES - FUNDAMENTALES & TEMAS (REDUNDANCIA SEGURA) */
+/* ------------------------------------------- */
+/* Nota: Se recomienda que estas variables estén en un archivo global,
+   pero se redefinen aquí para asegurar que el componente funcione. */
 :root {
-  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
-  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-16: 64px;
-  --radius-sm: 4px; --radius-md: 8px; --radius-lg: 12px; --radius-xl: 16px; --radius-full: 9999px;
-  --bg-primary: #ffffff; --bg-secondary: #f7f9fc; --bg-tertiary: #e9ecf1; --bg-elevated: #ffffff;
-  --text-primary: #1e293b; --text-secondary: #64748b; --text-tertiary: #94a3b8;
-  --primary-500: #00a86b; --primary-700: #008756;
-  --success-light: #ecfdf5; --success-dark: #059669;
-  --warning-light: #fffbeb; --warning-dark: #d97706;
-  --error: #ef4444; --error-light: #fee2e2; --error-dark: #b91c1c;
-  --border-color: #e2e8f0; --border-light: #f1f5f9;
-  --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
-  --transition-fast: 0.15s; --transition-base: 0.3s; --transition-slow: 0.5s;
+  /* Espaciado */
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem;
+
+  /* Diseño */
+  --radius-md: 0.5rem; --radius-lg: 0.75rem; --radius-xl: 1rem; --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --transition-fast: 150ms;
+
+  /* Paleta de FoodChain (Claro) */
+  --bg-primary: #f4f6f8;      /* Fondo de la página */
+  --bg-secondary: #f7f9fc;    /* Alternativa de fondo (usada aquí) */
+  --bg-elevated: #ffffff;    /* Fondo de la tarjeta/tabla */
+  --bg-tertiary: #e8ecf1;    /* Fondo de encabezados y hover */
+
+  --text-primary: #1a4314;    /* Verde oscuro de FoodChain para texto principal */
+  --text-secondary: #555555;  /* Texto atenuado */
+  --text-tertiary: #999999;  /* Texto más claro */
+
+  --primary-500: #1a4314;     /* Color principal (Verde FoodChain) */
+  --success-light: #e6f7e4;   /* Verde muy claro (Fondo de badge activo) */
+  --success-dark: #0d280c;    /* Verde oscuro para badge activo */
+
+  --warning: #f59e0b;         /* Naranja para Cancelado/Advertencia */
+  --warning-light: #fffbeb;
+  --warning-dark: #b45309;
+
+  --error: #ef4444;           /* Rojo para Eliminar/Error */
+  --error-light: #fee2e2;
+  --error-dark: #b91c1c;
+
+  --border-color: #e2e8f0;
+  --border-light: #f1f5f9;
 }
-*/
-/* --- Fin de Variables de ejemplo --- */
 
+/* ------------------------------------------- */
+/* 2. ADAPTACIÓN AL MODO OSCURO (Dark Mode) */
+/* ------------------------------------------- */
+:host-context(body.dark-theme) {
+  --bg-secondary: #1e3c23;     /* Fondo de la página (clr-bg-dark) */
+  --bg-elevated: #122b15;      /* Fondo de la tarjeta/tabla (clr-sidebar-dark) */
+  --bg-tertiary: #284e2c;      /* Fondo de encabezados y hover (clr-hover-dark) */
 
+  --text-primary: white;
+  --text-secondary: #a7f3d0;   /* Verde claro para texto atenuado */
+  --text-tertiary: #9ca3af;
+
+  --success-light: #1a4314;    /* Fondo oscuro para badge activo */
+  --success-dark: #a7f3d0;     /* Verde claro para badge activo */
+
+  --warning: #fde68a;          /* Amarillo claro para Advertencia */
+  --warning-light: #4c3f0b;    /* Fondo oscuro para badge advertencia */
+  --warning-dark: #f59e0b;     /* Naranja para texto de badge advertencia */
+
+  --error: #f87171;            /* Rojo claro para botón/fondo */
+  --error-light: #450a0a;      /* Fondo muy oscuro para mensaje de error */
+  --error-dark: #fca5a5;       /* Rojo claro para texto del mensaje de error */
+
+  --border-color: #374151;
+  --border-light: #284e2c;
+}
+
+/* ------------------------------------------- */
+/* 3. ESTILOS BASE Y CONTENEDOR */
+/* ------------------------------------------- */
 .delete-batch-container {
   padding: var(--space-8);
+  /* Usa el fondo secundario, que se adapta al tema */
   background-color: var(--bg-secondary);
   min-height: 100vh;
 }
@@ -41,11 +88,13 @@
   gap: var(--space-3);
 }
 
+/* Barra de color junto al título */
 .delete-batch-container h2::before {
   content: '';
   width: 4px;
   height: 28px;
-  background: linear-gradient(180deg, var(--error), var(--error-dark)); /* Temática de eliminación (rojo/naranja) */
+  /* Usamos el color de error para la temática de "Eliminar" */
+  background: linear-gradient(180deg, var(--error), var(--error-dark));
   border-radius: var(--radius-full);
 }
 
@@ -62,7 +111,7 @@
 }
 
 .error-message {
-  color: var(--error);
+  color: var(--error-dark);
   font-size: 0.875rem;
   padding: var(--space-3) var(--space-4);
   background: var(--error-light);
@@ -107,10 +156,16 @@ tbody tr {
 }
 
 tbody tr:hover {
-  background: linear-gradient(90deg, transparent, var(--bg-tertiary), transparent);
+  /* Fondo de hover más sutil */
+  background: color-mix(in srgb, var(--bg-elevated) 90%, var(--bg-tertiary) 10%);
   transform: scale(1.005);
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
+/* Aseguramos que el hover de Dark Mode sea correcto */
+:host-context(body.dark-theme) tbody tr:hover {
+  background: color-mix(in srgb, var(--bg-elevated) 90%, var(--bg-tertiary) 10%);
+}
+
 
 tbody tr:last-child {
   border-bottom: none;
@@ -122,7 +177,7 @@ td {
   color: var(--text-primary);
 }
 
-/* === STATUS BADGES (Adaptado al contexto) === */
+/* === STATUS BADGES (Adaptado a FoodChain) === */
 .status-tag {
   display: inline-flex;
   align-items: center;
@@ -142,7 +197,8 @@ td {
   border-radius: 50%;
 }
 
-.status-active { /* Lote Activo (Verde) */
+/* Estado Activo (Verde FoodChain) */
+.status-active {
   background: var(--success-light);
   color: var(--success-dark);
 }
@@ -152,17 +208,18 @@ td {
   animation: pulse 2s ease-in-out infinite;
 }
 
-.status-cancelled { /* Lote Cancelado (Naranja/Amarillo) */
+/* Estado Cancelado (Advertencia) */
+.status-cancelled {
   background: var(--warning-light);
   color: var(--warning-dark);
 }
 
 .status-cancelled::before {
-  background: var(--warning-dark);
+  background: var(--warning);
   animation: none;
 }
 
-/* === ACTION BUTTONS (Botones en la última columna) === */
+/* === ACTION BUTTONS === */
 .action-buttons {
   display: flex;
   gap: var(--space-3);
@@ -183,12 +240,12 @@ td {
 
 /* Botón CANCELAR (Temática naranja/advertencia) */
 .btn-cancel {
-  background: var(--warning-dark); /* Color más fuerte para botón de acción */
+  background: var(--warning); /* Usamos el color base del warning */
   color: white;
 }
 
 .btn-cancel:hover:not(:disabled) {
-  background: #c26905; /* Un poco más oscuro en hover */
+  background: var(--warning-dark);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
@@ -212,7 +269,28 @@ td {
   box-shadow: var(--shadow-md);
 }
 
-/* === RESPONSIVE === */
+/* ------------------------------------------- */
+/* 4. KEYFRAMES */
+/* ------------------------------------------- */
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 168, 107, 0.4); /* Verde base para el pulso */
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(0, 168, 107, 0);
+  }
+}
+/* Ajuste de Keyframe para Dark Mode */
+:host-context(body.dark-theme) @keyframes pulse {
+                                 0%, 100% {
+                                   box-shadow: 0 0 0 0 rgba(167, 243, 208, 0.4); /* Verde claro para el pulso */
+                                 }
+                               }
+
+
+/* ------------------------------------------- */
+/* 5. RESPONSIVE */
+/* ------------------------------------------- */
 @media (max-width: 768px) {
   .delete-batch-container {
     padding: var(--space-4);
@@ -222,13 +300,12 @@ td {
     font-size: 1.5rem;
   }
 
-  /* Hace la tabla deslizable horizontalmente */
   .batch-list {
     overflow-x: auto;
   }
 
   table {
-    min-width: 700px; /* Asegura un ancho mínimo para la tabla */
+    min-width: 700px;
   }
 
   th,
@@ -238,7 +315,7 @@ td {
   }
 
   .action-buttons {
-    flex-direction: column; /* Apila los botones en móviles */
+    flex-direction: column;
     gap: var(--space-2);
   }
 
