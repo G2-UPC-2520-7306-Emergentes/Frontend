@@ -179,16 +179,12 @@ google-map {
 }
 
 .register-button {
-  background-color: var(--clr-primary-green);
+  background-color: green;
   color: white;
 }
 
-.register-button:hover {
-  background-color: var(--clr-primary-green-hover);
-}
-
 .cancel-button {
-  background-color: var(--clr-cancel-bg-light);
+  background-color: darkgrey;
   color: var(--clr-text-dark);
 }
 
