@@ -2,6 +2,133 @@
    DETAILS BATCH - MODERN DESIGN
    =================================== */
 
+/* ------------------------------------------- */
+/* 1. VARIABLES - FUNDAMENTALES & TEMAS       */
+/* ------------------------------------------- */
+:root {
+  /* Espaciado */
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem;
+
+  /* Diseño */
+  --radius-md: 0.5rem; --radius-lg: 0.75rem; --radius-xl: 1rem; --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Sombras y Transiciones */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.15), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 12px 30px -6px rgba(0, 0, 0, 0.25);
+  --transition-fast: 150ms;
+  --transition-base: 300ms;
+  --transition-slow: 500ms;
+
+  /* PALETA DE COLORES (FoodChain - Claro) */
+  --bg-page: #f0f2f5;
+  --bg-secondary: #f0f2f5;
+  --bg-tertiary: #e8ecf1;
+  --bg-elevated: #ffffff;
+
+  --text-primary: #1a4314;
+  --text-secondary: #555555;
+  --text-tertiary: #999999;
+
+  --border-color: #d8dee6;
+  --border-light: #eee;
+
+  /* Colores de ACCIÓN y MARCA */
+  --primary-500: #4CAF50;
+  --primary-700: #388E3C;
+  --secondary-500: #1976D2;
+  --secondary-700: #1565C0;
+
+  --success: #38a169;
+  --success-dark: #2f855a;
+  --success-light: #d6f2e3;
+
+  --info: #2196F3;
+  --info-dark: #1e88e5;
+  --info-light: #e3f2fd;
+
+  --error: #E53935;
+  --error-dark: #D32F2F;
+  --error-light: #FFEBEE;
+}
+
+/* ------------------------------------------- */
+/* 2. ADAPTACIÓN AL MODO OSCURO (Dark Mode)   */
+/* ------------------------------------------- */
+:host-context(body.dark-theme) { /* CORREGIDO el selector a :host-context(body.dark-theme) */
+  --bg-secondary: #1e3c23;
+  --bg-tertiary: #1a321d;
+  --bg-elevated: #122b15;
+
+  --text-primary: #ffffff;
+  --text-secondary: #a7f3d0;
+  --text-tertiary: #9ca3af;
+
+  --border-color: #374151;
+  --border-light: #284e2c;
+
+  /* Colores de ACCIÓN y MARCA (Dark) */
+  --primary-500: #66BB6A;
+  --primary-700: #4CAF50;
+  --primary-400: #81C784;
+  --secondary-500: #64B5F6;
+  --secondary-700: #42A5F5;
+
+  --success: #6ee7b7;
+  --success-dark: #34d399;
+  --success-light: rgba(16, 185, 129, 0.2);
+
+  --info: #64B5F6;
+  --info-dark: #93c5fd;
+  --info-light: rgba(59, 130, 246, 0.2);
+
+  --error: #ff8a80;
+  --error-dark: #fca5a5;
+  --error-light: rgba(239, 68, 68, 0.2);
+}
+
+
+/* ===================================
+   ANIMACIONES
+   =================================== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+/* Animación Pulse Light Mode */
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(76, 175, 80, 0); }
+}
+/* Animación Pulse Dark Mode (usamos un selector diferente para Dark Mode) */
+:host-context(body.dark-theme) .status-tag.active::before {
+  animation: pulse-dark 2s ease-in-out infinite;
+}
+@keyframes pulse-dark {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(102, 187, 106, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(102, 187, 106, 0); }
+}
+
+
+/* ===================================
+   DETAILS BATCH - MODERN DESIGN
+   =================================== */
+
 /* === CONTAINER === */
 .details-container {
   padding: var(--space-8);
@@ -167,14 +294,15 @@
   border-left-color: var(--error);
 }
 
-[data-theme="dark"] .loading {
-  background: rgba(59, 130, 246, 0.2);
-  color: #93c5fd;
+/* CORREGIDO el selector para mensajes en Dark Mode */
+:host-context(body.dark-theme) .loading {
+  background: var(--info-light);
+  color: var(--info-dark);
 }
 
-[data-theme="dark"] .error {
-  background: rgba(239, 68, 68, 0.2);
-  color: #fca5a5;
+:host-context(body.dark-theme) .error {
+  background: var(--error-light);
+  color: var(--error-dark);
 }
 
 /* === GRID LAYOUT === */
@@ -234,7 +362,7 @@
   height: 6px;
   border-radius: 50%;
   background: var(--primary-500);
-  box-shadow: 0 0 0 3px rgba(0, 168, 107, 0.2);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-500) 30%, transparent);
 }
 
 .card p {
@@ -292,14 +420,15 @@
   animation: none;
 }
 
-[data-theme="dark"] .status-tag.active {
-  background: rgba(16, 185, 129, 0.2);
-  color: #6ee7b7;
+/* CORREGIDO el selector para tags en Dark Mode */
+:host-context(body.dark-theme) .status-tag.active {
+  background: var(--success-light);
+  color: var(--success);
 }
 
-[data-theme="dark"] .status-tag.closed {
-  background: rgba(59, 130, 246, 0.2);
-  color: #93c5fd;
+:host-context(body.dark-theme) .status-tag.closed {
+  background: var(--info-light);
+  color: var(--info);
 }
 
 /* === QR CARD === */
@@ -312,7 +441,7 @@
   margin: var(--space-6) auto;
   display: inline-block;
   padding: var(--space-4);
-  background: white;
+  background: var(--bg-elevated);
   border: 2px solid var(--border-light);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
@@ -381,8 +510,8 @@
   left: 12px;
   top: 0;
   bottom: 0;
-  width: 2px;
   background: linear-gradient(180deg, var(--primary-500), transparent);
+  width: 2px; /* Moviendo la propiedad width al final para que funcione */
 }
 
 .step-item {
@@ -407,7 +536,7 @@
   border-radius: 50%;
   background: var(--primary-500);
   border: 3px solid var(--bg-elevated);
-  box-shadow: 0 0 0 3px rgba(0, 168, 107, 0.2);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-500) 30%, transparent);
   z-index: 1;
 }
 
@@ -418,7 +547,8 @@
   font-weight: 600;
 }
 
-[data-theme="dark"] .step-item h4 {
+/* CORREGIDO el selector para título de paso en Dark Mode */
+:host-context(body.dark-theme) .step-item h4 {
   color: var(--primary-400);
 }
 
