@@ -2,20 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http'; // 💡 Importamos HttpClient
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { first } from 'rxjs/operators';
 import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Observable, Observer } from 'rxjs'; // 💡 Importamos Observable y Observer
 import {Batch} from '../../model/batch.entity';
 import {BatchService, BatchUpdatePayload} from '../../services/batch.service';
-
-
 
 
 @Component({
   selector: 'app-edit-batch',
   standalone: true,
-  // 💡 Agregamos HttpClientModule
   imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
   templateUrl: './edit-batch.component.html',
   styleUrls: ['./edit-batch.component.css'],
@@ -24,18 +21,13 @@ export class EditBatchComponent implements OnInit {
 
   editForm!: FormGroup;
   isLoading: boolean = true;
-  isSaving: boolean = false; // 💡 Nuevo estado para el guardado
+  isSaving: boolean = false;
   errorMessage: string | null = null;
   batchId!: string;
-  // 💡 CORREGIDO: Permite ser null al inicio para evitar TS2531
   protected currentBatchData: Batch | null = null;
-
-  // 💡 Nuevo: Estado para el archivo seleccionado
   selectedFile: File | null = null;
 
-  // 🔑 CONFIGURACIONES DE CLOUDINARY (Usa tus credenciales)
-  private CLOUDINARY_CLOUD_NAME = 'dwrfcod77';
-  private CLOUDINARY_UPLOAD_PRESET = 'lote_images'; // <-- Asegúrate que este preset es UNSEIGNED
+  // ❌ Eliminadas: CLOUDINARY_CLOUD_NAME y CLOUDINARY_UPLOAD_PRESET
 
 
   constructor(
@@ -43,7 +35,7 @@ export class EditBatchComponent implements OnInit {
     protected router: Router,
     private route: ActivatedRoute,
     private batchService: BatchService,
-    private http: HttpClient // 💡 Inyectamos HttpClient
+    private http: HttpClient // Se mantiene HttpClient, aunque ya no se use para Cloudinary, podría ser necesario en el futuro.
   ) {
     this.editForm = this.fb.group({
       nombreLote: ['', Validators.required],
@@ -97,12 +89,11 @@ export class EditBatchComponent implements OnInit {
   }
 
   /**
-   * 💡 Nuevo: Captura el archivo de imagen seleccionado por el usuario.
+   * Captura el archivo de imagen seleccionado por el usuario.
    */
   onFileSelected(event: any): void {
     if (event.target.files.length > 0) {
       this.selectedFile = event.target.files[0];
-      // 💡 Seguridad extra en la consola:
       console.log('Archivo seleccionado:', this.selectedFile?.name);
     } else {
       this.selectedFile = null;
@@ -110,10 +101,27 @@ export class EditBatchComponent implements OnInit {
     }
   }
 
+  // 💡 NUEVO: Función para convertir el archivo seleccionado a Base64 (hash)
+  private convertFileToBase64(file: File): Observable<string> {
+    return new Observable((observer: Observer<string>) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        observer.next(reader.result as string);
+        observer.complete();
+      };
+
+      reader.onerror = (error) => {
+        observer.error(error);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
   get f() { return this.editForm.controls; }
 
   /**
-   * Maneja el envío del formulario: 1. Sube imagen (si existe), 2. Actualiza el lote.
+   * Maneja el envío del formulario: 1. Convierte imagen a Base64 (si existe), 2. Actualiza el lote.
    */
   async onSubmit(): Promise<void> {
     if (this.editForm.invalid || this.isSaving) {
@@ -121,7 +129,6 @@ export class EditBatchComponent implements OnInit {
       return;
     }
 
-    // Si el lote original no se cargó por alguna razón, no continuar.
     if (!this.currentBatchData) {
       alert('Error interno: Los datos del lote original no están disponibles.');
       return;
@@ -130,27 +137,23 @@ export class EditBatchComponent implements OnInit {
     this.isSaving = true;
     let newImageUrl: string | undefined;
 
-    // --- FASE 1: SUBIDA A CLOUDINARY (Solo si se seleccionó un nuevo archivo) ---
+    // --- FASE 1: CONVERSIÓN A BASE64 (Solo si se seleccionó un nuevo archivo) ---
     if (this.selectedFile) {
       try {
-        const cloudinaryFormData = new FormData();
-        // 💡 Uso seguro de 'selectedFile' y 'selectedFile.name' ya que está dentro del IF
-        cloudinaryFormData.append('file', this.selectedFile, this.selectedFile.name);
-        cloudinaryFormData.append('upload_preset', this.CLOUDINARY_UPLOAD_PRESET);
+        // 1. CONVERSIÓN A BASE64
+        const base64ImageString = await this.convertFileToBase64(this.selectedFile!)
+          .toPromise() as string | undefined; // toPromise() es legacy, pero se mantiene si es necesario.
 
-        const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${this.CLOUDINARY_CLOUD_NAME}/image/upload`;
+        if (!base64ImageString) {
+          throw new Error("La conversión Base64 devolvió un valor nulo.");
+        }
 
-        // Nota: toPromise() está deprecado, pero se mantiene por consistencia
-        const cloudinaryResponse = await this.http
-          .post<any>(cloudinaryUrl, cloudinaryFormData)
-          .toPromise();
-
-        newImageUrl = cloudinaryResponse!.secure_url;
-        console.log('Nueva imagen subida a Cloudinary. URL:', newImageUrl);
+        newImageUrl = base64ImageString;
+        console.log('Nueva imagen convertida a Base64 (Hash):', newImageUrl.substring(0, 50) + '...');
 
       } catch (error) {
-        console.error('Error al subir la imagen a Cloudinary:', error);
-        alert('Error crítico al subir la imagen. La actualización del lote ha sido cancelada.');
+        console.error('Error al convertir la imagen a Base64:', error);
+        alert('Error crítico al procesar la imagen. La actualización del lote ha sido cancelada.');
         this.isSaving = false;
         return;
       }
@@ -168,26 +171,21 @@ export class EditBatchComponent implements OnInit {
 
     // Lógica de URL de Imagen:
     if (newImageUrl) {
-      // Caso 1: Se subió una nueva imagen.
+      // Caso 1: Se convirtió una nueva imagen (Base64).
       editedFields.imageUrl = newImageUrl;
     } else if (this.currentBatchData.imageUrl) {
-      // Caso 2: No se subió una nueva imagen, pero el lote ya tenía una.
+      // Caso 2: No se seleccionó una nueva imagen. Mantenemos el valor existente (Base64 o URL legacy).
       editedFields.imageUrl = this.currentBatchData.imageUrl;
     }
-    // Si no hay newImageUrl ni currentBatchData.imageUrl, la propiedad imageUrl simplemente no se incluye
-    // en editedFields, preservando el comportamiento de la API.
 
 
-    // Fusionar el lote original con los campos editados para preservar metadatos
+    // Fusionar el lote original con los campos editados
     const fullUpdatePayload = {
       ...this.currentBatchData,
       ...editedFields
     };
 
-    // Usar desestructuración para crear un nuevo objeto sin 'id' (soluciona TS2790)
     const { id, ...payloadToSend } = fullUpdatePayload;
-    // Aseguramos que la descripción (que es opcional y no estaba en el FormGroup) se mantenga
-
     const finalPayload = payloadToSend as unknown as BatchUpdatePayload;
 
 
