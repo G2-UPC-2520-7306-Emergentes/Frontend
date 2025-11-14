@@ -37,6 +37,8 @@ export class EditAdminComponent implements OnInit {
   profileForm: FormGroup;
   isLoading: boolean = false;
 
+  public companyOption: string | undefined;
+
   signatureHistory: SignatureHistory[] = [
     { hash: '9c8d...5678', eventsCount: 100, generatedDate: '2023-07-20', status: 'Anterior' },
     { hash: '3e4f...1234', eventsCount: 50, generatedDate: '2022-12-05', status: 'Anterior' },
@@ -71,6 +73,8 @@ export class EditAdminComponent implements OnInit {
 
       this.userService.getById(userId).subscribe({
         next: (user) => {
+
+          this.companyOption = user.companyOption;
 
           const formData: UserProfileForm = {
 

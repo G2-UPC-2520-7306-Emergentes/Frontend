@@ -134,7 +134,7 @@ export class NewUserAdminComponent implements OnInit {
         requestedRole: formValue.rol,
 
         // Campos fijos/predeterminados:
-        password: "admin1",
+        password: "admin1234",
         companyOption: "join",
         taxId: ""
       };

@@ -6,7 +6,7 @@
         <div class="profile-form-area">
           <div class="header-actions">
             <h2>Mi Perfil</h2>
-            <button (click)="addUser()" class="add-user-button">
+            <button (click)="addUser()" class="add-user-button" *ngIf="companyOption === 'create'">
               <i class="fas fa-user-plus"></i> Agregar usuario
             </button>
           </div>
