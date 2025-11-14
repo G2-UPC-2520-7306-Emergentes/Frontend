@@ -136,7 +136,8 @@ export class NewUserAdminComponent implements OnInit {
         // Campos fijos/predeterminados:
         password: "admin1234",
         companyOption: "join",
-        taxId: ""
+        taxId: "",
+        digitalSignature: "",
       };
 
       console.log('--- Cuerpo Enviado a la API (Limpio) ---', newUserBody);

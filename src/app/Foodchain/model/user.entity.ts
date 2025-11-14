@@ -16,6 +16,8 @@ export class User {
   // --- Campos de Rol ---
   requestedRole: string;
 
+  digitalSignature: string;
+
 
 
   /**
@@ -36,5 +38,7 @@ export class User {
     this.companyOption = user.companyOption || 'join'; // Valor por defecto
 
     this.requestedRole = user.requestedRole || '';
+
+    this.digitalSignature = user.digitalSignature || '';
   }
 }

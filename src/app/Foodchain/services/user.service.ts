@@ -31,6 +31,7 @@ export interface CreateUserBody {
   companyOption: 'join' | 'create';
   requestedRole: string;
   phoneNumber: string;
+  digitalSignature: string;
 }
 
 @Injectable({

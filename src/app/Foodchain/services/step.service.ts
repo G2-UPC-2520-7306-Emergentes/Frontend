@@ -15,6 +15,7 @@ export interface StepCreatePayload {
   lotId: string;
   userId: string;
   hash: string;
+  digitalSignature: string;
 }
 
 @Injectable({

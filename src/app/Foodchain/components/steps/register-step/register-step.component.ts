@@ -179,6 +179,8 @@ export class RegisterStepComponent implements OnInit {
       observations: [''],
       // Valor por defecto en la interfaz, será sobrescrito en onSubmit
       status: ['pending'],
+      // 🔑 Agregado el validador Validators.required para la firma digital
+      digitalSignature: ['', Validators.required],
     });
   }
 
@@ -237,7 +239,7 @@ export class RegisterStepComponent implements OnInit {
         return EMPTY;
       }),
       switchMap((user: User) => {
-        this.currentUser = user; // 🔑 Se guarda el objeto User (con requestedRole) aquí
+        this.currentUser = user; // 🔑 Se guarda el objeto User (con requestedRole y digitalSignature) aquí
         return forkJoin({
           allBatches: this.batchService.getAllBatches().pipe(
             catchError(() => of([] as Batch[]))
@@ -342,17 +344,26 @@ export class RegisterStepComponent implements OnInit {
       return;
     }
 
-    // --- 🎯 LÓGICA PARA ASIGNAR EL STATUS BASADO EN requestedRole ---
+    // --- 🎯 LÓGICA DE VALIDACIÓN DE LA FIRMA DIGITAL ---
     if (!this.currentUser) {
-      alert('Error: No se pudo obtener la información del usuario para determinar el estado del paso.');
+      alert('Error: No se pudo obtener la información del usuario para la validación de la firma.');
       return;
     }
 
-    // El status del paso es 'accepted' si el requestedRole del usuario es 'administrator'.
-    // En cualquier otro caso (ej: 'user', o vacío), será 'pending'.
-    const stepStatus = this.currentUser.requestedRole === 'Administrator' ? 'accepted' : 'pending';
+    const enteredSignature = rawFormValues.digitalSignature;
+    const userSignature = this.currentUser.digitalSignature;
 
-    // --- 🎯 FIN DE LA LÓGICA DE STATUS ---
+    if (enteredSignature !== userSignature) {
+      alert('Error de validación: La Firma Digital ingresada no coincide con la registrada en tu perfil.');
+      // Opcional: Marcar solo el campo de firma como error para una mejor UX
+      this.stepForm.get('digitalSignature')?.setErrors({ 'signatureMismatch': true });
+      return;
+    }
+    // --- 🎯 FIN DE LA LÓGICA DE VALIDACIÓN DE LA FIRMA DIGITAL ---
+
+    // --- 🔑 LÓGICA PARA ASIGNAR EL STATUS BASADA EN requestedRole ---
+    const stepStatus = this.currentUser.requestedRole === 'Administrator' ? 'accepted' : 'pending';
+    // --- FIN DE LA LÓGICA DE STATUS ---
 
     const payload: StepCreatePayload = {
       ...rawFormValues,
@@ -361,7 +372,7 @@ export class RegisterStepComponent implements OnInit {
       location: rawFormValues.location,
       lotId: rawFormValues.lotId,
       userId: connectedUserId,
-      status: stepStatus, // 🔑 Sobrescribe el valor del formulario con el valor calculado
+      status: stepStatus, // Sobrescribe el valor del formulario con el valor calculado
       hash: '',
     };
 

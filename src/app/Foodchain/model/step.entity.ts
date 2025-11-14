@@ -18,6 +18,7 @@ export class Step {
   hash: string;
 
   status: string;
+  digitalSignature: string;
 
   constructor(step: {
 
@@ -33,6 +34,7 @@ export class Step {
     id?: string,
     hash?: string,
     status?: string,
+    digitalSignature?: string
   }) {
     // Asignación de valores
     this.id = step.id || '';
@@ -46,5 +48,6 @@ export class Step {
 
     this.status = step.status || 'pending';
     this.hash = step.hash || '';
+    this.digitalSignature = step.digitalSignature || '';
   }
 }

@@ -31,6 +31,7 @@ export class RegisterLoginComponent implements OnInit {
       companyName: ['', Validators.required],
       taxId: [''],
       companyOption: ['create'],
+      digitalSignature: [''],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required],
       phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Requerido y solo números

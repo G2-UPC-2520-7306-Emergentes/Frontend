@@ -76,10 +76,12 @@
 }
 
 /* ------------------------------------------- */
-/* ESTILO DEL BOTÓN AGREGAR USUARIO (¡SOLUCIÓN DE VISIBILIDAD APLICADA!) */
+/* ESTILO DEL BOTÓN AGREGAR USUARIO */
 /* ------------------------------------------- */
 .add-user-button {
-  border: none;
+  border: 1px solid var(--clr-dark-green);
+  background-color: var(--clr-primary-green);
+  color: white;
   padding: 8px 15px;
   border-radius: 4px;
   font-weight: 500;
@@ -88,21 +90,16 @@
   font-size: 0.9em;
   height: fit-content;
 
-  /* === SOLUCIÓN === */
   visibility: visible !important;
   opacity: 1 !important;
-  /* ================ */
 }
 
 .add-user-button:hover {
-  background-color: #276221;
-  color: white;
+  background-color: var(--clr-dark-green);
 }
 
 .add-user-button i {
   margin-right: 5px;
-  background-color: #276221;
-  color: white;
 }
 
 /* ------------------------------------------- */
@@ -158,7 +155,7 @@ input:focus {
 }
 
 .save-signature-button {
-  background-color: #276221;
+  background-color: var(--clr-primary-green);
   color: white;
   border: none;
   flex-grow: 1;
@@ -193,7 +190,7 @@ input:focus {
 }
 
 .signature-image-placeholder {
-  height: 180px;
+  min-height: 100px; /* Reducido para mejor UX */
   background-color: #f5f5f5;
   border: 1px solid #eee;
   border-radius: 8px;
@@ -202,7 +199,51 @@ input:focus {
   align-items: center;
   color: #aaa;
   transition: all 0.3s ease;
+  padding: 15px; /* Añadir padding */
 }
+
+/* 🔑 Estilos para la Firma y Botón de Copia */
+.signature-display-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  color: var(--clr-text-dark);
+  font-size: 1.1em;
+}
+
+.signature-display-text strong {
+  font-weight: 600;
+  word-break: break-all;
+  margin-right: 15px;
+}
+
+.signature-display-text.placeholder {
+  justify-content: center;
+  text-align: center;
+  font-size: 0.9em;
+  font-style: italic;
+  color: #777;
+}
+
+.copy-button {
+  background-color: #e0e0e0;
+  border: 1px solid #ccc;
+  color: var(--clr-text-dark);
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+  font-size: 0.9em;
+  font-weight: 500;
+  white-space: nowrap; /* Evita que el botón se rompa */
+}
+
+.copy-button:hover {
+  background-color: #d3d3d3;
+  color: var(--clr-dark-green);
+}
+/* FIN 🔑 Estilos para la Firma y Botón de Copia */
 
 /* ------------------------------------------- */
 /* COLUMNA DERECHA: INFO Y HISTORIAL */
@@ -271,6 +312,8 @@ input:focus {
   color: var(--clr-text-dark);
   margin-bottom: 3px;
   transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
 }
 
 .details-text {
@@ -286,6 +329,26 @@ input:focus {
   color: var(--clr-primary-green);
   margin-top: 15px;
   transition: color 0.3s ease;
+}
+
+/* Estilos de Status Badge */
+.status-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  margin-left: 8px;
+  border-radius: 4px;
+  font-size: 0.75em;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+}
+
+.status-current {
+  background-color: var(--clr-primary-green); /* Verde principal */
+}
+
+.status-previous {
+  background-color: #6c757d; /* Gris */
 }
 
 /* =========================================== */
@@ -323,7 +386,8 @@ input:focus {
 
 :host-context(body.dark-theme) .definition-item p,
 :host-context(body.dark-theme) .details-text,
-:host-context(body.dark-theme) .signature-note {
+:host-context(body.dark-theme) .signature-note,
+:host-context(body.dark-theme) .signature-display-text.placeholder {
   color: #a0a0a0;
 }
 
@@ -359,6 +423,19 @@ input:focus {
   border: 1px solid var(--clr-border-dark);
 }
 
+/* 🔑 Botón de Copia - Dark Mode */
+:host-context(body.dark-theme) .copy-button {
+  background-color: #38643c;
+  border: 1px solid #4b5563;
+  color: var(--clr-text-light);
+}
+
+:host-context(body.dark-theme) .copy-button:hover {
+  background-color: #284e2c;
+  color: var(--clr-primary-dark-text);
+}
+/* FIN 🔑 Botón de Copia - Dark Mode */
+
 /* 4. Áreas y Bordes */
 :host-context(body.dark-theme) .info-block {
   border-bottom: 1px solid var(--clr-border-dark);
@@ -374,10 +451,9 @@ input:focus {
   color: #777;
 }
 
-
-/* ------------------------------------------- */
+/* =========================================== */
 /* MEDIA QUERIES (Mantener) */
-/* ------------------------------------------- */
+/* =========================================== */
 @media (max-width: 992px) {
   .content-grid {
     grid-template-columns: 1fr;
@@ -391,5 +467,15 @@ input:focus {
 
   .definition-grid {
     grid-template-columns: 1fr;
+  }
+
+  /* Ajuste para que el botón de copia no se superponga en móviles */
+  .signature-display-text {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .signature-display-text strong {
+    margin-right: 0;
   }
 }

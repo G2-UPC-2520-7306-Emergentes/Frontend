@@ -2,10 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import {SessionService} from '../../../services/session.service';
-import {UserService} from '../../../services/user.service';
-import {User} from '../../../model/user.entity';
-
+import { SessionService } from '../../../services/session.service';
+import { UserService } from '../../../services/user.service';
+import { User } from '../../../model/user.entity';
+// 💡 Importamos UUID para generar el hash/clave secreta
+import { v4 as uuidv4 } from 'uuid';
+import { StepService } from '../../../services/step.service';
+import { Step } from '../../../model/step.entity';
+import { forkJoin } from 'rxjs';
 
 
 // Interfaz para mapear los datos que el formulario necesita
@@ -17,12 +21,13 @@ interface UserProfileForm {
   cargo: string;
 }
 
-// Interfaz para el historial de firmas
+// 🔑 Interfaz para el historial de firmas (Hash COMPLETO para comparación)
 interface SignatureHistory {
   hash: string;
   eventsCount: number;
   generatedDate: string;
-  status: 'Anterior' | 'Actual';
+  status: 'Anterior' | 'Actual'; // Tipo de unión literal estricto
+  displayHash: string; // Nuevo campo para el hash truncado para la vista
 }
 
 @Component({
@@ -34,25 +39,23 @@ interface SignatureHistory {
 })
 export class EditAdminComponent implements OnInit {
 
-  profileForm: FormGroup;
+  profileForm!: FormGroup;
   isLoading: boolean = false;
+  currentUserId: string = ''; // Almacena el ID del usuario logueado
+  currentUserSignature: string = ''; // Almacena la firma actual
 
   public companyOption: string | undefined;
 
-  signatureHistory: SignatureHistory[] = [
-    { hash: '9c8d...5678', eventsCount: 100, generatedDate: '2023-07-20', status: 'Anterior' },
-    { hash: '3e4f...1234', eventsCount: 50, generatedDate: '2022-12-05', status: 'Anterior' },
-  ];
+  signatureHistory: SignatureHistory[] = [];
+  previousSignatures: { hash: string, generatedDate: string }[] = [];
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-
     private sessionService: SessionService,
-
-    private userService: UserService
+    private userService: UserService,
+    private stepService: StepService
   ) {
-
     this.profileForm = this.fb.group({
       nombreCompleto: ['', Validators.required],
       correoElectronico: ['', [Validators.required, Validators.email]],
@@ -63,58 +66,128 @@ export class EditAdminComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     const userId = this.sessionService.getUserId();
-
-    if (userId) {
-      this.isLoading = true;
-      console.log(`Usuario logueado ID: ${userId}. Cargando perfil con UserService.getById...`);
-
-
-      this.userService.getById(userId).subscribe({
-        next: (user) => {
-
-          this.companyOption = user.companyOption;
-
-          const formData: UserProfileForm = {
-
-            nombreCompleto: `${user.firstName} ${user.lastName}`,
-            correoElectronico: user.email,
-
-            telefono: user.phoneNumber || '',
-            empresa: user.companyName,
-
-            cargo: user.requestedRole,
-          };
-
-
-          this.profileForm.patchValue(formData);
-          this.isLoading = false;
-
-
-
-
-          console.log('Perfil cargado y formulario rellenado exitosamente.');
-        },
-        error: (err) => {
-          this.isLoading = false;
-          console.error('Fallo al obtener perfil del usuario logueado. ¿ID válido? ¿API accesible?', err);
-          alert('Error al cargar datos del usuario. Por favor, verifica la conexión o inicia sesión de nuevo.');
-
-
-          this.sessionService.clearSession();
-          this.router.navigate(['/login']);
-        }
-      });
-    } else {
-      console.warn('ID de usuario no encontrado en la sesión. Redirigiendo a Login.');
+    if (!userId) {
       this.router.navigate(['/login']);
+      return;
     }
+
+    this.currentUserId = userId;
+    this.isLoading = true;
+
+    forkJoin({
+      user: this.userService.getById(userId),
+      steps: this.stepService.getAllSteps()
+    }).subscribe({
+      next: ({ user, steps }) => {
+        this.companyOption = user.companyOption;
+
+        // 1. Cargar datos del formulario
+        this.currentUserSignature = user.digitalSignature || 'SIN_FIRMA';
+
+        const formData: UserProfileForm = {
+          nombreCompleto: `${user.firstName} ${user.lastName}`,
+          correoElectronico: user.email,
+          telefono: user.phoneNumber || '',
+          empresa: user.companyName,
+          cargo: user.requestedRole,
+        };
+
+        this.profileForm.patchValue(formData);
+
+        // 2. Procesar y construir el historial de firmas
+        this.buildSignatureHistory(user, steps);
+
+        this.isLoading = false;
+        console.log('Perfil cargado. Firma Digital Actual:', this.currentUserSignature);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Fallo al obtener datos iniciales.', err);
+        alert('Error al cargar datos del usuario o los pasos.');
+        this.sessionService.clearSession();
+        this.router.navigate(['/login']);
+      }
+    });
+  }
+
+  /**
+   * 🔑 Construye el historial de firmas del usuario a partir de los pasos registrados.
+   */
+  buildSignatureHistory(user: User, allSteps: Step[]): void {
+    const signatureCounts = new Map<string, number>();
+
+    // 1. Filtrar pasos que corresponden a este usuario y que tienen una firma.
+    const userSteps = allSteps.filter(step =>
+      String(step.userId) === String(user.id) && !!step.digitalSignature // 🔑 Usamos digitalSignature
+    );
+
+    // 2. Contar los pasos por la clave de firma (digitalSignature)
+    userSteps.forEach(step => {
+      // 🔑 Usamos step.digitalSignature para el hash de la firma
+      const hash = step.digitalSignature;
+      signatureCounts.set(hash, (signatureCounts.get(hash) || 0) + 1);
+    });
+
+    // 3. Obtener el conjunto de todos los hashes de firma usados por el usuario
+    const usedHashes = new Set(userSteps.map(step => step.digitalSignature));
+
+    // 4. Asegurarse de incluir la firma actual (incluso si no tiene pasos aún)
+    if (user.digitalSignature && user.digitalSignature !== 'SIN_FIRMA') {
+      usedHashes.add(user.digitalSignature);
+    }
+
+    // 5. Mapear los hashes únicos al historial
+    this.signatureHistory = Array.from(usedHashes)
+      .map(hash => {
+        // Determinar el estado y obtener el conteo
+        const status: 'Anterior' | 'Actual' = (hash === user.digitalSignature) ? 'Actual' : 'Anterior';
+        const eventsCount = signatureCounts.get(hash) || 0;
+
+        // Buscar el paso más reciente que usó este hash
+        const latestStep = userSteps
+          .filter(step => step.digitalSignature === hash)
+          .sort((a, b) => new Date(b.stepDate).getTime() - new Date(a.stepDate).getTime())[0];
+
+        const generatedDate = latestStep ? latestStep.stepDate : new Date().toISOString().split('T')[0];
+
+        return {
+          hash: hash,
+          eventsCount: eventsCount,
+          generatedDate: generatedDate,
+          status: status,
+          displayHash: this.getDisplayHash(hash),
+        } as SignatureHistory;
+      })
+      .sort((a, b) => {
+        // Poner la firma actual primero y luego ordenar por fecha descendente
+        if (a.status === 'Actual') return -1;
+        if (b.status === 'Actual') return 1;
+        return new Date(b.generatedDate).getTime() - new Date(a.generatedDate).getTime();
+      });
+
+    this.previousSignatures = this.signatureHistory
+      .filter(item => item.status === 'Anterior')
+      .map(item => ({ hash: item.hash, generatedDate: item.generatedDate }));
+  }
+
+  /**
+   * Genera el hash truncado para la visualización.
+   */
+  getDisplayHash(hash: string): string {
+    return hash.length > 10 ? `${hash.substring(0, 4)}...${hash.substring(hash.length - 4)}` : hash;
+  }
+
+  /**
+   * Genera un string aleatorio y criptográficamente único (UUID)
+   * para simular la "Firma Digital" o clave hash privada del usuario.
+   */
+  generateDigitalSignatureHash(): string {
+    return uuidv4();
   }
 
   /**
    * Maneja la acción de guardar el perfil y generar una nueva firma.
-   * En el futuro, enviarías el userId y los datos del formulario al servicio para actualizar.
    */
   onSubmitAndGenerateSignature(): void {
     if (this.profileForm.invalid) {
@@ -123,8 +196,7 @@ export class EditAdminComponent implements OnInit {
       return;
     }
 
-    const userId = this.sessionService.getUserId();
-    if (!userId) {
+    if (!this.currentUserId) {
       alert('No se encontró el ID del usuario en la sesión.');
       this.router.navigate(['/login']);
       return;
@@ -132,13 +204,11 @@ export class EditAdminComponent implements OnInit {
 
     this.isLoading = true;
 
-    const [firstName, ...lastNameParts] = this.profileForm.value.nombreCompleto.trim().split(' ');
-    const lastName = lastNameParts.join(' ');
+    // 1. GENERAR LA NUEVA FIRMA DIGITAL (HASH)
+    const newDigitalSignature = this.generateDigitalSignatureHash();
 
-    console.log('Obteniendo usuario completo antes de actualizar...');
-
-
-    this.userService.getById(userId).subscribe({
+    // 2. Obtener datos actuales (para no perder password, taxId, etc.)
+    this.userService.getById(this.currentUserId).subscribe({
       next: (currentUser) => {
         if (!currentUser) {
           this.isLoading = false;
@@ -146,33 +216,41 @@ export class EditAdminComponent implements OnInit {
           return;
         }
 
+        const [firstName, ...lastNameParts] = this.profileForm.value.nombreCompleto.trim().split(' ');
+        const lastName = lastNameParts.join(' ');
 
-        const updatedUser: User = {
-          ...currentUser,
-          firstName,
-          lastName,
+        // 3. Crear el objeto de actualización, ASEGURANDO LA PERSISTENCIA DE TODOS LOS DATOS.
+        const updatedUser: Partial<User> = {
+          ...currentUser, // Mantiene todos los campos existentes.
+
+          // Campos actualizados del formulario (sobrescriben los de currentUser)
+          firstName: firstName,
+          lastName: lastName,
           email: this.profileForm.value.correoElectronico,
           phoneNumber: this.profileForm.value.telefono,
           companyName: this.profileForm.value.empresa,
           requestedRole: this.profileForm.value.cargo,
+
+          // Firma Digital: Sobreescribe la firma antigua.
+          digitalSignature: newDigitalSignature,
         };
 
-        console.log('Enviando actualización completa del usuario:', updatedUser);
+        delete updatedUser.id;
 
-
-        this.userService.updateProfile(userId, updatedUser).subscribe({
+        // 4. Enviar actualización al servidor.
+        this.userService.updateProfile(this.currentUserId, updatedUser).subscribe({
           next: (updated) => {
             this.isLoading = false;
             if (updated) {
-              alert('✅ Perfil actualizado correctamente.');
+              alert('✅ Perfil actualizado y nueva Firma Digital generada con éxito.');
 
+              this.currentUserSignature = updated.digitalSignature || newDigitalSignature;
 
-              this.signatureHistory.unshift({
-                hash: '7f9a...3333',
-                eventsCount: 0,
-                generatedDate: new Date().toISOString().split('T')[0],
-                status: 'Anterior'
+              // Recargamos los pasos y reconstruimos el historial para incluir la nueva firma
+              this.stepService.getAllSteps().subscribe(steps => {
+                this.buildSignatureHistory(updated, steps);
               });
+
             } else {
               alert('No se pudo actualizar el perfil.');
             }
@@ -190,6 +268,23 @@ export class EditAdminComponent implements OnInit {
         alert('Error al cargar los datos actuales del usuario.');
       }
     });
+  }
+
+
+  copyDigitalSignature(): void {
+    if (this.currentUserSignature && this.currentUserSignature !== 'SIN_FIRMA') {
+      // Usa la API del portapapeles
+      navigator.clipboard.writeText(this.currentUserSignature)
+        .then(() => {
+          alert('✅ Firma Digital copiada al portapapeles. ¡Úsala para validar tus pasos!');
+        })
+        .catch(err => {
+          console.error('No se pudo copiar el texto: ', err);
+          alert('Error al copiar la firma digital. Por favor, cópiala manualmente.');
+        });
+    } else {
+      alert('Aún no tienes una firma digital activa para copiar.');
+    }
   }
 
   cancelEdit(): void {

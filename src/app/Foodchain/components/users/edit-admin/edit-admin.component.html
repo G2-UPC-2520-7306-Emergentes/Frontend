@@ -54,7 +54,26 @@
             <div class="current-signature-area">
               <h3>Firma Digital Actual</h3>
               <div class="signature-image-placeholder">
-                <p>Tu firma digital generada aparecerá aquí.</p>
+
+                <p class="signature-display-text" *ngIf="currentUserSignature && currentUserSignature !== 'SIN_FIRMA'">
+                  <span class="hash-value-container">
+                    <strong title="{{ currentUserSignature }}">
+                      {{ getDisplayHash(currentUserSignature) }}
+                    </strong>
+                  </span>
+                  <button
+                    type="button"
+                    (click)="copyDigitalSignature()"
+                    class="copy-button"
+                    title="Copiar Firma Digital Completa"
+                  >
+                    <i class="fas fa-copy"></i> Copiar
+                  </button>
+                </p>
+
+                <p class="signature-display-text placeholder" *ngIf="!currentUserSignature || currentUserSignature === 'SIN_FIRMA'">
+                  Aún no tienes una firma digital activa. Genera una clave con el botón de guardar.
+                </p>
               </div>
             </div>
           </form>
@@ -79,16 +98,31 @@
           </div>
 
           <div class="history-block">
-            <h3>Historial de Firmas</h3>
-            <div *ngFor="let item of signatureHistory" class="history-item">
-              <p class="hash-text">Hash: {{ item.hash }} ({{ item.status }})</p>
-              <p class="details-text">Eventos Firmados: {{ item.eventsCount }} | Generada: {{ item.generatedDate }}</p>
+            <h3>Historial de Firmas (Pasos Registrados)</h3>
+
+            <div *ngIf="signatureHistory.length === 0 && !isLoading" class="history-note">
+              No se encontraron firmas asociadas a pasos registrados por este usuario.
             </div>
+
+            <div *ngIf="isLoading" class="history-note">
+              Cargando historial de firmas...
+            </div>
+
+            <div *ngFor="let item of signatureHistory" class="history-item">
+              <p class="hash-text">
+                Hash:
+                <strong [title]="item.hash">{{ item.displayHash }}</strong>
+                <span class="status-badge" [ngClass]="{'status-current': item.status === 'Actual', 'status-previous': item.status === 'Anterior'}">
+                    {{ item.status }}
+                </span>
+              </p>
+              <p class="details-text">Pasos Firmados: <strong>{{ item.eventsCount }}</strong> | Último uso: {{ item.generatedDate }}</p>
+            </div>
+
             <p class="history-note">
-              Las firmas anteriores siguen siendo válidas para sus eventos.
+              Las firmas anteriores siguen siendo válidas para verificar la inmutabilidad de los eventos que firmaron.
             </p>
           </div>
-
         </div>
       </div>
     </div>

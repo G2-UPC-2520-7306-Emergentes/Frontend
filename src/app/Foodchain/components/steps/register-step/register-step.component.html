@@ -123,6 +123,21 @@
       <textarea id="observations" formControlName="observations" class="form-control" rows="4"></textarea>
     </div>
 
+    <div class="form-group-full">
+      <label for="digitalSignature">Firma Digital <span class="required">*</span></label>
+      <input
+        type="password"
+        id="digitalSignature"
+        formControlName="digitalSignature"
+        class="form-control"
+        placeholder="Ingresa tu Firma Digital para validar el paso"
+        [class.is-invalid]="(f['digitalSignature'].invalid && f['digitalSignature'].touched) || f['digitalSignature'].errors?.['signatureMismatch']"
+      >
+      <div *ngIf="f['digitalSignature'].invalid && f['digitalSignature'].touched" class="text-danger validation-error">
+        <span *ngIf="f['digitalSignature'].errors?.['required']">La Firma Digital es requerida.</span>
+        <span *ngIf="f['digitalSignature'].errors?.['signatureMismatch']">La Firma Digital no es correcta.</span>
+      </div>
+    </div>
     <div class="action-buttons">
       <button
         type="submit"
