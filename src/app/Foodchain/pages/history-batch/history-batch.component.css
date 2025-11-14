@@ -154,7 +154,7 @@
 }
 
 .timeline-icon.unlocked {
-  background-color: var(--clr-primary-green);
+  background-color: green;
 }
 .timeline-icon:not(.unlocked) {
   background-color: #aaa;
