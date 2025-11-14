@@ -202,7 +202,7 @@
 }
 
 .edit-button {
-  background: linear-gradient(135deg, var(--secondary-500), var(--secondary-700));
+  background: linear-gradient(135deg, green, greenyellow);
   color: white;
   position: relative;
   overflow: hidden;
