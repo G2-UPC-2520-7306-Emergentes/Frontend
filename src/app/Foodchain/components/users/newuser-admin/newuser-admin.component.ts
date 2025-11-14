@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {CreateUserBody, RegisterPayload, UserService} from '../../../services/user.service';
-
+import { Router, RouterLink } from '@angular/router';
 
 interface RolePermission {
   key: string;
@@ -82,7 +82,7 @@ export class NewUserAdminComponent implements OnInit {
   selectedPermissions: RolePermission[] = [];
 
   constructor(private fb: FormBuilder,
-              private userService: UserService) {
+              private userService: UserService,  protected router: Router,) {
     this.userForm = this.fb.group({
       nombreCompleto: ['Carlos Mendoza', Validators.required],
       email: ['carlos.mendoza@foodchain.com', [Validators.required, Validators.email]],
@@ -165,6 +165,6 @@ export class NewUserAdminComponent implements OnInit {
 
   cancelCreation(): void {
     console.log('Creación de usuario cancelada.');
-    this.userForm.reset();
+    this.router.navigate(['/sidenav/dashboard']);
   }
 }

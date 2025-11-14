@@ -1,107 +1,191 @@
-/* --- Estilos del Contenedor de la Página --- */
-.page-wrapper {
-  min-height: 100vh;
-  padding: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* Alineación arriba */
+/* ------------------------------------------- */
+/* 1. VARIABLES - FUNDAMENTALES & TEMAS       */
+/* ------------------------------------------- */
+:root {
+  /* Espaciado */
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem;
+
+  /* Diseño */
+  --radius-md: 0.5rem; --radius-lg: 0.75rem; --radius-xl: 1rem; --radius-2xl: 1.5rem;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.15), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 12px 30px -6px rgba(0, 0, 0, 0.25);
+  --transition-fast: 150ms;
+
+  /* Paleta de FoodChain (Claro) */
+  --bg-page: #f0f2f5;
+  --bg-elevated: #ffffff;
+  --bg-footer: #e8ecf1;
+  --bg-permissions: #f9f9f9;
+
+  --text-primary: #1a4314;     /* Texto principal (Verde oscuro FoodChain) */
+  --text-secondary: #555555;
+  --text-tertiary: #999999;
+  --text-header: #ffffff;
+
+  --primary-brand: #2b5c2a;    /* ¡Aseguramos la definición aquí! */
+  --accent-action: #38a169;
+  --accent-action-hover: #2f855a;
+
+  --border-color: #d8dee6;
+  --border-input: #b0b0b0;
+  --border-focus: #4a55a2;
 }
 
-/* ==================================== */
-/* === EL ESTILO DE LA CARD PRINCIPAL === */
-/* ==================================== */
+/* ------------------------------------------- */
+/* 2. ADAPTACIÓN AL MODO OSCURO (Dark Mode) */
+/* ------------------------------------------- */
+:host-context(body.dark-theme) {
+  --bg-page: #1e3c23;
+  --bg-elevated: #122b15;
+  --bg-footer: #1a321d;
+  --bg-permissions: #1a321d;
+
+  --text-primary: white;
+  --text-secondary: #a7f3d0;
+  --text-tertiary: #9ca3af;
+  --text-header: #a7f3d0;
+
+  --primary-brand: #1a321d;
+  --accent-action: #6ee7b7;
+  --accent-action-hover: #34d399;
+
+  --border-color: #374151;
+  --border-input: #4b5563;
+  --border-focus: #6ee7b7;
+}
+
+/* ------------------------------------------- */
+/* 3. ESTILOS BASE Y CONTENEDOR */
+/* ------------------------------------------- */
+.page-wrapper {
+  min-height: 100vh;
+  padding: var(--space-8);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: var(--bg-page);
+  transition: background-color var(--transition-fast);
+}
+
 .user-registration-card {
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: var(--bg-elevated);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
   max-width: 800px;
   width: 100%;
-  margin: 20px 0;
-  overflow: hidden; /* Para contener bordes redondeados */
+  margin: var(--space-5) 0;
+  overflow: hidden;
+  transition: all var(--transition-fast);
+  border: 1px solid var(--border-color);
 }
 
 /* --- Estilos Comunes de Sección --- */
 .content-section, .footer-section {
-  padding: 25px 30px;
+  padding: var(--space-6) var(--space-8);
 }
 
 .card-divider {
   border: none;
-  border-top: 1px solid #e0e0e0;
-  margin: 0; /* La línea ocupa todo el ancho de la card */
+  border-top: 1px solid var(--border-color);
+  margin: 0;
 }
 
-/* --- Encabezado --- */
+/* ------------------------------------------- */
+/* 4. ENCABEZADO (¡CORRECCIÓN CLAVE!) */
+/* ------------------------------------------- */
 .header-section {
-  background-color: #2b5c2a; /* Color principal de la marca */
-  color: white;
-  padding: 25px 30px;
+  /* USO DE FALLBACK: Si var(--primary-brand) falla, usa el color directo #2b5c2a.
+    Esto garantiza que siempre haya un color.
+  */
+  background-color: var(--primary-brand, #2b5c2a);
+  color: var(--text-header);
+  padding: var(--space-6) var(--space-8);
 }
 
 .main-title {
-  font-size: 1.8rem;
-  margin-bottom: 5px;
+  color: white;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: var(--space-1);
 }
 
 .description {
-  font-size: 0.95rem;
-  opacity: 0.9;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  color: white;
 }
 
-/* --- Sección de Información y Roles --- */
+/* ------------------------------------------- */
+/* 5. SECCIONES DE CONTENIDO */
+/* ------------------------------------------- */
 .info-section-card h3, .role-section h3 {
   font-size: 1.4rem;
-  color: #333;
-  margin-bottom: 5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
 }
 
 .section-subtitle {
   font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 20px;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-5);
 }
 
-/* --- Grid de Formulario --- */
+/* ------------------------------------------- */
+/* 6. FORMULARIO Y INPUTS */
+/* ------------------------------------------- */
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-5);
 }
 
-/* --- Estilos de Formulario General --- */
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: var(--space-4);
 }
 
 .form-group label {
   display: block;
   font-weight: 600;
   font-size: 0.9rem;
-  color: #555;
-  margin-bottom: 5px;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
 }
 
 .form-group input,
 .form-group select {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-input);
+  border-radius: var(--radius-md);
   font-size: 1rem;
+  color: var(--text-primary);
+  background-color: lightgray;
   box-sizing: border-box;
-  transition: border-color 0.2s;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
 }
+
+:host-context(body.dark-theme) .form-group input,
+:host-context(body.dark-theme) .form-group select {
+  background-color: var(--bg-elevated);
+}
+
 
 .form-group input:focus,
 .form-group select:focus {
-  border-color: #4a55a2;
+  border-color: var(--border-focus);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(74, 85, 162, 0.2);
+  box-shadow: 0 0 0 3px var(--border-focus), 0 0 0 5px color-mix(in srgb, var(--border-focus) 20%, transparent);
 }
 
-/* --- Estilo de Rol (Dropdown con Icono) --- */
+/* ------------------------------------------- */
+/* 7. ROL Y PERMISOS */
+/* ------------------------------------------- */
 .role-dropdown {
-  max-width: 350px; /* Limitar el ancho del selector de rol */
+  max-width: 400px;
 }
 
 .input-with-icon {
@@ -110,38 +194,51 @@
 
 .input-with-icon .role-icon {
   position: absolute;
-  left: 12px;
+  left: var(--space-3);
   top: 50%;
   transform: translateY(-50%);
-  color: #999;
+  color: var(--text-secondary);
   pointer-events: none;
+  font-size: 1.1rem;
 }
 
 .input-with-icon select {
-  padding-left: 35px; /* Dejar espacio para el icono */
-  appearance: none; /* Ocultar flecha nativa si es necesario */
+  padding-left: var(--space-8);
+  appearance: none;
+}
+/* Flecha del select en Dark Mode */
+:host-context(body.dark-theme) .input-with-icon select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%236ee7b7' d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  background-size: 1em;
 }
 
-/* --- Bloque de Permisos --- */
 .permissions-block {
-  margin-top: 20px;
-  padding: 15px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  background-color: lightgreen;
+}
+
+/* ESTILO PARA MODO OSCURO */
+:host-context(body.dark-theme) .permissions-block {
+  /* En Dark Mode, sobrescribimos con el color oscuro definido en las variables */
+  background-color: var(--bg-permissions); /* Esto usa el valor de Dark Mode: #1a321d */
 }
 
 .permissions-header {
   font-weight: 600;
-  color: #4a55a2;
-  margin-bottom: 10px;
+  color: var(--accent-action);
+  margin-bottom: var(--space-3);
   display: flex;
   align-items: center;
   font-size: 1rem;
 }
 
 .permissions-header .fas {
-  margin-right: 8px;
+  margin-right: var(--space-2);
 }
 
 .permissions-list {
@@ -150,97 +247,130 @@
   margin: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 20px; /* Espaciado entre elementos de la lista */
+  gap: var(--space-2) var(--space-5);
 }
 
 .permissions-list li {
   font-size: 0.85rem;
-  color: #666;
+  color: var(--text-secondary);
   display: flex;
-  align-items: center;
-  width: calc(50% - 10px); /* Dos columnas en desktop */
+  align-items: flex-start;
+  width: calc(50% - var(--space-4));
 }
 
 .check-icon {
-  color: #38a169; /* Verde para los checks */
-  margin-right: 5px;
+  color: var(--accent-action);
+  margin-right: var(--space-2);
+  line-height: 1.5;
 }
 
-/* --- Pie de Página --- */
+/* ------------------------------------------- */
+/* 8. PIE DE PÁGINA Y BOTONES */
+/* ------------------------------------------- */
 .footer-section {
-  background-color: #f5f6f8;
-  border-top: 1px solid #e0e0e0;
+  background-color: var(--bg-footer);
+  border-top: 1px solid var(--border-color);
   font-size: 0.85rem;
-  color: #777;
-  padding: 20px 30px;
+  color: var(--text-tertiary);
+  padding: var(--space-4) var(--space-8);
 }
 
 .footer-title {
   font-size: 1rem;
-  color: #444;
-  margin-bottom: 5px;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
 }
 
-/* --- Botones de Acción --- */
 .action-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  padding-top: 15px;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
 }
 
 .create-user-button, .cancel-button {
-  padding: 10px 20px;
+  padding: var(--space-3) var(--space-5);
   font-weight: 600;
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: background-color 0.2s, opacity 0.2s;
+  transition: all var(--transition-fast);
   font-size: 1rem;
   display: flex;
   align-items: center;
 }
 
 .create-user-button {
-  background-color: #38a169; /* Verde para acción principal */
+  /* Uso de Fallback */
+  background-color: var(--accent-action, #38a169);
   color: white;
-  border: 1px solid #38a169;
+  border: 1px solid var(--accent-action, #38a169);
 }
 
 .create-user-button:hover:not(:disabled) {
-  background-color: #2f855a;
+  background-color: var(--accent-action-hover, #2f855a);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .cancel-button {
-  background-color: #ffffff;
-  color: #666;
-  border: 1px solid #ccc;
+  background-color: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-input);
 }
 
 .cancel-button:hover:not(:disabled) {
-  background-color: #f0f0f0;
+  background-color: var(--bg-footer);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
-/* Iconos en botones */
+/* Iconos y Discapacitado */
 .create-user-button .fas {
-  margin-right: 8px;
+  margin-right: var(--space-2);
 }
 
 .create-user-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-/* --- Media Queries (Para Responsividad) --- */
+/* ------------------------------------------- */
+/* 9. RESPONSIVE */
+/* ------------------------------------------- */
 @media (max-width: 768px) {
+  .page-wrapper {
+    padding: var(--space-4);
+  }
+
   .user-registration-card {
     margin: 0;
     border-radius: 0;
     box-shadow: none;
   }
-  .form-grid {
-    grid-template-columns: 1fr; /* Una columna en móvil */
+  .content-section, .footer-section, .header-section {
+    padding: var(--space-5);
   }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
   .permissions-list li {
-    width: 100%; /* Permisos en una sola columna en móvil */
+    width: 100%;
+  }
+
+  .action-buttons {
+    justify-content: space-between;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  .create-user-button, .cancel-button {
+    flex-grow: 1;
+    justify-content: center;
   }
 }
