@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit {
 
             this.sessionService.setUserId(userIdAsString);
 
-            this.router.navigate(['/sidenav']);
+            this.router.navigate(['/sidenav/dashboard']);
           } else {
 
             this.loginError = true;
