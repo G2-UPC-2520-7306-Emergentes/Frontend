@@ -1,482 +1,305 @@
-/* ===================================
-   CREATE BATCH - MODERN DESIGN
-   =================================== */
+/* ------------------------------------------- */
+/* 1. VARIABLES - FUNDAMENTALES & TEMAS       */
+/* ------------------------------------------- */
+:root {
+  /* Espaciado (Space System) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
 
-/* === CONTAINER === */
+  /* Bordes y Sombras (Design System) */
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+
+  /* Transiciones */
+  --transition-fast: 150ms;
+  --transition-base: 300ms;
+  --transition-slow: 500ms;
+
+  /* Colores (Claro) - TU BASE */
+  --bg-primary: #f4f6f8;
+  --bg-elevated: #ffffff;
+  --bg-tertiary: #e8ecf1;
+  --text-primary: #2c3e50;
+  --text-secondary: #555555;
+  --text-tertiary: #999999;
+  --primary-500: #1a4314; /* Verde FoodChain oscuro */
+  --primary-700: #0d280c;
+  --border-color: #e0e0e0;
+  --error: #ef4444;
+  --error-dark: #b91c1c;
+}
+
+/* ------------------------------------------- */
+/* 2. ADAPTACIÓN AL MODO OSCURO (Mapeo de variables) */
+/* ------------------------------------------- */
+
+:host-context(body.dark-theme) {
+  --bg-primary: #1e3c23;
+  --bg-elevated: #122b15;
+  --bg-tertiary: #284e2c;
+  --text-primary: #ffffff;
+  --text-secondary: #a7f3d0;
+  --text-tertiary: #9ca3af;
+  --primary-500: #6ee7b7;
+  --primary-700: #34d399;
+  --border-color: #374151;
+  --error: #fca5a5;
+  --error-dark: #f87171;
+}
+
+/* ------------------------------------------- */
+/* 3. ESTILOS BASE Y CONTENEDOR */
+/* ------------------------------------------- */
+
+:host {
+  display: block;
+}
+
 #batch-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: linear-gradient(135deg, var(--primary-50) 0%, var(--bg-secondary) 100%);
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-tertiary) 100%);
   min-height: 100vh;
   padding: var(--space-8);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  animation: fadeIn var(--transition-slow) ease-out;
 }
 
-[data-theme="dark"] #batch-container {
-  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
-}
-
-/* === CARD === */
 #batch-card {
   width: 100%;
   max-width: 48rem;
   background-color: var(--bg-elevated);
-  box-shadow: var(--shadow-xl);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   border-radius: var(--radius-2xl);
   padding: var(--space-10);
   margin-top: var(--space-8);
   transition: all var(--transition-base);
-  border: 1px solid var(--border-light);
-  animation: scaleIn var(--transition-slow) ease-out 0.2s both;
+  border: 1px solid var(--border-color);
 }
 
-#batch-card > * {
-  margin-top: var(--space-8);
-}
+/* ------------------------------------------- */
+/* 4. CABECERA (HEADER) Y NAVEGACIÓN */
+/* ------------------------------------------- */
 
-#batch-card form > * {
-  margin-top: var(--space-6);
-}
-
-#batch-card form > *:first-child {
-  margin-top: 0;
-}
-
-/* === HEADER === */
 #header-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   padding-bottom: var(--space-5);
-  border-bottom: 2px solid var(--border-color);
-  gap: var(--space-4);
-  flex-wrap: wrap;
-  animation: slideInRight var(--transition-slow) ease-out 0.3s both;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: var(--space-5);
 }
 
 #header-row h1 {
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--primary-500);
   margin: 0;
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-
-#header-row h1::before {
-  content: '';
-  width: 4px;
-  height: 32px;
-  background: linear-gradient(180deg, var(--primary-500), var(--primary-700));
-  border-radius: var(--radius-full);
 }
 
 #header-row a {
-  font-size: 0.875rem;
+  padding: var(--space-2) var(--space-3);
   color: var(--primary-500);
   font-weight: 600;
   text-decoration: none;
+  border-radius: var(--radius-lg);
   transition: all var(--transition-fast);
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-md);
 }
 
 #header-row a:hover {
+  background-color: var(--bg-tertiary);
   color: var(--primary-700);
-  background: var(--primary-50);
-  transform: translateX(-3px);
 }
 
-[data-theme="dark"] #header-row a:hover {
-  background: rgba(0, 168, 107, 0.1);
-  color: var(--primary-400);
-}
-
-/* === DESCRIPTION === */
-#batch-card p {
+#batch-card > p {
   color: var(--text-secondary);
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  margin: 0;
-  animation: fadeIn var(--transition-base) ease-out 0.4s both;
+  font-size: 1rem;
+  margin-bottom: var(--space-8);
 }
 
-/* === FORM GROUPS === */
+/* ------------------------------------------- */
+/* 5. FORMULARIOS (LABELS, INPUTS, SELECTS) */
+/* ------------------------------------------- */
+
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  animation: fadeIn var(--transition-base) ease-out;
+  margin-bottom: var(--space-5);
 }
-
-.form-group:nth-child(1) { animation-delay: 0.5s; }
-.form-group:nth-child(2) { animation-delay: 0.55s; }
-.form-group:nth-child(3) { animation-delay: 0.6s; }
-.form-group:nth-child(4) { animation-delay: 0.65s; }
-.form-group:nth-child(5) { animation-delay: 0.7s; }
 
 .form-group label {
   display: block;
-  font-size: 0.875rem;
   font-weight: 600;
-  color: var(--text-secondary);
-  transition: color var(--transition-fast);
+  margin-bottom: var(--space-2);
+  color: var(--text-primary);
+  font-size: 0.95rem;
 }
 
-/* === INPUTS & SELECTS (Actualización clave aquí) === */
-.form-group input,
-.form-group textarea,
-.form-group .select-input { /* 💡 Agregado: .select-input */
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+textarea,
+.select-input {
   width: 100%;
-  padding: var(--space-4) var(--space-5);
-  border: 2px solid var(--border-color);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
-  background-color: var(--bg-primary);
+  background-color: var(--bg-tertiary);
   color: var(--text-primary);
   font-size: 1rem;
-  font-family: inherit;
   transition: all var(--transition-fast);
   outline: none;
-  box-sizing: border-box;
+  box-shadow: var(--shadow-sm);
 }
 
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-  color: var(--text-disabled);
+/* Focus */
+input:focus:not([type="file"]),
+textarea:focus,
+.select-input:focus {
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px var(--primary-500), 0 0 0 5px rgba(26, 67, 20, 0.1);
+  background-color: var(--bg-elevated);
 }
 
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group .select-input:focus { /* 💡 Agregado: .select-input */
-  border-color: var(--border-focus);
-  background-color: var(--bg-primary);
-  box-shadow: 0 0 0 4px rgba(0, 168, 107, 0.1);
-  transform: translateY(-1px);
+.select-input {
+  appearance: none;
+  /* SVG de flecha oscura */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%231a4314' d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  background-size: 1em;
+  padding-right: var(--space-8);
 }
 
-.form-group input:hover:not(:focus),
-.form-group textarea:hover:not(:focus),
-.form-group .select-input:hover:not(:focus):not(:disabled) { /* 💡 Agregado: .select-input */
-  border-color: var(--text-disabled);
-}
-
-[data-theme="dark"] .form-group input,
-[data-theme="dark"] .form-group textarea,
-[data-theme="dark"] .form-group .select-input { /* 💡 Agregado: .select-input */
-  background-color: var(--bg-secondary);
-}
-
-[data-theme="dark"] .form-group input:focus,
-[data-theme="dark"] .form-group textarea:focus,
-[data-theme="dark"] .form-group .select-input:focus { /* 💡 Agregado: .select-input */
+.select-input:disabled {
   background-color: var(--bg-tertiary);
-}
-
-/* === SELECT SPECIFIC STYLES === */
-/* Estilizado para imitar el input, añadiendo el manejo de la flecha de dropdown */
-.form-group .select-input {
-  /* Eliminar la apariencia nativa para un control total */
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  /* Añadir flecha custom SVG como background-image */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23999999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right var(--space-4) center;
-  background-size: 18px;
-  padding-right: var(--space-12); /* Espacio para la flecha */
-  cursor: pointer;
-}
-
-[data-theme="dark"] .form-group .select-input {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4d4d4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-}
-
-/* Deshabilitar estilo para el select (cuando no se ha elegido producto padre) */
-.form-group .select-input:disabled {
-  opacity: 0.7;
   cursor: not-allowed;
-  background-color: var(--bg-secondary);
-  border-color: var(--border-color);
-}
-[data-theme="dark"] .form-group .select-input:disabled {
-  background-color: var(--bg-primary);
+  color: var(--text-tertiary);
 }
 
+/* ------------------------------------------- */
+/* 6. UPLOAD Y VALIDACIÓN - SOLUCIÓN DE INPUT FILE */
+/* ------------------------------------------- */
 
-/* Textarea specific */
-.form-group textarea {
-  resize: vertical;
-  min-height: 120px;
+/* ESTO CORRIGE EL PROBLEMA DE "CHOOSE FILE" VISIBLE */
+.hidden-input {
+  /* Oculta el input nativo de forma segura */
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
 }
 
-/* === VALIDATION ERROR === */
-.form-group input.border-red-500,
-.form-group textarea.border-red-500,
-.form-group .select-input.border-red-500 { /* 💡 Agregado: .select-input */
-  border-color: var(--error);
-  background-color: var(--error-light);
-}
-
-.validation-error {
-  font-size: 0.75rem;
-  color: var(--error-dark);
-  font-weight: 500;
-  margin-top: var(--space-1);
-  padding-left: var(--space-2);
-  animation: slideInLeft var(--transition-fast) ease-out;
-}
-
-[data-theme="dark"] .validation-error {
-  color: #fca5a5;
-}
-
-/* === DATE INPUT === */
-.date-input {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right var(--space-4) center;
-  background-size: 20px;
-  padding-right: var(--space-12);
-  cursor: pointer;
-}
-
-[data-theme="dark"] .date-input {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23d4d4d4' stroke-width='2'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E");
-}
-
-/* === UPLOAD AREA === */
 #upload-area {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-4);
-  border: 2px dashed var(--border-color);
-  border-radius: var(--radius-xl);
   padding: var(--space-8);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-lg);
   text-align: center;
-  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+  margin-bottom: var(--space-8);
   transition: all var(--transition-base);
-  animation: fadeIn var(--transition-base) ease-out 0.75s both;
+  cursor: pointer;
   position: relative;
   overflow: hidden;
-}
-
-#upload-area::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(0, 168, 107, 0.05) 0%, transparent 70%);
-  animation: pulse 3s ease-in-out infinite;
+  background-color: var(--bg-tertiary);
 }
 
 #upload-area:hover {
   border-color: var(--primary-500);
-  background: linear-gradient(135deg, var(--primary-50) 0%, var(--bg-tertiary) 100%);
-  transform: scale(1.01);
-}
-
-[data-theme="dark"] #upload-area:hover {
-  background: linear-gradient(135deg, rgba(0, 168, 107, 0.1) 0%, var(--bg-tertiary) 100%);
+  background-color: color-mix(in srgb, var(--bg-tertiary) 90%, var(--primary-500) 10%);
 }
 
 #upload-area p {
-  position: relative;
-  z-index: 1;
-}
-
-#upload-area p:first-of-type {
-  font-weight: 600;
-  font-size: 1rem;
   color: var(--text-primary);
   margin: 0;
+  font-size: 1rem;
 }
 
-#upload-area p:last-of-type {
-  font-size: 0.875rem;
-  color: var(--text-tertiary);
-  margin: 0;
-}
-
-/* === FILE UPLOAD === */
 .file-upload-group {
-  position: relative;
-  z-index: 1;
+  margin-top: var(--space-3);
+  /* Centra el botón customizado */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+/* El Label estilizado (tu botón) */
 .custom-file-label {
-  cursor: pointer;
-  padding: var(--space-3) var(--space-6);
-  font-size: 0.875rem;
-  font-weight: 600;
+  padding: var(--space-3) var(--space-5);
+  background-color: var(--primary-500);
   color: white;
-  background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
   border-radius: var(--radius-lg);
-  transition: all var(--transition-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  margin-top: var(--space-4);
   display: inline-block;
   box-shadow: var(--shadow-sm);
-  position: relative;
-  overflow: hidden;
-}
-
-.custom-file-label::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-}
-
-.custom-file-label:hover::before {
-  width: 300px;
-  height: 300px;
 }
 
 .custom-file-label:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  background-color: var(--primary-700);
 }
 
-.hidden-input {
-  display: none;
+/* Mensaje de validación */
+.validation-error {
+  color: var(--error-dark);
+  font-size: 0.85rem;
+  margin-top: var(--space-1);
 }
 
-/* === SUBMIT BUTTON === */
+/* ------------------------------------------- */
+/* 7. BOTÓN Y MENSAJES DE ERROR/ÉXITO */
+/* ------------------------------------------- */
+
 .submit-button {
   width: 100%;
-  padding: var(--space-4) var(--space-6);
-  margin-top: var(--space-6);
+  padding: var(--space-3) var(--space-5);
+  background-color: var(--primary-500);
   color: white;
-  font-weight: 700;
-  font-size: 1.125rem;
-  border-radius: var(--radius-lg);
   border: none;
+  border-radius: var(--radius-lg);
+  font-size: 1.1rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all var(--transition-base);
-  box-shadow: var(--shadow-md);
-  background: linear-gradient(135deg, var(--success), var(--success-dark));
-  position: relative;
-  overflow: hidden;
-  animation: fadeIn var(--transition-base) ease-out 0.8s both;
-}
-
-.submit-button::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-}
-
-.submit-button:hover:not(:disabled)::before {
-  width: 500px;
-  height: 500px;
+  transition: background-color var(--transition-fast), opacity var(--transition-fast), transform var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+  margin-top: var(--space-5);
 }
 
 .submit-button:hover:not(:disabled) {
-  transform: translateY(-2px);
+  background-color: var(--primary-700);
+  transform: translateY(-2px); /* Un pequeño levantamiento al pasar el ratón */
   box-shadow: var(--shadow-lg);
 }
 
-.submit-button:active:not(:disabled) {
-  transform: translateY(0);
-}
-
 .submit-button:disabled {
-  background: var(--gray-400);
-  box-shadow: none;
+  background-color: var(--bg-tertiary);
+  color: var(--text-tertiary);
+  opacity: 0.7;
   cursor: not-allowed;
-  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
 }
 
-/* === ERROR MESSAGE === */
+/* Mensaje de Error (al pie del formulario) */
 .error-message {
-  color: var(--error-dark);
-  background: var(--error-light);
-  font-size: 0.875rem;
+  padding: var(--space-4);
+  background-color: var(--error);
+  color: var(--bg-elevated);
+  border-radius: var(--radius-lg);
+  margin-top: var(--space-5);
+  font-weight: 600;
   text-align: center;
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-md);
-  margin-top: var(--space-4);
-  border-left: 4px solid var(--error);
-  font-weight: 500;
-  animation: slideInLeft var(--transition-fast) ease-out;
 }
 
-[data-theme="dark"] .error-message {
-  background: rgba(239, 68, 68, 0.2);
-  color: #fca5a5;
-}
-
-/* === RESPONSIVE === */
-@media (max-width: 768px) {
-  #batch-container {
-    padding: var(--space-6) var(--space-4);
-  }
-
-  #batch-card {
-    padding: var(--space-8);
-    max-width: 100%;
-    margin-top: var(--space-6);
-  }
-
-  #header-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  #header-row h1 {
-    font-size: 1.75rem;
-  }
-
-  #header-row a {
-    width: 100%;
-    text-align: center;
-  }
-
-  #upload-area {
-    padding: var(--space-6);
-  }
-}
-
-@media (max-width: 480px) {
-  #batch-card {
-    padding: var(--space-6);
-  }
-
-  #header-row h1 {
-    font-size: 1.5rem;
-  }
-
-  .form-group input,
-  .form-group textarea,
-  .form-group .select-input { /* 💡 Aseguramos responsive para select */
-    font-size: 0.9375rem;
-    padding: var(--space-3) var(--space-4);
-  }
-
-  .submit-button {
-    font-size: 1rem;
-    padding: var(--space-4);
-  }
+/* Dark Mode para Mensaje de Error */
+:host-context(body.dark-theme) .error-message {
+  color: var(--text-primary);
 }
