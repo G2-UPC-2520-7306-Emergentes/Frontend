@@ -119,7 +119,8 @@ export class EditAdminComponent implements OnInit {
 
     // 1. Filtrar pasos que corresponden a este usuario y que tienen una firma.
     const userSteps = allSteps.filter(step =>
-      String(step.userId) === String(user.id) && !!step.digitalSignature // 🔑 Usamos digitalSignature
+      String(step.userId) === String(user.id) && !!step.digitalSignature &&
+      step.status === 'accepted'// 🔑 Usamos digitalSignature
     );
 
     // 2. Contar los pasos por la clave de firma (digitalSignature)
