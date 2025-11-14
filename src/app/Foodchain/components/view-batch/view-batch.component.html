@@ -73,7 +73,7 @@
             | <a (click)="generateQR(batch.id)">Generar QR</a>
 
             <ng-container *ngIf="batch.state === 'Activo' || batch.state === 'Draft'">
-              | <a (click)="closeBatch(batch.id)">Cerrar lote</a>
+              | <a (click)="closeBatch()">Cerrar lote</a>
             </ng-container>
           </ng-container>
 

@@ -240,12 +240,12 @@ td {
 
 /* Botón CANCELAR (Temática naranja/advertencia) */
 .btn-cancel {
-  background: var(--warning); /* Usamos el color base del warning */
+  background: green; /* Usamos el color base del warning */
   color: white;
 }
 
 .btn-cancel:hover:not(:disabled) {
-  background: var(--warning-dark);
+  background: lightgreen;
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }

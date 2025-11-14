@@ -217,8 +217,7 @@ export class ViewBatchComponent implements OnInit {
     this.qrCodeBatchId = '';
   }
 
-  closeBatch(batchId: string | number): void {
-    console.log(`Acción: Cerrar lote para el lote: ${batchId}`);
-    // Aquí iría la lógica para cambiar el estado del lote a 'Cerrado' o similar.
+  closeBatch(): void {
+    this.router.navigate([`/sidenav/delete-batch`]);
   }
 }
