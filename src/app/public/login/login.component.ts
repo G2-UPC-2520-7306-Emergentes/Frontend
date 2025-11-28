@@ -3,10 +3,13 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {Router, RouterLink} from '@angular/router';
 import { first } from 'rxjs/operators';
 import { HttpErrorResponse } from '@angular/common/http';
-import {UserService} from '../../Foodchain/services/user.service';
-import {User} from '../../Foodchain/model/user.entity';
 import {CommonModule} from '@angular/common';
-import {SessionService} from '../../Foodchain/services/session.service';
+
+// 🛑 IMPORTANTE: Asegúrate que esta interfaz en el servicio se ha actualizado
+// a 'token' en lugar de 'accessToken' y que 'userId' es opcional o se ha eliminado,
+// o si no, el tipado no será estricto.
+import { RegisterService, SignInPayload, AuthResponse } from '../../Foodchain/services/register.service'; // AJUSTA LA RUTA
+import {SessionService} from '../../Foodchain/services/session.service'; // Asumo que esta ruta es correcta
 
 @Component({
   selector: 'app-login',
@@ -26,13 +29,13 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private userService: UserService,
+    // 🛑 CAMBIO: Inyectamos el RegisterService para el método signIn
+    private registerService: RegisterService,
     private router: Router,
     private sessionService: SessionService
   ) { }
 
   ngOnInit(): void {
-
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]]
@@ -47,70 +50,72 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * Maneja el envío del formulario.
+   * Maneja el envío del formulario, llamando al servicio de autenticación.
    */
   onSubmit(): void {
     this.loginError = false; // Limpiar el error anterior
 
     if (this.loginForm.invalid) {
-
       this.loginForm.markAllAsTouched();
       return;
     }
 
     const { email, password } = this.loginForm.value;
 
+    // 1. Construir el payload con los datos del formulario
+    const payload: SignInPayload = { email, password };
 
+    // 🛑 LOGS DE DEPURACIÓN AÑADIDOS
+    console.log('--- INTENTANDO LOGIN ---');
+    console.log('1. Valor del Formulario (RAW):', this.loginForm.value);
+    console.log('2. Payload Final Enviado (estructura del JSON):', payload);
+    console.log('------------------------');
+    // 🛑 FIN DE LOGS DE DEPURACIÓN
 
-    this.userService.getAll()
+    // 2. Llamar al servicio signIn de la API
+    this.registerService.signIn(payload)
       .pipe(first())
       .subscribe({
-        next: (users: User[]) => {
-          const userFound = users.find(
-            user => user.email === email && user.password === password
-          );
+        next: (authResponse: AuthResponse | null) => {
 
-          if (userFound) {
-            console.log('Login exitoso para el usuario:', userFound.email);
+          console.log('3. RESPUESTA DEL SERVIDOR (Status 200 OK):', authResponse);
 
-            const userIdAsString = userFound.id.toString();
+          // 🛑 CORRECCIÓN CLAVE: Comprobamos si existe la propiedad 'token'
+          if (authResponse && authResponse.token) {
 
-            this.sessionService.setUserId(userIdAsString);
+            console.log('Login exitoso. Token JWT recibido.');
+
+            // 🛑 ALMACENAMIENTO CORREGIDO:
+            // 1. Guardamos el TOKEN usando la propiedad 'token' de la respuesta.
+            this.sessionService.setToken(authResponse.token);
+
+            // 2. Guardamos el EMAIL como identificador de usuario (ya que 'userId' no viene, usamos 'email')
+            this.sessionService.setUserId(authResponse.email);
 
             this.router.navigate(['/sidenav/dashboard']);
           } else {
-
+            // Este caso ocurre si el servicio devuelve 'null' (credenciales inválidas)
             this.loginError = true;
-            console.error('Credenciales incorrectas: Email o contraseña no coinciden.');
+            console.error('Fallo en la autenticación: Credenciales incorrectas o error de servicio.');
           }
         },
         error: (err: HttpErrorResponse) => {
-
+          // Error de red o error no manejado por el servicio
           this.loginError = true;
-          console.error('Error al intentar conectar con el servicio de usuarios:', err);
-
+          console.error('Error al intentar iniciar sesión:', err);
         }
       });
   }
 
+  // --- Getters y Validaciones de la Interfaz ---
 
-
-  /**
-   * Getter conveniente para acceder a los controles del formulario.
-   */
   get f() { return this.loginForm.controls; }
 
-  /**
-   * Verifica si el campo de email tiene errores y ha sido tocado.
-   */
   isEmailInvalidAndTouched(): boolean {
     const emailControl = this.f['email'];
     return emailControl.invalid && emailControl.touched;
   }
 
-  /**
-   * Verifica si el campo de password tiene errores y ha sido tocado.
-   */
   isPasswordInvalidAndTouched(): boolean {
     const passwordControl = this.f['password'];
     return passwordControl.invalid && passwordControl.touched;

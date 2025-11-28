@@ -1,11 +1,13 @@
+// src/app/modules/auth/register-login.component.ts
+
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
-// Importamos el UserService y la interfaz RegisterPayload
-import { UserService, RegisterPayload } from '../../Foodchain/services/user.service'; // AJUSTA LA RUTA
+// Importamos el RegisterService y la interfaz RegistroPayload
+import { RegisterService, RegistroPayload } from '../../Foodchain/services/register.service'; // AJUSTA ESTA RUTA
 
 @Component({
   selector: 'app-register',
@@ -16,61 +18,64 @@ import { UserService, RegisterPayload } from '../../Foodchain/services/user.serv
 })
 export class RegisterLoginComponent implements OnInit {
 
-  registerForm: FormGroup;
-  roles = ['Administrator', 'Enterprise Administrator'];
+  registerForm!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private userService: UserService
-  ) {
+    private registerService: RegisterService
+  ) {}
+
+  ngOnInit(): void {
     this.registerForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
+      // Campos de la Entidad Registro
+      enterpriseId: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      companyName: ['', Validators.required],
-      taxId: [''],
-      companyOption: ['create'],
-      digitalSignature: [''],
       password: ['', [Validators.required, Validators.minLength(8)]],
+
+      // Campo extra para validación
       confirmPassword: ['', Validators.required],
-      phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]+$')]], // Requerido y solo números
-      requestedRole: ['', Validators.required],
-      agreement: [false, Validators.requiredTrue],
-      recaptcha: [false, Validators.requiredTrue],
+
+      // 🛑 CAMPOS agreement y recaptcha ELIMINADOS
     }, {
+      // Aplicamos el validador de coincidencia
       validators: this.passwordsMatchValidator.bind(this)
     });
   }
 
-  ngOnInit(): void {}
-
-  passwordsMatchValidator(form: FormGroup) {
+  // --- Validador de Coincidencia de Contraseñas ---
+  passwordsMatchValidator(form: AbstractControl): ValidationErrors | null {
     const password = form.get('password')?.value;
     const confirmPassword = form.get('confirmPassword')?.value;
-    return password === confirmPassword ? null : { mismatch: true };
+
+    if (password && confirmPassword && password !== confirmPassword) {
+      return { mismatch: true };
+    }
+    return null;
   }
+  // ------------------------------------------------
+
 
   onSubmit() {
     if (this.registerForm.invalid) {
-      alert('Formulario inválido. Revisa los campos requeridos y la coincidencia de contraseñas.');
+      alert('Formulario inválido. Revisa los campos obligatorios.');
       this.registerForm.markAllAsTouched();
       return;
     }
 
+    // Desestructuramos solo los campos necesarios para el payload
+    const { enterpriseId, email, password } = this.registerForm.value;
 
-    const {  confirmPassword,
-      agreement,
-      recaptcha,
-      ...newUserToSave } = this.registerForm.value;
+    const payload: RegistroPayload = {
+      enterpriseId: enterpriseId,
+      email: email,
+      password: password
+    };
 
-    // 2. 🚀 Llama al servicio y se suscribe al resultado
-    this.userService.registerUser(newUserToSave as RegisterPayload)
-      .subscribe((user) => {
-
-        if (user) {
-          alert('Registro exitoso');
-
+    this.registerService.registerUser(payload)
+      .subscribe((registro) => {
+        if (registro) {
+          alert('¡Registro exitoso!');
           this.router.navigate(['/login']);
         }
       });
